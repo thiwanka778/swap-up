@@ -1,0 +1,32 @@
+font-family: 'Poppins', sans-serif;
+
+font-family: 'Ubuntu', sans-serif;
+font-family: 'Roboto', sans-serif;
+
+
+
+
+
+
+fontFamily:" 'Poppins', sans-serif"
+fontFamily: "'Ubuntu', sans-serif"
+fontFamily: "'Roboto', sans-serif"
+
+
+<Input    
+        placeholder="Enter your gmail"
+        value={email}
+        onChange={handleEmailChange}
+        style={{
+          borderRadius: '4px',
+          border: '1px solid #d9d9d9',
+          boxShadow: 'none',
+          fontSize: '1rem',
+          padding: '1rem',
+          width: "100%",
+          fontWeight:"500",
+           fontFamily:" 'Poppins', sans-serif",
+           letterSpacing:"0.1rem",
+        
+        }}
+      />

@@ -1,0 +1,90 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+.home {
+  width: 100%;
+  padding-top: 12vh;
+  min-height: 88vh;
+}
+.signup-button {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.1rem;
+  border: 2px solid #251df5;
+  font-weight: 500;
+  color: #fff;
+  transition: transform 0.3s;
+}
+.login-button {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+  border: 2px solid #04bd16;
+
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.1rem;
+  font-weight: 500;
+  color: #fff;
+  transition: transform 0.3s;
+}
+
+.signup-button {
+  background-color: #251df5;
+}
+
+.login-button {
+  background-color: #04bd16;
+}
+
+.signup-button:hover {
+  background-color: white;
+  color: black;
+  font-weight: bold;
+}
+
+.login-button:hover {
+  background-color: white;
+  color: black;
+  font-weight: bold;
+}
+
+.signup-button:active {
+  transform: scale(0.7);
+}
+.login-button:active {
+  transform: scale(0.7);
+}
+
+.verify-button{
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.1rem;
+    border: 2px solid #0f66f2;
+    font-weight: 500;
+    color: #fff;
+    transition: transform 0.3s;
+    background-color: #0f66f2;
+}
+
+.verify-button:hover {
+    background-color: #0f66f2;
+    color: black;
+    font-weight: bold;
+  }
+  .verify-button:active {
+    transform: scale(0.7);
+  }

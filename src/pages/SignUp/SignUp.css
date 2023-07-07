@@ -4,7 +4,8 @@
     box-sizing: border-box;
     scroll-behavior: smooth;
 }
-.app{
+.signup{
     width:100%;
-    min-height: 100vh;
+    padding-top: 12vh;
+    min-height: 88vh;
 }

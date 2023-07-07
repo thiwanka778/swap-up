@@ -1,24 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import NavBar from "./components/NavBar/NavBar";
+import Home from "./pages/Home/Home";
+import Footer from "./components/Footer/Footer";
+import {Routes, Route} from "react-router-dom";
+import SignUp from "./pages/SignUp/SignUp";
+import Login from "./pages/Login/Login";
+import { useDispatch, } from "react-redux";
+import { getScreenWidth } from "./redux/userSlice";
+
 
 function App() {
+  const dispatch=useDispatch();
+  // const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
+  React.useEffect(() => {
+    const handleResize = () => {
+      // setScreenWidth(window.innerWidth);
+      dispatch(getScreenWidth(window.innerWidth))
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup function to remove the event listener
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className="app">
+
+     <NavBar/>
+     <Routes>
+     <Route path="/" element={<Home/>}/>
+     <Route path="signup" element={<SignUp/>}/>
+     <Route path="login" element={<Login/>}/>
+
+     </Routes>
+     
+     <Footer/>
+
+    </main>
+
+   
   );
 }
 
