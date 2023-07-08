@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <div className='footer'>
       <p style={{fontFamily: "'Ubuntu', sans-serif",
-      fontWeight:"bold",marginLeft:"2rem",fontSize:"1.5rem",letterSpacing:"2px"}} >Footer-swap-up</p>  
+      fontWeight:"500",color:"white",fontSize:"1.1rem",}} >&copy; 2023 SwapUp. All rights reserved.</p>  
     </div>
   )
 }

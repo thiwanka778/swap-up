@@ -3,46 +3,47 @@ import "./App.css";
 import NavBar from "./components/NavBar/NavBar";
 import Home from "./pages/Home/Home";
 import Footer from "./components/Footer/Footer";
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import SignUp from "./pages/SignUp/SignUp";
 import Login from "./pages/Login/Login";
-import { useDispatch, } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getScreenWidth } from "./redux/userSlice";
-
+import SignupAuth from "./protectedRoutes/SignupAuth";
 
 function App() {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   // const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
   React.useEffect(() => {
     const handleResize = () => {
       // setScreenWidth(window.innerWidth);
-      dispatch(getScreenWidth(window.innerWidth))
+      dispatch(getScreenWidth(window.innerWidth));
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Cleanup function to remove the event listener
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
     <main className="app">
+      <NavBar />
+      
+          <Routes>
+            <Route path="/" element={<Home />} />
 
-     <NavBar/>
-     <Routes>
-     <Route path="/" element={<Home/>}/>
-     <Route path="signup" element={<SignUp/>}/>
-     <Route path="login" element={<Login/>}/>
+            <Route path="login" element={<Login />} />
 
-     </Routes>
-     
-     <Footer/>
+            <Route element={<SignupAuth />}>
+              <Route path="signup" element={<SignUp />} />
+            </Route>
+          </Routes>
+       
 
+      <Footer />
     </main>
-
-   
   );
 }
 
