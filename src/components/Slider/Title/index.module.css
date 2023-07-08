@@ -1,11 +1,27 @@
 .Container {
     margin: 0 auto;
-    padding: 0;
     text-transform: uppercase;
     width: 90%;
     text-align: center;
     font-size: 3.5rem;
     color:#120278;
     text-shadow: 2px 2px 1px white; 
+    
   }
+
+
+  @media (max-width: 385px) {
+    .Container {
+      margin: 0 auto;
+      text-transform: uppercase;
+      width: 90%;
+      text-align: center;
+      font-size: 2rem;
+      color:#120278;
+      text-shadow: 2px 2px 1px white; 
+      
+    }
+  }
+
+
   

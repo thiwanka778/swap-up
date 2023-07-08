@@ -8,3 +8,17 @@
     color:#026e2f;
     text-shadow: 2px 2px 1px white; 
 }
+
+
+@media (max-width: 385px) {
+    .title-span{
+        margin: 0 auto;
+        padding: 0;
+        text-transform: uppercase;
+        width: 90%;
+        text-align: center;
+        font-size: 2rem;
+        color:#026e2f;
+        text-shadow: 2px 2px 1px white; 
+    }
+  }
