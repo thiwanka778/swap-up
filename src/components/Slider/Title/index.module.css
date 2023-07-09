@@ -10,7 +10,7 @@
   }
 
 
-  @media (max-width: 400px) {
+  @media (max-width: 450px) {
     .Container {
       margin: 0 auto;
       text-transform: uppercase;
