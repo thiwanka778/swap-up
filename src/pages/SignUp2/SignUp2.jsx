@@ -108,11 +108,11 @@ const SignUp2 = () => {
               style={{
                 fontFamily: "'Ubuntu', sans-serif",
                 fontSize: "2.5rem",
-                color: "#8a87f5",
+                color: "white",
                 fontWeight: "600",
                 width:"fit-content",
                 letterSpacing:"0.2rem",
-                textShadow:"2px 2px 0.5px black"
+                textShadow:"3px 3px 1px black",
               }}
             >
               Register To Become A Member
@@ -121,13 +121,13 @@ const SignUp2 = () => {
               style={{
                 fontFamily: "'Ubuntu', sans-serif",
                 fontSize: "1.75rem",
-                color: "#8a87f5",
+                color: "white",
                 fontWeight: "500",
                 marginTop: "1rem",
                 fontWeight: "600",
                 width:"fit-content",
                 letterSpacing:"0.2rem",
-                textShadow:"2px 2px 0.5px black"
+                textShadow:"3px 3px 1px black",
               }}
             >
              We Need Your Details To Complete Your Registration. 
