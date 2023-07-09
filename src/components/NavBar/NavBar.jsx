@@ -25,6 +25,9 @@ const {userEmail,screen}=useSelector((state)=>state.user)
   const handleClickOpen = () => {
 if(userEmail===""){
   setOpen(true);
+}else if(userEmail!==""){
+  setOpen(false);
+  navigate("/signup");
 }
     
   };
@@ -95,7 +98,7 @@ if(userEmail===""){
         <NavLink to="/" className="nav-text">Home</NavLink>
         <p className="nav-text">About Us</p>
         <p className="nav-text">Contact Us</p>
-       {userEmail==="" && <button className="signup-btn" onClick={handleClickOpen} style={{marginRight:"1.5rem"}}>SIGN UP</button>}
+      <button className="signup-btn" onClick={handleClickOpen} style={{marginRight:"1.5rem"}}>SIGN UP</button>
         <button className="login-btn" onClick={()=>navigate("/login")} style={{marginRight:"1.5rem"}}>LOGIN</button>
         </div>
 

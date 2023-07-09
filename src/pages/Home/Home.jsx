@@ -56,7 +56,7 @@ const Home = () => {
     ],
    loop:{},
     typeSpeed:100,
-    deleteSpeed:50,
+    deleteSpeed:30,
 
   })
 

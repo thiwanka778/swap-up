@@ -9,6 +9,7 @@ import Login from "./pages/Login/Login";
 import { useDispatch } from "react-redux";
 import { getScreenWidth } from "./redux/userSlice";
 import SignupAuth from "./protectedRoutes/SignupAuth";
+import SignUp2 from "./pages/SignUp2/SignUp2";
 
 function App() {
   const dispatch = useDispatch();
@@ -37,7 +38,8 @@ function App() {
             <Route path="login" element={<Login />} />
 
             <Route element={<SignupAuth />}>
-              <Route path="signup" element={<SignUp />} />
+              {/* <Route path="signup" element={<SignUp />} /> */}
+              <Route path="signup" element={<SignUp2/>}/>
             </Route>
           </Routes>
        
