@@ -20,7 +20,10 @@
   display:flex;
   justify-content: space-between;
   z-index:2;
+ 
 }
+
+
 
 .sidebar::-webkit-scrollbar {
     width: 8px;

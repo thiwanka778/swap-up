@@ -16,9 +16,14 @@ import Card from "../../components/Card/Card";
 import cardArray from "../../components/Card/cardArray";
 import { useTypewriter,Cursor } from "react-simple-typewriter";
 import SideBar from "../../components/SideBar/SideBar";
+import { useLocation } from 'react-router-dom';
+
 // import { useTypewriter } from 'react-typewriter-hook';
 
 const Home = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {screen}=useSelector((state)=>state.user);

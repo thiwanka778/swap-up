@@ -9,7 +9,6 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { getUserEmail } from "../../redux/userSlice";
-import SideBar from "../../components/SideBar/SideBar";
 
 
 
@@ -79,7 +78,7 @@ const SignUp2 = () => {
     const {userEmail,screen}=useSelector((state)=>state.user);
   const [gender, setGender] = React.useState("");
   const onChangeGender = (e) => {
-    console.log("radio checked", e.target.value);
+    // console.log("radio checked", e.target.value);
     setGender(e.target.value);
   };
 
@@ -89,15 +88,12 @@ const SignUp2 = () => {
     navigate("/")
   }
 
-  console.log("gender", gender);
+  
 
   return (
     <div className="sign-up2">
 
 
-<div style={{width:"100%"}}>
-<SideBar/>
-</div>
 
       <div className="main-signup-container">
 

@@ -22,8 +22,13 @@ import LoginIcon from '@mui/icons-material/Login';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import Divider from '@mui/material/Divider';
 import { Link } from "react-router-dom";
+import SideBar from "../SideBar/SideBar";
+import { CSSTransition } from "react-transition-group";
+import { useLocation } from "react-router-dom";
 
 const NavBar = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
 const {userEmail,screen}=useSelector((state)=>state.user)
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,6 +38,28 @@ const {userEmail,screen}=useSelector((state)=>state.user)
   const [validGmail, setValidGmail] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openUser = Boolean(anchorEl);
+  const [openSideBar,setOpenSideBar]=React.useState(()=>{
+    const localOpenSideBar=window.localStorage.getItem("openSideBar")
+    return localOpenSideBar?JSON.parse(localOpenSideBar):false;
+  });
+
+
+
+  const menuClick = () => {
+    setOpenSideBar((prevState) => {
+      const newValue = !prevState;
+      // console.log(newValue); // Check the value of openSideBar
+      return newValue;
+    });
+  };
+
+  React.useEffect(()=>{
+window.localStorage.setItem("openSideBar",JSON.stringify(openSideBar))
+  },[openSideBar])
+
+  
+  
+  
   
 
   const handleClickUser = (event) => {
@@ -93,7 +120,7 @@ if(userEmail===""){
       // google sign up firebase function
       signInWithPopup(auth, provider)
         .then((result) => {
-          console.log(result?.user?.email);
+          // console.log(result?.user?.email);
           if (result?.user?.email === email) {
             dispatch(getUserEmail(result?.user?.email));
             setOpen(false);
@@ -111,17 +138,25 @@ if(userEmail===""){
     }
   };
 
+
+
   return (
     <>
+
+    
+
+
+
     <div className='nav'>
+
 
         <img src={swaplogo} alt='swapup-logo' style={{width:"10vh",marginLeft:"1.5rem",marginRight:"1.5rem"}} />
 
-        <div style={{marginRight:"auto",cursor:"pointer"}}>
+    {currentPath!=="/" &&  <div style={{marginRight:"auto",cursor:"pointer"}} onClick={menuClick}>
           <MenuIcon style={{color:"white"}}/>
-        </div>
+        </div>}
         
-       {screen>=670 && <NavLink to="/" className="nav-text">Home</NavLink>}
+       {screen>=670 && <NavLink to="/" className="nav-text" style={{marginLeft:"auto"}}>Home</NavLink>}
       {screen>=670 &&  <p className="nav-text">About Us</p>}
        {screen>=670 && <p className="nav-text">Contact Us</p>}
      {screen>=436 && <button className="signup-btn" onClick={handleClickOpen} style={{marginRight:"1.5rem"}}>SIGN UP</button>}
@@ -267,6 +302,16 @@ if(userEmail===""){
         </Link> 
         <MenuItem onClick={handleCloseUser}><PowerSettingsNewIcon />&nbsp;&nbsp;Logout</MenuItem>
       </Menu>
+
+
+      {openSideBar && (
+  <div style={{ width: "100%" }}>
+   
+      <SideBar openSideBar={openSideBar} setOpenSideBar={setOpenSideBar} />
+  
+  </div>
+)}
+
         </>
   )
 }

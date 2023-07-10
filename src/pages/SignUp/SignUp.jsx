@@ -61,12 +61,12 @@ const SignUp = () => {
   const { userEmail, screen } = useSelector((state) => state.user);
   const [gender,setGender] = React.useState(1);
   const onChangeGender = (e) => {
-    console.log('radio checked', e.target.value);
+    // console.log('radio checked', e.target.value);
     setGender(e.target.value);
   };
 
   const onChangeChecked = (checkedValues) => {
-    console.log('checked = ', checkedValues);
+    // console.log('checked = ', checkedValues);
   };
 
   return (

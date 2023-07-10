@@ -4,17 +4,29 @@ import SideBarItem from "./SideBarItem";
 import sideBarData from "./sideBarData.js";
 import swaplogo from "../../assets/swaplogo.png"
 
-const SideBar = () => {
-  console.log(sideBarData);
+const SideBar = ({openSideBar,setOpenSideBar}) => {
+  
   const sidebaritemdisplay = sideBarData.map((item, index) => {
     return <SideBarItem key={index} item={item} />;
   });
 
+  const sideBarClose=()=>{
+    setOpenSideBar((prevState)=>{
+return !prevState;
+    })
+  };
+
+
+
+  React.useEffect(()=>{
+    window.localStorage.setItem("openSideBar",JSON.stringify(openSideBar))
+      },[openSideBar])
+
   return (
-  <div className="sidebar">
-    {/* <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",padding:"1rem 1rem 0 0"}}>
-    <i className="bi-x-circle" style={{fontSize:"1.4rem",cursor:"pointer"}}></i>
-    </div> */}
+  <div  className="sidebar">
+    <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",padding:"1rem 1rem 0 0"}}>
+    <i className="bi-x-circle" style={{fontSize:"1rem",cursor:"pointer"}} onClick={sideBarClose} ></i>
+    </div>
     <div style={{width:"100%",padding:"1rem",display:"flex",alignItems:"center",}}>
     <img src={swaplogo} style={{marginRight:"auto",width:"80px"}}/>
     <p style={{

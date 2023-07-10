@@ -132,7 +132,7 @@ const sideBarData = [
                       {
                         title: "Logout",
                         icon: "bi-box-arrow-right",
-                        path: "/logout",
+                        path: "/login",
                       },
                 ],
               },
