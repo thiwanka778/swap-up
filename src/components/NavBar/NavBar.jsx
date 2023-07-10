@@ -152,11 +152,11 @@ if(userEmail===""){
 
         <img src={swaplogo} alt='swapup-logo' style={{width:"10vh",marginLeft:"1.5rem",marginRight:"1.5rem"}} />
 
-    {currentPath!=="/" &&  <div style={{marginRight:"auto",cursor:"pointer"}} onClick={menuClick}>
+     <div style={{marginRight:"auto",cursor:"pointer"}} onClick={menuClick}>
           <MenuIcon style={{color:"white"}}/>
-        </div>}
+        </div>
         
-       {screen>=670 && <NavLink to="/" className="nav-text" style={{marginLeft:"auto"}}>Home</NavLink>}
+       {screen>=670 && <NavLink to="/" className="nav-text" >Home</NavLink>}
       {screen>=670 &&  <p className="nav-text">About Us</p>}
        {screen>=670 && <p className="nav-text">Contact Us</p>}
      {screen>=436 && <button className="signup-btn" onClick={handleClickOpen} style={{marginRight:"1.5rem"}}>SIGN UP</button>}
