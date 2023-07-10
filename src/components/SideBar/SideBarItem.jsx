@@ -38,7 +38,7 @@ const SideBarItem = (props) => {
   } else {
     return (
       <div className={open ? 'sidebar-main-item open' : 'sidebar-main-item'}>
-        <NavLink to={props.item?.path || '#'} className="sidebar-item">
+        <NavLink to={props.item?.path} className="sidebar-item">
           <span>
             <i
               style={{ fontSize: '1.2rem', textDecoration: 'none', color: 'white' }}
