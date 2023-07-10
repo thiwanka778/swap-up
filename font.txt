@@ -2,12 +2,14 @@ font-family: 'Poppins', sans-serif;
 
 font-family: 'Ubuntu', sans-serif;
 font-family: 'Roboto', sans-serif;
+font-family: 'Satisfy', cursive;
 
 
 
 fontFamily:" 'Poppins', sans-serif"
 fontFamily: "'Ubuntu', sans-serif"
 fontFamily: "'Roboto', sans-serif"
+fontFamily: "'Satisfy', cursive"
 
 
 <Input    

@@ -12,6 +12,16 @@ import { getUserEmail } from "../../redux/userSlice";
 import { useDispatch,useSelector } from "react-redux";
 import { Input } from "antd";
 import { NavLink } from "react-router-dom";
+import Avatar from '@mui/material/Avatar';
+import MenuIcon from '@mui/icons-material/Menu';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import PersonIcon from '@mui/icons-material/Person';
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import LoginIcon from '@mui/icons-material/Login';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import Divider from '@mui/material/Divider';
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
 const {userEmail,screen}=useSelector((state)=>state.user)
@@ -21,8 +31,19 @@ const {userEmail,screen}=useSelector((state)=>state.user)
   const provider = new GoogleAuthProvider();
   const [email, setEmail] = useState("");
   const [validGmail, setValidGmail] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openUser = Boolean(anchorEl);
+  
+
+  const handleClickUser = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseUser = () => {
+    setAnchorEl(null);
+  };
 
   const handleClickOpen = () => {
+    setAnchorEl(null);
 if(userEmail===""){
   setOpen(true);
 }else if(userEmail!==""){
@@ -94,12 +115,34 @@ if(userEmail===""){
     <>
     <div className='nav'>
 
-        <img src={swaplogo} alt='swapup-logo' style={{marginRight:"auto",width:"10vh",marginLeft:"1.5rem"}} />
-        <NavLink to="/" className="nav-text">Home</NavLink>
-        <p className="nav-text">About Us</p>
-        <p className="nav-text">Contact Us</p>
-      <button className="signup-btn" onClick={handleClickOpen} style={{marginRight:"1.5rem"}}>SIGN UP</button>
-        <button className="login-btn" onClick={()=>navigate("/login")} style={{marginRight:"1.5rem"}}>LOGIN</button>
+        <img src={swaplogo} alt='swapup-logo' style={{width:"10vh",marginLeft:"1.5rem",marginRight:"1.5rem"}} />
+
+        <div style={{marginRight:"auto",cursor:"pointer"}}>
+          <MenuIcon style={{color:"white"}}/>
+        </div>
+        
+       {screen>=670 && <NavLink to="/" className="nav-text">Home</NavLink>}
+      {screen>=670 &&  <p className="nav-text">About Us</p>}
+       {screen>=670 && <p className="nav-text">Contact Us</p>}
+     {screen>=436 && <button className="signup-btn" onClick={handleClickOpen} style={{marginRight:"1.5rem"}}>SIGN UP</button>}
+       {/* {screen>=436 && <button className="login-btn" onClick={()=>navigate("/login")} style={{marginRight:"1.5rem"}}>LOGIN</button>} */}
+
+     
+       
+       {/* {screen<670 && <div style={{marginRight:"1.5rem",cursor:"pointer"}}>
+          <MenuIcon style={{color:"white"}}/>
+        </div>} */}
+
+        <div style={{marginRight:"1.5rem",cursor:"pointer"}}  
+            id="basic-button"
+            aria-controls={openUser ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={openUser ? 'true' : undefined}
+         onClick={handleClickUser}>
+        <Avatar alt="" src="#" />
+        </div>
+
+
         </div>
 
 
@@ -205,6 +248,25 @@ if(userEmail===""){
           },
         }}
       />
+
+
+<Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={openUser}
+        onClose={handleCloseUser}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+          <MenuItem onClick={handleCloseUser}><PersonIcon/>&nbsp;&nbsp;Thiwanka Udumulla</MenuItem>
+          <Divider />
+        <MenuItem  onClick={handleClickOpen} ><AppRegistrationIcon/>&nbsp;&nbsp;Sign Up</MenuItem>
+       <Link to="/login" style={{textDecoration:"none",color:"black"}}>
+       <MenuItem onClick={handleCloseUser}><LoginIcon/>&nbsp;&nbsp;Login</MenuItem>
+        </Link> 
+        <MenuItem onClick={handleCloseUser}><PowerSettingsNewIcon />&nbsp;&nbsp;Logout</MenuItem>
+      </Menu>
         </>
   )
 }

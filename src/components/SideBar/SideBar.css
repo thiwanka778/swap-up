@@ -1,0 +1,95 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    text-decoration: none;
+}
+
+
+.sidebar{
+    width: 260px;
+  height: 100vh;
+  background-color: #2c0457;
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  flex-direction: column;
+  display:flex;
+  justify-content: space-between;
+  z-index:2;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .sidebar::-webkit-scrollbar-track {
+    background-color: #2c0457;
+  }
+  
+  .sidebar::-webkit-scrollbar-thumb {
+    background-color: #6c3f91;
+  }
+  
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: #9367a7;
+  }
+
+.sidebar-main-item{
+    width:100%;
+  
+}
+
+.sidebar-item{
+    width:100%;
+    display:flex;
+    align-items: center;
+    padding:1rem;
+    transition: background-color  0.4s;
+    
+}
+
+.sidebar-item:hover{
+background-color: #0e15e8;
+}
+.sidebar-item.active{
+    background-color: #0e15e8;
+}
+
+.item-title{
+    margin-right:auto;
+    margin-left:1rem;
+    letter-spacing: 0.1rem;
+}
+.toggle-btn{
+    cursor: pointer;
+    transition: transform 0.6s;
+}
+
+.sidebar-main-item.open > .sidebar-item .toggle-btn  {
+    transform: rotate(180deg);
+}
+
+
+.side-bar-content{
+    height:0;
+    overflow: hidden;
+    background-color: rgba(255,255,255,0.2);
+   
+}
+.sidebar-main-item.open > .side-bar-content{
+    height:auto;
+    margin:1rem;
+    border-radius: 8px;
+    
+}
+
+
+
+
+
+
+

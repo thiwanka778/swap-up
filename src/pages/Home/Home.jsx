@@ -15,6 +15,7 @@ import Slider from "../../components/Slider/Slider";
 import Card from "../../components/Card/Card";
 import cardArray from "../../components/Card/cardArray";
 import { useTypewriter,Cursor } from "react-simple-typewriter";
+import SideBar from "../../components/SideBar/SideBar";
 // import { useTypewriter } from 'react-typewriter-hook';
 
 const Home = () => {
@@ -35,7 +36,7 @@ const Home = () => {
      padding:"1rem",
   }
 
-  console.log(cardArray);
+  // console.log(cardArray);
   const cardDisplay = cardArray.map((item) => {
     return <Card key={item.id} {...item} />;
   });
@@ -61,7 +62,7 @@ const Home = () => {
   })
 
   
-console.log(typeEffect)
+// console.log(typeEffect)
   return (
     <>
       <div className="home">
@@ -79,6 +80,9 @@ console.log(typeEffect)
         >
           {cardDisplay}
         </div>
+
+
+
       </div>
     </>
   );

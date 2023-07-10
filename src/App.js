@@ -41,6 +41,8 @@ function App() {
               {/* <Route path="signup" element={<SignUp />} /> */}
               <Route path="signup" element={<SignUp2/>}/>
             </Route>
+
+            
           </Routes>
        
 

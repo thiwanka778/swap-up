@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   screen:window.innerWidth,
-  userEmail:"",
+  userEmail:"bu",
 };
 
 const userSlice = createSlice({
