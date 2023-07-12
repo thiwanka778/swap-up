@@ -8,7 +8,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import WarningToast from "../../components/warningToast/WarningToast";
-import { getUserEmail } from "../../redux/userSlice";
+import { getUserEmail, userLogout } from "../../redux/userSlice";
 import { useDispatch,useSelector } from "react-redux";
 import { Input } from "antd";
 import { NavLink } from "react-router-dom";
@@ -27,9 +27,10 @@ import { CSSTransition } from "react-transition-group";
 import { useLocation } from "react-router-dom";
 
 const NavBar = () => {
+ 
   const location = useLocation();
   const currentPath = location.pathname;
-const {userEmail,screen}=useSelector((state)=>state.user)
+const {userEmail,screen,user}=useSelector((state)=>state.user)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -68,6 +69,11 @@ window.localStorage.setItem("openSideBar",JSON.stringify(openSideBar))
   const handleCloseUser = () => {
     setAnchorEl(null);
   };
+
+  const logoutBtnClick=()=>{
+    setAnchorEl(null);
+    dispatch(userLogout());
+  }
 
   const handleClickOpen = () => {
     setAnchorEl(null);
@@ -150,11 +156,11 @@ if(userEmail===""){
     <div className='nav'>
 
 
-        <img src={swaplogo} alt='swapup-logo' style={{width:"10vh",marginLeft:"1.5rem",marginRight:"1.5rem"}} />
+        <img src={swaplogo} alt='swapup-logo' style={{width:"10vh",marginLeft:"1.5rem",marginRight:user?"1.5rem":"auto"}} />
 
-     <div style={{marginRight:"auto",cursor:"pointer"}} onClick={menuClick}>
+    {user && <div style={{marginRight:"auto",cursor:"pointer"}} onClick={menuClick}>
           <MenuIcon style={{color:"white"}}/>
-        </div>
+        </div>}
         
        {screen>=670 && <NavLink to="/" className="nav-text" >Home</NavLink>}
       {screen>=670 &&  <p className="nav-text">About Us</p>}
@@ -300,11 +306,11 @@ if(userEmail===""){
        <Link to="/login" style={{textDecoration:"none",color:"black"}}>
        <MenuItem onClick={handleCloseUser}><LoginIcon/>&nbsp;&nbsp;Login</MenuItem>
         </Link> 
-        <MenuItem onClick={handleCloseUser}><PowerSettingsNewIcon />&nbsp;&nbsp;Logout</MenuItem>
+        <MenuItem onClick={logoutBtnClick}><PowerSettingsNewIcon />&nbsp;&nbsp;Logout</MenuItem>
       </Menu>
 
 
-      {openSideBar && (
+      { (openSideBar && user) && (
   <div style={{ width: "100%" }}>
    
       <SideBar openSideBar={openSideBar} setOpenSideBar={setOpenSideBar} />

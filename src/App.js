@@ -6,13 +6,15 @@ import Footer from "./components/Footer/Footer";
 import { Routes, Route } from "react-router-dom";
 import SignUp from "./pages/SignUp/SignUp";
 import Login from "./pages/Login/Login";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getScreenWidth } from "./redux/userSlice";
 import SignupAuth from "./protectedRoutes/SignupAuth";
 import SignUp2 from "./pages/SignUp2/SignUp2";
+import AuthenticatedHome from "./pages/AuthenticatedHome/AuthenticatedHome";
 
 function App() {
   const dispatch = useDispatch();
+  const {user,screen}=useSelector((state)=>state.user);
   // const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
   React.useEffect(() => {
     const handleResize = () => {
@@ -33,7 +35,9 @@ function App() {
       <NavBar />
       
           <Routes>
-            <Route path="/" element={<Home />} />
+
+          {!user ?   <Route path="/" element={<Home />} />:
+            <Route path="/" element={<AuthenticatedHome/>}/>}
 
             <Route path="login" element={<Login />} />
 

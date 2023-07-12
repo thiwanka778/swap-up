@@ -1,0 +1,17 @@
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    text-decoration: none;
+}
+
+
+
+
+.authenticated-home{
+    width:100%;
+    padding-top: 12vh;
+    min-height: 95vh; 
+}

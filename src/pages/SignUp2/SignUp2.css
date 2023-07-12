@@ -25,7 +25,9 @@
 }
 .input-box-container{
     width:440px;
-    background-color: #00425A;
+    /* background-color: #00425A; */
+    background-color:transparent;
+    backdrop-filter: blur(100px);
     display: flex;
     padding:0 2rem 2rem 2rem;
     flex-direction: column;
