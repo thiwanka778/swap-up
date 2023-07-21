@@ -11,6 +11,7 @@ import { getScreenWidth } from "./redux/userSlice";
 import SignupAuth from "./protectedRoutes/SignupAuth";
 import SignUp2 from "./pages/SignUp2/SignUp2";
 import AuthenticatedHome from "./pages/AuthenticatedHome/AuthenticatedHome";
+import LoginAuth from "./protectedRoutes/LoginAuth";
 
 function App() {
   const dispatch = useDispatch();
@@ -39,7 +40,11 @@ function App() {
           {!user ?   <Route path="/" element={<Home />} />:
             <Route path="/" element={<AuthenticatedHome/>}/>}
 
+            <Route element={<LoginAuth/>}>
             <Route path="login" element={<Login />} />
+            </Route>
+
+            
 
             <Route element={<SignupAuth />}>
               {/* <Route path="signup" element={<SignUp />} /> */}

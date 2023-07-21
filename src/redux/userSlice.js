@@ -5,7 +5,7 @@ const localUser=window.localStorage.getItem("user");
 
 const initialState = {
   screen:window.innerWidth,
-  userEmail:"thiwanka@gmail.com",
+  userEmail:"",
   user:localUser?JSON.parse(localUser):null,
 };
 

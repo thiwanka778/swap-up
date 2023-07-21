@@ -156,7 +156,7 @@ if(userEmail===""){
     <div className='nav'>
 
 
-        <img src={swaplogo} alt='swapup-logo' style={{width:"10vh",marginLeft:"1.5rem",marginRight:user?"1.5rem":"auto"}} />
+        <img src={swaplogo} alt='swapup-logo' style={{width:"8vh",marginLeft:"1.5rem",marginRight:user?"1.5rem":"auto"}} />
 
     {user && <div style={{marginRight:"auto",cursor:"pointer"}} onClick={menuClick}>
           <MenuIcon style={{color:"white"}}/>
@@ -165,8 +165,8 @@ if(userEmail===""){
        {screen>=670 && <NavLink to="/" className="nav-text" >Home</NavLink>}
       {screen>=670 &&  <p className="nav-text">About Us</p>}
        {screen>=670 && <p className="nav-text">Contact Us</p>}
-     {screen>=436 && <button className="signup-btn" onClick={handleClickOpen} style={{marginRight:"1.5rem"}}>SIGN UP</button>}
-       {/* {screen>=436 && <button className="login-btn" onClick={()=>navigate("/login")} style={{marginRight:"1.5rem"}}>LOGIN</button>} */}
+     {!user && <button className="signup-btn" onClick={handleClickOpen} style={{marginRight:"1.5rem"}}>SIGN UP</button>}
+       {!user && <button className="login-btn" onClick={()=>navigate("/login")} style={{marginRight:"1.5rem"}}>LOGIN</button>}
 
      
        
@@ -174,14 +174,14 @@ if(userEmail===""){
           <MenuIcon style={{color:"white"}}/>
         </div>} */}
 
-        <div style={{marginRight:"1.5rem",cursor:"pointer"}}  
+       {user && <div style={{marginRight:"1.5rem",cursor:"pointer"}}  
             id="basic-button"
             aria-controls={openUser ? 'basic-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={openUser ? 'true' : undefined}
          onClick={handleClickUser}>
         <Avatar alt="" src="#" />
-        </div>
+        </div>}
 
 
         </div>
@@ -302,10 +302,12 @@ if(userEmail===""){
       >
           <MenuItem onClick={handleCloseUser}><PersonIcon/>&nbsp;&nbsp;Thiwanka Udumulla</MenuItem>
           <Divider />
-        <MenuItem  onClick={handleClickOpen} ><AppRegistrationIcon/>&nbsp;&nbsp;Sign Up</MenuItem>
-       <Link to="/login" style={{textDecoration:"none",color:"black"}}>
+       {!user && <MenuItem  onClick={handleClickOpen} ><AppRegistrationIcon/>&nbsp;&nbsp;Sign Up</MenuItem>}
+
+     {!user &&  <Link to="/login" style={{textDecoration:"none",color:"black"}}>
        <MenuItem onClick={handleCloseUser}><LoginIcon/>&nbsp;&nbsp;Login</MenuItem>
-        </Link> 
+        </Link> }
+
         <MenuItem onClick={logoutBtnClick}><PowerSettingsNewIcon />&nbsp;&nbsp;Logout</MenuItem>
       </Menu>
 

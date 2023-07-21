@@ -3,6 +3,8 @@ font-family: 'Poppins', sans-serif;
 font-family: 'Ubuntu', sans-serif;
 font-family: 'Roboto', sans-serif;
 font-family: 'Satisfy', cursive;
+font-family: 'Montserrat', sans-serif;
+font-family: 'Inter', sans-serif;
 
 
 
@@ -10,6 +12,8 @@ fontFamily:" 'Poppins', sans-serif"
 fontFamily: "'Ubuntu', sans-serif"
 fontFamily: "'Roboto', sans-serif"
 fontFamily: "'Satisfy', cursive"
+fontFamily: "'Montserrat', sans-serif"
+fontFamily: "'Inter', sans-serif"
 
 
 <Input    
