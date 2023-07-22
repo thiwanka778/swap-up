@@ -18,8 +18,6 @@ fontFamily: "'Inter', sans-serif"
 
 <Input    
         placeholder="Enter your gmail"
-        value={email}
-        onChange={handleEmailChange}
         style={{
           borderRadius: '4px',
           border: '1px solid #d9d9d9',

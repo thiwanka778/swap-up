@@ -12,6 +12,7 @@ import SignupAuth from "./protectedRoutes/SignupAuth";
 import SignUp2 from "./pages/SignUp2/SignUp2";
 import AuthenticatedHome from "./pages/AuthenticatedHome/AuthenticatedHome";
 import LoginAuth from "./protectedRoutes/LoginAuth";
+import QualityCheck from "./pages/user/QualityCheck/QualityCheck";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ function App() {
           {!user ?   <Route path="/" element={<Home />} />:
             <Route path="/" element={<AuthenticatedHome/>}/>}
 
+
             <Route element={<LoginAuth/>}>
             <Route path="login" element={<Login />} />
             </Route>
@@ -50,6 +52,8 @@ function App() {
               {/* <Route path="signup" element={<SignUp />} /> */}
               <Route path="signup" element={<SignUp2/>}/>
             </Route>
+
+            <Route path="quality-check" element={<QualityCheck/>}/>
 
             
           </Routes>

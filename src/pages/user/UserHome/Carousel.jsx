@@ -137,7 +137,7 @@ const Carousel = () => {
     breakpoints={{
       // When window width is >= 320px (small devices)
 
-      250:{
+      0:{
         slidesPerView: 1,
       },
       588: {
