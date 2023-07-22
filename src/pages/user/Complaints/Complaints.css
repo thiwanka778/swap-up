@@ -1,0 +1,124 @@
+.complaints{
+    width:100%;
+    min-height: 95vh;
+    padding-top: 12vh;
+    padding-left:1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+}
+
+.appeal-button {
+    background-color: #4CAF50; /* Green background color */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    font-size:1rem; /* Font size */
+    cursor: pointer; /* Cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition for background color change */
+  }
+  .appeal-button[disabled] {
+    background-color: #e0e0e0; /* Very light green for disabled button */
+    cursor: not-allowed; /* Cursor indicating that the button is not allowed */
+  }
+  
+  /* CSS for the button on hover (for enabled button) */
+  .appeal-button:not([disabled]):hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+  }
+
+  .new-swap-button {
+    background-color: #ff9900; /* Orange background color */
+    color: #ffffff; /* White text color */
+    padding: 10px 20px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Default cursor on hover */
+    font-family: 'Inter', sans-serif; /* Use 'Inter' font-family */
+    transition: all 0.3s ease; /* Smooth transition for background color change */
+  }
+  
+  /* CSS for the button on hover */
+  .new-swap-button:hover {
+    background-color: #ff8c00; /* Slightly darker orange on hover */
+  }
+  .new-swap-button:active{
+    transform: scale(0.7);
+  }
+ 
+
+  input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    background-color:#3890f5; /* Orange background color */
+    color: #ffffff; /* White text color */
+    padding: 6px 12px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Default cursor on hover */
+    font-family: 'Inter', sans-serif; /* Use 'Inter' font-family */
+    transition: all 0.3s ease; 
+    margin-top: 0.4rem;
+}
+
+.custom-file-upload:active{
+    transform: scale(0.7);
+  }
+
+  .q-submit-btn{
+    background-color: #ff9900; /* Orange background color */
+    color: #ffffff; /* White text color */
+    padding: 8px 16px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Default cursor on hover */
+    font-family: 'Inter', sans-serif; /* Use 'Inter' font-family */
+    transition: all 0.3s ease;
+  }
+  .q-submit-btn:active{
+    transform: scale(0.7);
+  }
+
+  .q-cancel-btn{
+    background-color: #f22805; /* Orange background color */
+    color: #ffffff; /* White text color */
+    padding: 8px 16px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Default cursor on hover */
+    font-family: 'Inter', sans-serif; /* Use 'Inter' font-family */
+    transition: all 0.3s ease;
+  }
+  .q-cancel-btn:active{
+    transform: scale(0.7);
+  }
+
+  .q-upload-btn{
+    background-color: #0cbf06; /* Orange background color */
+    color: #ffffff; /* White text color */
+    padding: 8px 16px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Default cursor on hover */
+    font-family: 'Inter', sans-serif; /* Use 'Inter' font-family */
+    transition: all 0.3s ease;
+  }
+  .q-upload-btn:active{
+    transform: scale(0.7);
+  }
+
+  .q-upload-btn[disabled] {
+    background-color: #7dfa7f; /* Very light green for disabled button */
+    cursor: not-allowed; /* Cursor indicating that the button is not allowed */
+  }
+
+
+

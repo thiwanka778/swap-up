@@ -1,5 +1,5 @@
 import React from "react";
-import "./QualityCheck.css";
+import "./Swap.css";
 import { Space, Table, Tag } from "antd";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -35,229 +35,368 @@ const options = [
 ];
 
 const data = [
-  {
-    key: "1",
-    itemId: "501",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-  {
-    key: "2",
-    itemId: "502",
-    dateSubmitted: "03/06/2023",
-    itemName: "Jeans",
-    status: "Rejected",
-  },
-  {
-    key: "3",
-    itemId: "503",
-    dateSubmitted: "04/06/2023",
-    itemName: "Sweater",
-    status: "In progress",
-  },
-  {
-    key: "4",
-    itemId: "504",
-    dateSubmitted: "05/06/2023",
-    itemName: "Jacket",
-    status: "Approved",
-  },
-  {
-    key: "5",
-    itemId: "505",
-    dateSubmitted: "06/06/2023",
-    itemName: "Shoes",
-    status: "Rejected",
-  },
-  // More objects...
-  {
-    key: "26",
-    itemId: "526",
-    dateSubmitted: "27/06/2023",
-    itemName: "Shorts",
-    status: "In progress",
-  },
-  {
-    key: "27",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "28",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "29",
-    itemId: "529",
-    dateSubmitted: "30/06/2023",
-    itemName: "Hat",
-    status: "In progress",
-  },
-  {
-    key: "30",
-    itemId: "530",
-    dateSubmitted: "01/07/2023",
-    itemName: "Socks",
-    status: "Approved",
-  },
-  {
-    key: "31",
-    itemId: "501",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-  {
-    key: "32",
-    itemId: "502",
-    dateSubmitted: "03/06/2023",
-    itemName: "Jeans",
-    status: "Rejected",
-  },
-  {
-    key: "33",
-    itemId: "503",
-    dateSubmitted: "04/06/2023",
-    itemName: "Sweater",
-    status: "In progress",
-  },
-  {
-    key: "34",
-    itemId: "504",
-    dateSubmitted: "05/06/2023",
-    itemName: "Jacket",
-    status: "Approved",
-  },
-  {
-    key: "35",
-    itemId: "505",
-    dateSubmitted: "06/06/2023",
-    itemName: "Shoes",
-    status: "Rejected",
-  },
-  // More objects...
-  {
-    key: "36",
-    itemId: "526",
-    dateSubmitted: "27/06/2023",
-    itemName: "Shorts",
-    status: "In progress",
-  },
-  {
-    key: "37",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "38",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "45",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "46",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "47",
-    itemId: "529",
-    dateSubmitted: "30/06/2023",
-    itemName: "Hat",
-    status: "In progress",
-  },
-  {
-    key: "48",
-    itemId: "530",
-    dateSubmitted: "01/07/2023",
-    itemName: "Socks",
-    status: "Approved",
-  },
-  {
-    key: "49",
-    itemId: "531",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-];
-
-
-
-const QualityCheck = () => {
-
-  const columns = [
     {
-      title: "Item Id",
-      dataIndex: "itemId",
-      key: "itemId",
-    },
-    {
-      title: "Date Submitted",
-      dataIndex: "dateSubmitted",
-      key: "dateSubmitted",
-    },
-    {
-      title: "Item Name",
-      dataIndex: "itemName",
-      key: "itemName",
-    },
-    {
-      title: "Status",
-      key: "status",
-      render: (_, record) => {
-        let color;
-        switch (record.status) {
-          case "Approved":
-            color = "#04ba25";
-            break;
-          case "Rejected":
-            color = "#fc1303";
-            break;
-          case "In progress":
-            color = "blue";
-            break;
-          default:
-            color = "black"; // Fallback color for any other status
-            break;
-        }
-  
-        return <span style={{ color,fontWeight:"bold",fontSize:"1rem" }}>{record.status}</span>;
+        key: "1",
+        id: "501",
+        dateOfSwap: "02/06/2023",
+        itemName: "T-shirt",
+        status: "Swap",
       },
-    },
-  
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <button
-        onClick={()=>appealClick(record)}
-          className="appeal-button"
-          disabled={record.status == "Rejected" ? false : true}
-        >
-          Appeal
-        </button>
-      ),
-    },
+      {
+        key: "2",
+        id: "502",
+        dateOfSwap: "03/06/2023",
+        itemName: "Jeans",
+        status: "Swap",
+      },
+      {
+        key: "3",
+        id: "503",
+        dateOfSwap: "04/06/2023",
+        itemName: "Sweater",
+        status: "Swap",
+      },
+      {
+        key: "4",
+        id: "504",
+        dateOfSwap: "05/06/2023",
+        itemName: "Jacket",
+        status: "Swap",
+      },
+      {
+        key: "5",
+        id: "505",
+        dateOfSwap: "06/06/2023",
+        itemName: "Shoes",
+        status: "Swap",
+      },
+
+      {
+        key: "6",
+        id: "501",
+        dateOfSwap: "02/06/2023",
+        itemName: "T-shirt",
+        status: "Swap",
+      },
+      {
+        key: "7",
+        id: "502",
+        dateOfSwap: "03/06/2023",
+        itemName: "Jeans",
+        status: "Swap",
+      },
+      {
+        key: "8",
+        id: "503",
+        dateOfSwap: "04/06/2023",
+        itemName: "Sweater",
+        status: "Swap",
+      },
+      {
+        key: "9",
+        id: "504",
+        dateOfSwap: "05/06/2023",
+        itemName: "Jacket",
+        status: "Swap",
+      },
+      {
+        key: "10",
+        id: "505",
+        dateOfSwap: "06/06/2023",
+        itemName: "Shoes",
+        status: "Swap",
+      },
+      {
+        key: "6",
+        id: "506",
+        dateOfSwap: "07/06/2023",
+        itemName: "Hat",
+        status: "Swap",
+      },
+      // Continue with more objects...
+      {
+        key: "51",
+        id: "551",
+        dateOfSwap: "22/07/2023",
+        itemName: "Skirt",
+        status: "Swap",
+      },
+      {
+        key: "52",
+        id: "552",
+        dateOfSwap: "23/07/2023",
+        itemName: "Dress",
+        status: "Swap",
+      },
+      {
+        key: "53",
+        id: "553",
+        dateOfSwap: "24/07/2023",
+        itemName: "Hat",
+        status: "Swap",
+      },
+      {
+        key: "54",
+        id: "554",
+        dateOfSwap: "25/07/2023",
+        itemName: "Socks",
+        status: "Swap",
+      },
+      {
+        key: "55",
+        id: "555",
+        dateOfSwap: "26/07/2023",
+        itemName: "Shorts",
+        status: "Swap",
+      },
+
+      {
+        key: "56",
+        id: "551",
+        dateOfSwap: "22/07/2023",
+        itemName: "Skirt",
+        status: "Swap",
+      },
+      {
+        key: "57",
+        id: "552",
+        dateOfSwap: "23/07/2023",
+        itemName: "Dress",
+        status: "Swap",
+      },
+      {
+        key: "58",
+        id: "553",
+        dateOfSwap: "24/07/2023",
+        itemName: "Hat",
+        status: "Swap",
+      },
+      {
+        key: "59",
+        id: "554",
+        dateOfSwap: "25/07/2023",
+        itemName: "Socks",
+        status: "Swap",
+      },
+      {
+        key: "60",
+        id: "555",
+        dateOfSwap: "26/07/2023",
+        itemName: "Shorts",
+        status: "Swap",
+      },
+
+      {
+        key: "61",
+        id: "551",
+        dateOfSwap: "22/07/2023",
+        itemName: "Skirt",
+        status: "Swap",
+      },
+      {
+        key: "62",
+        id: "552",
+        dateOfSwap: "23/07/2023",
+        itemName: "Dress",
+        status: "Swap",
+      },
+      {
+        key: "63",
+        id: "553",
+        dateOfSwap: "24/07/2023",
+        itemName: "Hat",
+        status: "Swap",
+      },
+      {
+        key: "64",
+        id: "554",
+        dateOfSwap: "25/07/2023",
+        itemName: "Socks",
+        status: "Swap",
+      },
+      {
+        key: "65",
+        id: "555",
+        dateOfSwap: "26/07/2023",
+        itemName: "Shorts",
+        status: "Swap",
+      },
+
+      {
+        key: "71",
+        id: "551",
+        dateOfSwap: "22/07/2023",
+        itemName: "Skirt",
+        status: "Swap",
+      },
+      {
+        key: "72",
+        id: "552",
+        dateOfSwap: "23/07/2023",
+        itemName: "Dress",
+        status: "Swap",
+      },
+      {
+        key: "73",
+        id: "553",
+        dateOfSwap: "24/07/2023",
+        itemName: "Hat",
+        status: "Swap",
+      },
+      {
+        key: "74",
+        id: "554",
+        dateOfSwap: "25/07/2023",
+        itemName: "Socks",
+        status: "Swap",
+      },
+      {
+        key: "75",
+        id: "555",
+        dateOfSwap: "26/07/2023",
+        itemName: "Shorts",
+        status: "Swap",
+      },
+
+      {
+        key: "81",
+        id: "551",
+        dateOfSwap: "22/07/2023",
+        itemName: "Skirt",
+        status: "Swap",
+      },
+      {
+        key: "82",
+        id: "552",
+        dateOfSwap: "23/07/2023",
+        itemName: "Dress",
+        status: "Swap",
+      },
+      {
+        key: "83",
+        id: "553",
+        dateOfSwap: "24/07/2023",
+        itemName: "Hat",
+        status: "Swap",
+      },
+      {
+        key: "84",
+        id: "554",
+        dateOfSwap: "25/07/2023",
+        itemName: "Socks",
+        status: "Swap",
+      },
+      {
+        key: "85",
+        id: "555",
+        dateOfSwap: "26/07/2023",
+        itemName: "Shorts",
+        status: "Swap",
+      },
+
+      {
+        key: "91",
+        id: "551",
+        dateOfSwap: "22/07/2023",
+        itemName: "Skirt",
+        status: "Swap",
+      },
+      {
+        key: "92",
+        id: "552",
+        dateOfSwap: "23/07/2023",
+        itemName: "Dress",
+        status: "Swap",
+      },
+      {
+        key: "93",
+        id: "553",
+        dateOfSwap: "24/07/2023",
+        itemName: "Hat",
+        status: "Swap",
+      },
+      {
+        key: "94",
+        id: "554",
+        dateOfSwap: "25/07/2023",
+        itemName: "Socks",
+        status: "Swap",
+      },
+      {
+        key: "95",
+        id: "555",
+        dateOfSwap: "26/07/2023",
+        itemName: "Shorts",
+        status: "Swap",
+      },
+      {
+        key: "96",
+        id: "555",
+        dateOfSwap: "26/07/2023",
+        itemName: "Shorts",
+        status: "Swap",
+      },
+   
   ];
+
+
+
+const Swap = () => {
+
+    const columns = [
+        {
+          title: "ID",
+          dataIndex: "id",
+          key: "id",
+        },
+        {
+          title: "Date of Swap",
+          dataIndex: "dateOfSwap",
+          key: "dateOfSwap",
+        },
+        {
+          title: "Item Name",
+          dataIndex: "itemName",
+          key: "itemName",
+        },
+        {
+          title: "Status",
+          key: "status",
+          render: (_, record) => {
+            let color;
+            switch (record.status) {
+              case "Swap":
+                color = "#04ba25";
+                break;
+              case "Rejected":
+                color = "red";
+                break;
+              case "In progress":
+                color = "blue";
+                break;
+              default:
+                color = "black"; // Fallback color for any other status
+                break;
+            }
+      
+            return <span style={{ color,fontWeight:"bold",fontSize:"1rem" }}>{record.status}</span>;
+          },
+        },
+      
+        // {
+        //   title: "Action",
+        //   key: "action",
+        //   render: (_, record) => (
+        //     <button
+        //     onClick={()=>appealClick(record)}
+        //       className="appeal-button"
+        //       disabled={record.status == "Rejected" ? false : true}
+        //     >
+        //       Appeal
+        //     </button>
+        //   ),
+        // },
+      ];
   const storage = getStorage();
   const itemsPerPage = 10;
   const [totalPages, setTotalPages] = React.useState(0);
@@ -422,18 +561,32 @@ const QualityCheck = () => {
 
   return (
     <>
-      <div className="q-check">
-        <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center",marginTop:"2rem"  }}>
+      <div className="swap">
+        <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center" }}>
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
               color: "#00425A",
               fontSize: "1.5rem",
               fontWeight: "bold",
+              marginTop: "2rem",
+            }}
+          >
+            Swap
+          </p>
+        </div>
+
+        <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center" }}>
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              color: "#00425A",
+              fontSize: "1.2rem",
+              fontWeight: "bold",
               marginTop: "1rem",
             }}
           >
-            Quality Check
+       Submit the item you want to swap
           </p>
         </div>
 
@@ -446,9 +599,9 @@ const QualityCheck = () => {
             marginTop: "2rem",
           }}
         >
-          {/* <button className="new-swap-button" onClick={showModal}>
+          <button className="new-swap-button" onClick={showModal}>
             New Swap
-          </button> */}
+          </button>
         </div>
 
         <div style={{ marginTop: "2rem", width: "100%", overflowX: "auto" }}>
@@ -468,7 +621,7 @@ const QualityCheck = () => {
             marginTop: "1rem",
           }}
         >
-           {displayItems?.length>1 &&  <div>
+         {displayItems?.length>1 &&  <div>
             from {from} to {to} out of {data?.length} item{data?.length==1?"":"s"}
           </div>}
 
@@ -508,7 +661,7 @@ const QualityCheck = () => {
 
       <Modal
         title={<h2 style={{color:"#00425A",
-        fontSize:"1.5rem",marginBottom:"1rem"}}>Submit the item you want to check quality</h2>}
+        fontSize:"1.5rem",marginBottom:"1rem"}}>Submit the item you want to swap</h2>}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -629,4 +782,4 @@ return (
   );
 };
 
-export default QualityCheck;
+export default Swap;

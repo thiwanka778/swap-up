@@ -1,5 +1,5 @@
 import React from "react";
-import "./QualityCheck.css";
+import "./Complaints.css";
 import { Space, Table, Tag } from "antd";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -35,190 +35,85 @@ const options = [
 ];
 
 const data = [
-  {
-    key: "1",
-    itemId: "501",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-  {
-    key: "2",
-    itemId: "502",
-    dateSubmitted: "03/06/2023",
-    itemName: "Jeans",
-    status: "Rejected",
-  },
-  {
-    key: "3",
-    itemId: "503",
-    dateSubmitted: "04/06/2023",
-    itemName: "Sweater",
-    status: "In progress",
-  },
-  {
-    key: "4",
-    itemId: "504",
-    dateSubmitted: "05/06/2023",
-    itemName: "Jacket",
-    status: "Approved",
-  },
-  {
-    key: "5",
-    itemId: "505",
-    dateSubmitted: "06/06/2023",
-    itemName: "Shoes",
-    status: "Rejected",
-  },
-  // More objects...
-  {
-    key: "26",
-    itemId: "526",
-    dateSubmitted: "27/06/2023",
-    itemName: "Shorts",
-    status: "In progress",
-  },
-  {
-    key: "27",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "28",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "29",
-    itemId: "529",
-    dateSubmitted: "30/06/2023",
-    itemName: "Hat",
-    status: "In progress",
-  },
-  {
-    key: "30",
-    itemId: "530",
-    dateSubmitted: "01/07/2023",
-    itemName: "Socks",
-    status: "Approved",
-  },
-  {
-    key: "31",
-    itemId: "501",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-  {
-    key: "32",
-    itemId: "502",
-    dateSubmitted: "03/06/2023",
-    itemName: "Jeans",
-    status: "Rejected",
-  },
-  {
-    key: "33",
-    itemId: "503",
-    dateSubmitted: "04/06/2023",
-    itemName: "Sweater",
-    status: "In progress",
-  },
-  {
-    key: "34",
-    itemId: "504",
-    dateSubmitted: "05/06/2023",
-    itemName: "Jacket",
-    status: "Approved",
-  },
-  {
-    key: "35",
-    itemId: "505",
-    dateSubmitted: "06/06/2023",
-    itemName: "Shoes",
-    status: "Rejected",
-  },
-  // More objects...
-  {
-    key: "36",
-    itemId: "526",
-    dateSubmitted: "27/06/2023",
-    itemName: "Shorts",
-    status: "In progress",
-  },
-  {
-    key: "37",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "38",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "45",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "46",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "47",
-    itemId: "529",
-    dateSubmitted: "30/06/2023",
-    itemName: "Hat",
-    status: "In progress",
-  },
-  {
-    key: "48",
-    itemId: "530",
-    dateSubmitted: "01/07/2023",
-    itemName: "Socks",
-    status: "Approved",
-  },
-  {
-    key: "49",
-    itemId: "531",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-];
+    {
+      key: "1",
+      id: "501",
+      dateReported: "02/06/2023",
+      subject: "System breakdown",
+      status: "Completed",
+    },
+    {
+      key: "2",
+      id: "502",
+      dateReported: "03/06/2023",
+      subject: "Late Response",
+      status: "Submitted",
+    },
+    {
+      key: "3",
+      id: "503",
+      dateReported: "04/06/2023",
+      subject: "Network Outage",
+      status: "In Progress",
+    },
+    {
+      key: "4",
+      id: "504",
+      dateReported: "05/06/2023",
+      subject: "Payment Issue",
+      status: "Completed",
+    },
+    {
+      key: "5",
+      id: "505",
+      dateReported: "06/06/2023",
+      subject: "Login Problem",
+      status: "Submitted",
+    },
+    // More objects...
+    {
+      key: "20",
+      id: "520",
+      dateReported: "21/06/2023",
+      subject: "Missing Items",
+      status: "Completed",
+    },
+    {
+      key: "21",
+      id: "521",
+      dateReported: "22/06/2023",
+      subject: "Slow Performance",
+      status: "In Progress",
+    },
+    {
+      key: "22",
+      id: "522",
+      dateReported: "23/06/2023",
+      subject: "Incorrect Data",
+      status: "Submitted",
+    },
+  ];
+  
 
 
 
-const QualityCheck = () => {
+const Complaints = () => {
 
   const columns = [
     {
-      title: "Item Id",
-      dataIndex: "itemId",
-      key: "itemId",
+      title: "Complaint ID",
+      dataIndex: "id",
+      key: "id",
     },
     {
-      title: "Date Submitted",
-      dataIndex: "dateSubmitted",
-      key: "dateSubmitted",
+      title: "Date Reported",
+      dataIndex: "dateReported",
+      key: "dateReported",
     },
     {
-      title: "Item Name",
-      dataIndex: "itemName",
-      key: "itemName",
+      title: "Subject",
+      dataIndex: "subject",
+      key: "subject",
     },
     {
       title: "Status",
@@ -226,11 +121,11 @@ const QualityCheck = () => {
       render: (_, record) => {
         let color;
         switch (record.status) {
-          case "Approved":
-            color = "#04ba25";
+          case "Submitted":
+            color = "blue";
             break;
-          case "Rejected":
-            color = "#fc1303";
+          case "Completed":
+            color = "#13d609";
             break;
           case "In progress":
             color = "blue";
@@ -244,19 +139,19 @@ const QualityCheck = () => {
       },
     },
   
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <button
-        onClick={()=>appealClick(record)}
-          className="appeal-button"
-          disabled={record.status == "Rejected" ? false : true}
-        >
-          Appeal
-        </button>
-      ),
-    },
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <button
+    //     onClick={()=>appealClick(record)}
+    //       className="appeal-button"
+    //       disabled={record.status == "Rejected" ? false : true}
+    //     >
+    //       Appeal
+    //     </button>
+    //   ),
+    // },
   ];
   const storage = getStorage();
   const itemsPerPage = 10;
@@ -422,8 +317,8 @@ const QualityCheck = () => {
 
   return (
     <>
-      <div className="q-check">
-        <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center",marginTop:"2rem"  }}>
+      <div className="complaints">
+        <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center",marginTop:"2rem" }}>
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
@@ -433,7 +328,7 @@ const QualityCheck = () => {
               marginTop: "1rem",
             }}
           >
-            Quality Check
+            Complaints
           </p>
         </div>
 
@@ -446,9 +341,9 @@ const QualityCheck = () => {
             marginTop: "2rem",
           }}
         >
-          {/* <button className="new-swap-button" onClick={showModal}>
-            New Swap
-          </button> */}
+          <button className="new-swap-button" onClick={showModal}>
+            Complain
+          </button>
         </div>
 
         <div style={{ marginTop: "2rem", width: "100%", overflowX: "auto" }}>
@@ -508,7 +403,7 @@ const QualityCheck = () => {
 
       <Modal
         title={<h2 style={{color:"#00425A",
-        fontSize:"1.5rem",marginBottom:"1rem"}}>Submit the item you want to check quality</h2>}
+        fontSize:"1.5rem",marginBottom:"1rem"}}>Report a complaint</h2>}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -516,8 +411,9 @@ const QualityCheck = () => {
       >
         <div style={{ width: "100%" }}>
 
-          <p style={pStyles}>Item type</p>
-          <AutoComplete
+          <p style={pStyles}>Complaint Subject</p>
+          <Input style={{width:"100%",marginTop:"0.3rem"}} placeholder="Complaint Subject"/>
+          {/* <AutoComplete
     style={{
      width:"100%",
 marginTop:"0.3rem",
@@ -528,17 +424,17 @@ marginTop:"0.3rem",
     filterOption={(inputValue, option) =>
       option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
     }
-  />
-  <p style={pStyles}>Item description</p>
+  /> */}
+  <p style={pStyles}>Complaint description</p>
 
   <TextArea rows={4} style={{marginTop:"0.3rem",width:"100%",}} />
 
   <p style={pStyles}>Desired outcome</p>
   <TextArea rows={3} style={{marginTop:"0.3rem",width:"100%",}} />
 
-  <p style={pStyles}>Choose Item (Upload atleast 5 pictures)</p>
+ 
 
-  <label className="custom-file-upload" onChange={handleFileSelect} >
+  <label className="custom-file-upload" onChange={handleFileSelect} style={{marginTop:"1rem"}}>
     <input type="file" multiple />
     Choose images
 </label>
@@ -554,11 +450,11 @@ marginTop:"0.3rem",
   }
 </div>
 
-{fileArray?.length>=1 &&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
+{/* {fileArray?.length>=1 &&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
 {fileArray?.length<2?"Please select at least 5 images !":""}
-</div>}
+</div>} */}
 
-{fileArray?.length>=2 && <div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem"}}>
+{fileArray?.length>=1 && <div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem"}}>
 <button className="q-upload-btn" onClick={handleUpload} disabled={downloadUrlArray?.length>=1?true:false}
 >Upload</button>
 </div>}
@@ -629,4 +525,4 @@ return (
   );
 };
 
-export default QualityCheck;
+export default Complaints;

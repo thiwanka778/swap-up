@@ -1,5 +1,5 @@
 import React from "react";
-import "./QualityCheck.css";
+import "./Donate.css";
 import { Space, Table, Tag } from "antd";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -35,185 +35,240 @@ const options = [
 ];
 
 const data = [
-  {
-    key: "1",
-    itemId: "501",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-  {
-    key: "2",
-    itemId: "502",
-    dateSubmitted: "03/06/2023",
-    itemName: "Jeans",
-    status: "Rejected",
-  },
-  {
-    key: "3",
-    itemId: "503",
-    dateSubmitted: "04/06/2023",
-    itemName: "Sweater",
-    status: "In progress",
-  },
-  {
-    key: "4",
-    itemId: "504",
-    dateSubmitted: "05/06/2023",
-    itemName: "Jacket",
-    status: "Approved",
-  },
-  {
-    key: "5",
-    itemId: "505",
-    dateSubmitted: "06/06/2023",
-    itemName: "Shoes",
-    status: "Rejected",
-  },
-  // More objects...
-  {
-    key: "26",
-    itemId: "526",
-    dateSubmitted: "27/06/2023",
-    itemName: "Shorts",
-    status: "In progress",
-  },
-  {
-    key: "27",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "28",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "29",
-    itemId: "529",
-    dateSubmitted: "30/06/2023",
-    itemName: "Hat",
-    status: "In progress",
-  },
-  {
-    key: "30",
-    itemId: "530",
-    dateSubmitted: "01/07/2023",
-    itemName: "Socks",
-    status: "Approved",
-  },
-  {
-    key: "31",
-    itemId: "501",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-  {
-    key: "32",
-    itemId: "502",
-    dateSubmitted: "03/06/2023",
-    itemName: "Jeans",
-    status: "Rejected",
-  },
-  {
-    key: "33",
-    itemId: "503",
-    dateSubmitted: "04/06/2023",
-    itemName: "Sweater",
-    status: "In progress",
-  },
-  {
-    key: "34",
-    itemId: "504",
-    dateSubmitted: "05/06/2023",
-    itemName: "Jacket",
-    status: "Approved",
-  },
-  {
-    key: "35",
-    itemId: "505",
-    dateSubmitted: "06/06/2023",
-    itemName: "Shoes",
-    status: "Rejected",
-  },
-  // More objects...
-  {
-    key: "36",
-    itemId: "526",
-    dateSubmitted: "27/06/2023",
-    itemName: "Shorts",
-    status: "In progress",
-  },
-  {
-    key: "37",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "38",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "45",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "46",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "47",
-    itemId: "529",
-    dateSubmitted: "30/06/2023",
-    itemName: "Hat",
-    status: "In progress",
-  },
-  {
-    key: "48",
-    itemId: "530",
-    dateSubmitted: "01/07/2023",
-    itemName: "Socks",
-    status: "Approved",
-  },
-  {
-    key: "49",
-    itemId: "531",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-];
+    {
+      key: "1",
+      id: "501",
+      dateDonated: "02/06/2023",
+      itemName: "T-shirt",
+      status: "Donated",
+    },
+    {
+      key: "2",
+      id: "502",
+      dateDonated: "03/06/2023",
+      itemName: "Jeans",
+      status: "Donated",
+    },
+    {
+      key: "3",
+      id: "503",
+      dateDonated: "04/06/2023",
+      itemName: "Sweater",
+      status: "Donated",
+    },
+    {
+      key: "4",
+      id: "504",
+      dateDonated: "05/06/2023",
+      itemName: "Jacket",
+      status: "Donated",
+    },
+    {
+      key: "5",
+      id: "505",
+      dateDonated: "06/06/2023",
+      itemName: "Shoes",
+      status: "Donated",
+    },
+    {
+      key: "6",
+      id: "506",
+      dateDonated: "07/06/2023",
+      itemName: "Hat",
+      status: "Donated",
+    },
+    {
+      key: "7",
+      id: "507",
+      dateDonated: "08/06/2023",
+      itemName: "Shorts",
+      status: "Donated",
+    },
+    {
+      key: "8",
+      id: "508",
+      dateDonated: "09/06/2023",
+      itemName: "Dress",
+      status: "Donated",
+    },
+    {
+      key: "9",
+      id: "509",
+      dateDonated: "10/06/2023",
+      itemName: "Skirt",
+      status: "Donated",
+    },
+    {
+      key: "10",
+      id: "510",
+      dateDonated: "11/06/2023",
+      itemName: "Socks",
+      status: "Donated",
+    },
+    {
+      key: "11",
+      id: "511",
+      dateDonated: "12/06/2023",
+      itemName: "Shirt",
+      status: "Donated",
+    },
+    {
+      key: "12",
+      id: "512",
+      dateDonated: "13/06/2023",
+      itemName: "Pants",
+      status: "Donated",
+    },
+    {
+      key: "13",
+      id: "513",
+      dateDonated: "14/06/2023",
+      itemName: "Coat",
+      status: "Donated",
+    },
+    {
+      key: "14",
+      id: "514",
+      dateDonated: "15/06/2023",
+      itemName: "Gloves",
+      status: "Donated",
+    },
+    {
+      key: "15",
+      id: "515",
+      dateDonated: "16/06/2023",
+      itemName: "Scarf",
+      status: "Donated",
+    },
+    {
+      key: "16",
+      id: "516",
+      dateDonated: "17/06/2023",
+      itemName: "Sweatshirt",
+      status: "Donated",
+    },
+    {
+      key: "17",
+      id: "517",
+      dateDonated: "18/06/2023",
+      itemName: "Blouse",
+      status: "Donated",
+    },
+    {
+      key: "18",
+      id: "518",
+      dateDonated: "19/06/2023",
+      itemName: "Cap",
+      status: "Donated",
+    },
+    {
+      key: "19",
+      id: "519",
+      dateDonated: "20/06/2023",
+      itemName: "Vest",
+      status: "Donated",
+    },
+    {
+      key: "20",
+      id: "520",
+      dateDonated: "21/06/2023",
+      itemName: "Jumper",
+      status: "Donated",
+    },
+    {
+      key: "21",
+      id: "521",
+      dateDonated: "22/06/2023",
+      itemName: "Sweatpants",
+      status: "Donated",
+    },
+    {
+      key: "22",
+      id: "522",
+      dateDonated: "23/06/2023",
+      itemName: "Blazer",
+      status: "Donated",
+    },
+    {
+      key: "23",
+      id: "523",
+      dateDonated: "24/06/2023",
+      itemName: "Necktie",
+      status: "Donated",
+    },
+    {
+      key: "24",
+      id: "524",
+      dateDonated: "25/06/2023",
+      itemName: "Tank top",
+      status: "Donated",
+    },
+    {
+      key: "25",
+      id: "525",
+      dateDonated: "26/06/2023",
+      itemName: "Suspenders",
+      status: "Donated",
+    },
+    {
+      key: "26",
+      id: "526",
+      dateDonated: "27/06/2023",
+      itemName: "Belt",
+      status: "Donated",
+    },
+    {
+      key: "27",
+      id: "527",
+      dateDonated: "28/06/2023",
+      itemName: "Tie",
+      status: "Donated",
+    },
+    {
+      key: "28",
+      id: "528",
+      dateDonated: "29/06/2023",
+      itemName: "Beanie",
+      status: "Donated",
+    },
+    {
+      key: "29",
+      id: "529",
+      dateDonated: "30/06/2023",
+      itemName: "Cardigan",
+      status: "Donated",
+    },
+    {
+      key: "30",
+      id: "530",
+      dateDonated: "01/07/2023",
+      itemName: "Hoodie",
+      status: "Donated",
+    },
+    {
+      key: "31",
+      id: "531",
+      dateDonated: "02/07/2023",
+      itemName: "Polo shirt",
+      status: "Donated",
+    },
+  ];
+  
 
 
 
-const QualityCheck = () => {
+const Donate = () => {
 
   const columns = [
     {
-      title: "Item Id",
-      dataIndex: "itemId",
-      key: "itemId",
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
     },
     {
-      title: "Date Submitted",
-      dataIndex: "dateSubmitted",
-      key: "dateSubmitted",
+      title: "Date Donated",
+      dataIndex: "dateDonated",
+      key: "dateDonated",
     },
     {
       title: "Item Name",
@@ -226,11 +281,11 @@ const QualityCheck = () => {
       render: (_, record) => {
         let color;
         switch (record.status) {
-          case "Approved":
-            color = "#04ba25";
+          case "Donated":
+            color = "#f70f83";
             break;
           case "Rejected":
-            color = "#fc1303";
+            color = "red";
             break;
           case "In progress":
             color = "blue";
@@ -240,23 +295,23 @@ const QualityCheck = () => {
             break;
         }
   
-        return <span style={{ color,fontWeight:"bold",fontSize:"1rem" }}>{record.status}</span>;
+        return <span style={{ color,fontWeight:"600",fontSize:"1rem" }}>{record.status}</span>;
       },
     },
   
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <button
-        onClick={()=>appealClick(record)}
-          className="appeal-button"
-          disabled={record.status == "Rejected" ? false : true}
-        >
-          Appeal
-        </button>
-      ),
-    },
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <button
+    //     onClick={()=>appealClick(record)}
+    //       className="appeal-button"
+    //       disabled={record.status == "Rejected" ? false : true}
+    //     >
+    //       Appeal
+    //     </button>
+    //   ),
+    // },
   ];
   const storage = getStorage();
   const itemsPerPage = 10;
@@ -422,8 +477,8 @@ const QualityCheck = () => {
 
   return (
     <>
-      <div className="q-check">
-        <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center",marginTop:"2rem"  }}>
+      <div className="donate">
+        <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center" ,marginTop:"2rem" }}>
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
@@ -433,7 +488,7 @@ const QualityCheck = () => {
               marginTop: "1rem",
             }}
           >
-            Quality Check
+            Donation
           </p>
         </div>
 
@@ -446,9 +501,9 @@ const QualityCheck = () => {
             marginTop: "2rem",
           }}
         >
-          {/* <button className="new-swap-button" onClick={showModal}>
-            New Swap
-          </button> */}
+          <button className="new-swap-button" onClick={showModal}>
+            New Donation
+          </button>
         </div>
 
         <div style={{ marginTop: "2rem", width: "100%", overflowX: "auto" }}>
@@ -508,7 +563,7 @@ const QualityCheck = () => {
 
       <Modal
         title={<h2 style={{color:"#00425A",
-        fontSize:"1.5rem",marginBottom:"1rem"}}>Submit the item you want to check quality</h2>}
+        fontSize:"1.5rem",marginBottom:"1rem"}}>Submit the item you want to donate</h2>}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -516,8 +571,9 @@ const QualityCheck = () => {
       >
         <div style={{ width: "100%" }}>
 
-          <p style={pStyles}>Item type</p>
-          <AutoComplete
+          <p style={pStyles}>Donating Item</p>
+          <Input style={{width:"100%",marginTop:"0.3rem"}} placeholder="Donating Item"/>
+          {/* <AutoComplete
     style={{
      width:"100%",
 marginTop:"0.3rem",
@@ -528,17 +584,17 @@ marginTop:"0.3rem",
     filterOption={(inputValue, option) =>
       option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
     }
-  />
-  <p style={pStyles}>Item description</p>
+  /> */}
+  <p style={pStyles}>Donation description</p>
 
   <TextArea rows={4} style={{marginTop:"0.3rem",width:"100%",}} />
 
   <p style={pStyles}>Desired outcome</p>
   <TextArea rows={3} style={{marginTop:"0.3rem",width:"100%",}} />
 
-  <p style={pStyles}>Choose Item (Upload atleast 5 pictures)</p>
+ 
 
-  <label className="custom-file-upload" onChange={handleFileSelect} >
+  <label className="custom-file-upload" onChange={handleFileSelect} style={{marginTop:"1rem"}}>
     <input type="file" multiple />
     Choose images
 </label>
@@ -554,11 +610,11 @@ marginTop:"0.3rem",
   }
 </div>
 
-{fileArray?.length>=1 &&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
+{/* {fileArray?.length>=1 &&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
 {fileArray?.length<2?"Please select at least 5 images !":""}
-</div>}
+</div>} */}
 
-{fileArray?.length>=2 && <div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem"}}>
+{fileArray?.length>=1 && <div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem"}}>
 <button className="q-upload-btn" onClick={handleUpload} disabled={downloadUrlArray?.length>=1?true:false}
 >Upload</button>
 </div>}
@@ -629,4 +685,4 @@ return (
   );
 };
 
-export default QualityCheck;
+export default Donate;

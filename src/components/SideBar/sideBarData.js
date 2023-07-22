@@ -15,10 +15,27 @@ const sideBarData = [
       path:"/swap",
     },
     {
+title:"Donate",
+icon:"bi-balloon-heart-fill",
+path:"/donate",
+    },
+    {
+      title:"Complaints",
+      icon:"bi-shield-fill-exclamation",
+      path:"/complaints"
+    },
+  
+    {
+     title:"Profile",
+     icon:"bi-person-lines-fill",
+     path:"/profile"
+    },
+    {
       title:"Logout",
       icon:"bi-power",
       path:"/logout",
-    }
+    },
+    
   
     // Add more menu items here...
   ];

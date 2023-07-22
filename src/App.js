@@ -13,6 +13,10 @@ import SignUp2 from "./pages/SignUp2/SignUp2";
 import AuthenticatedHome from "./pages/AuthenticatedHome/AuthenticatedHome";
 import LoginAuth from "./protectedRoutes/LoginAuth";
 import QualityCheck from "./pages/user/QualityCheck/QualityCheck";
+import Swap from "./pages/user/Swap/Swap";
+import Donate from "./pages/user/Donate/Donate";
+import Complaints from "./pages/user/Complaints/Complaints";
+import Profile from "./pages/user/Profile/Profile";
 
 function App() {
   const dispatch = useDispatch();
@@ -54,6 +58,10 @@ function App() {
             </Route>
 
             <Route path="quality-check" element={<QualityCheck/>}/>
+            <Route path="swap" element={<Swap/>}/>
+            <Route path="donate" element={<Donate/>}/>
+            <Route path="complaints" element={<Complaints/>}/>
+            <Route path="profile" element={<Profile/>}/>
 
             
           </Routes>
