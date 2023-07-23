@@ -49,11 +49,7 @@ const SideBarItem = (props) => {
           <p className="item-title" style={{ textDecoration: 'none', color: 'white' }}>
             {props.item.title}
           </p>
-          {/* <i
-            style={{ fontSize: "1.2rem" }}
-            onClick={handleToggle}
-            className={`bi ${arrowIconClass} toggle-btn`}
-          ></i> */}
+        
         </NavLink>
       </div>
     );

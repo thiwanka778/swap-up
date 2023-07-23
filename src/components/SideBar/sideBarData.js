@@ -30,11 +30,7 @@ path:"/donate",
      icon:"bi-person-lines-fill",
      path:"/profile"
     },
-    {
-      title:"Logout",
-      icon:"bi-power",
-      path:"/logout",
-    },
+   
     
   
     // Add more menu items here...

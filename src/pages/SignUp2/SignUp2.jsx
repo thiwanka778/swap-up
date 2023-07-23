@@ -179,7 +179,7 @@ const SignUp2 = () => {
   };
 
   //  console.log({...form,gender,password,confirmPassword,gmail:userEmail,})
-  console.log({ nic, isNicValidate });
+  // console.log({ nic, isNicValidate });
 
   return (
     <div className="sign-up2">

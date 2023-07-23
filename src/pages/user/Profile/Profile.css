@@ -2,9 +2,7 @@
     width:100%;
     min-height: 95vh;
     padding-top:12vh;
-    padding-left:1rem;
-    padding-right: 1rem;
-    padding-bottom: 1rem;
+  
 }
 
 .input-styles{
@@ -16,11 +14,11 @@
   font-weight: 500;
   font-family: 'Poppins', sans-serif;
   letter-spacing: 0.1rem;
-  margin-top: 0.3rem;
+  
 }
 
 .p-edit-btn{
-    background-color: #ff9900; /* Orange background color */
+    background-color: #05b328; /* Orange background color */
     color: #ffffff; /* White text color */
     padding: 8px 16px; /* Padding inside the button */
     border: none; /* No border */
@@ -33,4 +31,27 @@
 
 .p-edit-btn:active{
     transform: scale(0.7);
+}
+
+.r-edit-btn{
+    background-color: orange; /* Orange background color */
+    color: #ffffff; /* White text color */
+    padding: 8px 16px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Default cursor on hover */
+    font-family: 'Inter', sans-serif; /* Use 'Inter' font-family */
+    transition: all 0.3s ease;
+}
+.r-edit-btn:active{
+    transform: scale(0.7);
+}
+
+.p-styles{
+    font-size: 1.2rem;
+font-family: 'Ubuntu', sans-serif;
+font-weight: 500;
+letter-spacing: 0.1rem;
+
 }

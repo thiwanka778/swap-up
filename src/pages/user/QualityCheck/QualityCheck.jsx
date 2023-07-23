@@ -223,6 +223,12 @@ const QualityCheck = () => {
     {
       title: "Status",
       key: "status",
+      filters: [ // Specify the available filters for the status column
+      { text: "Approved", value: "Approved" },
+      { text: "Rejected", value: "Rejected" },
+      { text: "In Progress", value: "In progress" },
+    ],
+    onFilter: (value, record) => record.status === value,
       render: (_, record) => {
         let color;
         switch (record.status) {
@@ -258,6 +264,7 @@ const QualityCheck = () => {
       ),
     },
   ];
+
   const storage = getStorage();
   const itemsPerPage = 10;
   const [totalPages, setTotalPages] = React.useState(0);
@@ -276,6 +283,15 @@ const QualityCheck = () => {
 
   const [isModalOpena, setIsModalOpena] = React.useState(false);
   const [appealData,setAppealData]=React.useState({});
+
+  const [pagination, setPagination] = React.useState({
+    current: 1,
+    pageSize: 10,
+  });
+
+  const handleTableChange = (pagination) => {
+    setPagination(pagination);
+  };
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -456,6 +472,8 @@ const QualityCheck = () => {
             columns={columns}
             dataSource={displayItems}
             pagination={false}
+            // pagination={pagination}
+           
           />
         </div>
 
@@ -504,6 +522,7 @@ const QualityCheck = () => {
             )}
           </div>
         </div>
+
       </div>
 
       <Modal

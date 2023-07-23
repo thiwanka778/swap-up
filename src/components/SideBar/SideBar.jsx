@@ -2,9 +2,13 @@ import React from "react";
 import "./SideBar.css";
 import SideBarItem from "./SideBarItem";
 import sideBarData from "./sideBarData.js";
-import swaplogo from "../../assets/swaplogo.png"
+import swaplogo from "../../assets/swaplogo.png";
+import { userLogout } from "../../redux/userSlice";
+import { useDispatch } from "react-redux";
 
 const SideBar = ({openSideBar,setOpenSideBar}) => {
+  const dispatch=useDispatch();
+
   
   const sidebaritemdisplay = sideBarData.map((item, index) => {
     return <SideBarItem key={index} item={item} />;
@@ -38,6 +42,20 @@ return !prevState;
     <div style={{marginTop:"2rem"}}>
     {sidebaritemdisplay}
     </div>
+
+    <div  className="sidebar-item" style={{cursor:"pointer"}} onClick={()=>dispatch(userLogout())}>
+          <span>
+            <i
+              style={{ fontSize: '1.2rem', textDecoration: 'none', color: 'white' }}
+              className="bi-power"
+            ></i>
+          </span>
+
+          <p className="item-title" style={{ textDecoration: 'none', color: 'white' }}>
+            Logout
+          </p>
+        
+        </div>
     
     </div>
     )
