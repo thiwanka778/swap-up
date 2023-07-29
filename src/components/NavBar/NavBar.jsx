@@ -59,9 +59,6 @@ window.localStorage.setItem("openSideBar",JSON.stringify(openSideBar))
   },[openSideBar])
 
   
-  
-  
-  
 
   const handleClickUser = (event) => {
     setAnchorEl(event.currentTarget);
@@ -76,14 +73,7 @@ window.localStorage.setItem("openSideBar",JSON.stringify(openSideBar))
   }
 
   const handleClickOpen = () => {
-    setAnchorEl(null);
-if(userEmail===""){
-  setOpen(true);
-}else if(userEmail!==""){
-  setOpen(false);
   navigate("/signup");
-}
-    
   };
 
   const handleClose = () => {

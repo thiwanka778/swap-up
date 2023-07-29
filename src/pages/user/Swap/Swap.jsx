@@ -12,7 +12,10 @@ import { auth } from "../../../firebase";
 import { Input } from 'antd';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import Pagination from '@mui/material/Pagination';
 const { TextArea } = Input;
+
+
 
 const pStyles = {
   fontSize: "1rem",
@@ -533,7 +536,7 @@ const Swap = () => {
       // console.log('Download URLs:', downloadUrls);
       setImageLoading(false);
        // Array of download URLs
-       setDownloadUrlArray(downloadUrls)
+       setDownloadUrlArray(downloadUrls);
     } catch (error) {
       console.log(error);
       setImageLoading(false);
@@ -630,6 +633,7 @@ const Swap = () => {
           </div>}
 
           <div style={{ display: "flex", alignItems: "center" }}>
+            
             {pageNumber != 1 && (
               <KeyboardArrowLeftIcon
                 style={{ cursor: "pointer" }}
@@ -656,6 +660,9 @@ const Swap = () => {
               />
             )}
           </div>
+
+
+
         </div>
       </div>
 
@@ -711,7 +718,7 @@ marginTop:"0.3rem",
 {fileArray?.length<2?"Please select at least 5 images !":""}
 </div>}
 
-{fileArray?.length>=2 && <div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem"}}>
+{fileArray?.length>=2 && <div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"0.5rem"}}>
 <button className="q-upload-btn" onClick={handleUpload} disabled={downloadUrlArray?.length>=1?true:false}
 >Upload</button>
 </div>}

@@ -99,6 +99,8 @@ const Carousel = () => {
       w="340px";
     }else if(screen<1115){
       w="280px"
+    }else if(screen<1444){
+      w="280px"
     }
 
     console.log(w)
@@ -146,6 +148,9 @@ const Carousel = () => {
       // When window width is >= 768px (medium devices)
       925: {
         slidesPerView: 3,
+      },
+      1300:{
+        slidesPerView:4,
       },
      
     }}

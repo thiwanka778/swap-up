@@ -1,5 +1,5 @@
 import React from "react";
-import "./QualityCheck.css";
+import "./QualityCheckAuth.css";
 import { Space, Table, Tag } from "antd";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -38,196 +38,335 @@ const options = [
 const data = [
   {
     key: "1",
-    itemId: "501",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
     status: "Approved",
   },
-  // {
-  //   key: "14566",
-  //   itemId: "501",
-  //   dateSubmitted: "02/06/2023",
-  //   itemName: "T-shirt",
-  //   status: "Bulla",
-  // },
+  {
+    key: "204",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "203",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "202",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "201",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "200",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "109",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "108",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "107",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "106",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "105",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "104",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "103",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "102",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
+  {
+    key: "101",
+    memberName: "Ryan Diyon",
+    memberId: 501,
+    itemType: "Shoe",
+    status: "Approved",
+  },
 
   {
     key: "2",
-    itemId: "502",
-    dateSubmitted: "03/06/2023",
-    itemName: "Jeans",
+    memberName: "Emma Watson",
+    memberId: 502,
+    itemType: "T-Shirt",
     status: "Rejected",
   },
   {
     key: "3",
-    itemId: "503",
-    dateSubmitted: "04/06/2023",
-    itemName: "Sweater",
+    memberName: "John Doe",
+    memberId: 503,
+    itemType: "Jeans",
     status: "In progress",
   },
   {
     key: "4",
-    itemId: "504",
-    dateSubmitted: "05/06/2023",
-    itemName: "Jacket",
+    memberName: "Alice Johnson",
+    memberId: 504,
+    itemType: "Sweater",
     status: "Approved",
   },
   {
     key: "5",
-    itemId: "505",
-    dateSubmitted: "06/06/2023",
-    itemName: "Shoes",
+    memberName: "Michael Smith",
+    memberId: 505,
+    itemType: "Jacket",
     status: "Rejected",
   },
-  // More objects...
+  {
+    key: "6",
+    memberName: "Sophia Lee",
+    memberId: 506,
+    itemType: "Hat",
+    status: "In progress",
+  },
+  {
+    key: "7",
+    memberName: "Noah Martin",
+    memberId: 507,
+    itemType: "Socks",
+    status: "Approved",
+  },
+  {
+    key: "8",
+    memberName: "Olivia Brown",
+    memberId: 508,
+    itemType: "Shorts",
+    status: "Rejected",
+  },
+  {
+    key: "9",
+    memberName: "William Clark",
+    memberId: 509,
+    itemType: "Skirt",
+    status: "Approved",
+  },
+  {
+    key: "10",
+    memberName: "Ava Rodriguez",
+    memberId: 510,
+    itemType: "Dress",
+    status: "Approved",
+  },
+  {
+    key: "11",
+    memberName: "Liam Harris",
+    memberId: 511,
+    itemType: "Shirt",
+    status: "In progress",
+  },
+  {
+    key: "12",
+    memberName: "Isabella Lopez",
+    memberId: 512,
+    itemType: "Pants",
+    status: "Approved",
+  },
+  {
+    key: "13",
+    memberName: "Ethan Wilson",
+    memberId: 513,
+    itemType: "Coat",
+    status: "Approved",
+  },
+  {
+    key: "14",
+    memberName: "Mia Thomas",
+    memberId: 514,
+    itemType: "Scarf",
+    status: "Rejected",
+  },
+  {
+    key: "15",
+    memberName: "James Martinez",
+    memberId: 515,
+    itemType: "Gloves",
+    status: "Approved",
+  },
+  {
+    key: "16",
+    memberName: "Sophia Lee",
+    memberId: 516,
+    itemType: "Sneakers",
+    status: "Rejected",
+  },
+  {
+    key: "17",
+    memberName: "Logan Wilson",
+    memberId: 517,
+    itemType: "Boots",
+    status: "In progress",
+  },
+  {
+    key: "18",
+    memberName: "Ava Martinez",
+    memberId: 518,
+    itemType: "Sandals",
+    status: "Approved",
+  },
+  {
+    key: "19",
+    memberName: "Jackson Taylor",
+    memberId: 519,
+    itemType: "Slippers",
+    status: "Rejected",
+  },
+  {
+    key: "20",
+    memberName: "Emma Rodriguez",
+    memberId: 520,
+    itemType: "Hat",
+    status: "Approved",
+  },
+  {
+    key: "21",
+    memberName: "Daniel Adams",
+    memberId: 521,
+    itemType: "Socks",
+    status: "In progress",
+  },
+  {
+    key: "22",
+    memberName: "Oliver Moore",
+    memberId: 522,
+    itemType: "Shorts",
+    status: "Rejected",
+  },
+  {
+    key: "23",
+    memberName: "Sophia Johnson",
+    memberId: 523,
+    itemType: "Skirt",
+    status: "Approved",
+  },
+  {
+    key: "24",
+    memberName: "Ethan Clark",
+    memberId: 524,
+    itemType: "Dress",
+    status: "Approved",
+  },
+  {
+    key: "25",
+    memberName: "Emily Hernandez",
+    memberId: 525,
+    itemType: "Blouse",
+    status: "In progress",
+  },
   {
     key: "26",
-    itemId: "526",
-    dateSubmitted: "27/06/2023",
-    itemName: "Shorts",
-    status: "In progress",
+    memberName: "Michael Anderson",
+    memberId: 526,
+    itemType: "Jeans",
+    status: "Approved",
   },
   {
     key: "27",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
+    memberName: "Abigail Jackson",
+    memberId: 527,
+    itemType: "Shoes",
+    status: "Rejected",
   },
   {
     key: "28",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
+    memberName: "Noah White",
+    memberId: 528,
+    itemType: "Jacket",
+    status: "Approved",
   },
   {
     key: "29",
-    itemId: "529",
-    dateSubmitted: "30/06/2023",
-    itemName: "Hat",
-    status: "In progress",
+    memberName: "Isabella Clark",
+    memberId: 529,
+    itemType: "Sweater",
+    status: "Approved",
   },
   {
     key: "30",
-    itemId: "530",
-    dateSubmitted: "01/07/2023",
-    itemName: "Socks",
-    status: "Approved",
-  },
-  {
-    key: "31",
-    itemId: "501",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-  {
-    key: "32",
-    itemId: "502",
-    dateSubmitted: "03/06/2023",
-    itemName: "Jeans",
+    memberName: "James Wilson",
+    memberId: 530,
+    itemType: "Hat",
     status: "Rejected",
   },
-  {
-    key: "33",
-    itemId: "503",
-    dateSubmitted: "04/06/2023",
-    itemName: "Sweater",
-    status: "In progress",
-  },
-  {
-    key: "34",
-    itemId: "504",
-    dateSubmitted: "05/06/2023",
-    itemName: "Jacket",
-    status: "Approved",
-  },
-  {
-    key: "35",
-    itemId: "505",
-    dateSubmitted: "06/06/2023",
-    itemName: "Shoes",
-    status: "Rejected",
-  },
-  // More objects...
-  {
-    key: "36",
-    itemId: "526",
-    dateSubmitted: "27/06/2023",
-    itemName: "Shorts",
-    status: "In progress",
-  },
-  {
-    key: "37",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "38",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "45",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "46",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "47",
-    itemId: "529",
-    dateSubmitted: "30/06/2023",
-    itemName: "Hat",
-    status: "In progress",
-  },
-  {
-    key: "48",
-    itemId: "530",
-    dateSubmitted: "01/07/2023",
-    itemName: "Socks",
-    status: "Approved",
-  },
-  {
-    key: "49",
-    itemId: "531",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
+  // Add more objects...
 ];
 
 
 
-const QualityCheck = () => {
+const QualityCheckAuth = () => {
 
   const columns = [
     {
-      title: "Item Id",
-      dataIndex: "itemId",
-      key: "itemId",
+      title: "Member Name",
+      dataIndex: "memberName",
+      key: "memberName",
     },
     {
-      title: "Date Submitted",
-      dataIndex: "dateSubmitted",
-      key: "dateSubmitted",
+      title: "Member Id",
+      dataIndex: "memberId",
+      key: "memberId",
     },
     {
-      title: "Item Name",
-      dataIndex: "itemName",
-      key: "itemName",
+      title: "Item Type",
+      dataIndex: "itemType",
+      key: "itemType",
     },
     {
       title: "Status",
@@ -255,16 +394,16 @@ const QualityCheck = () => {
     },
   
     {
-      title: "Action",
+      title: "Actions",
       key: "action",
       render: (_, record) => (
-        <button
-        onClick={()=>appealClick(record)}
-          className="appeal-button"
-          disabled={record.status == "Rejected" ? false : true}
-        >
-          Appeal
-        </button>
+<div>
+{ (record?.status==="Approved" || record?.status==="Rejected") &&  <button className="appeal-button-p" style={{marginRight:"0.5rem"}}>In Progress</button>}
+{ (record?.status==="In progress" || record?.status==="Rejected") &&<button className="appeal-button" style={{marginRight:"0.5rem"}}>Approve</button>}
+{ (record?.status==="In progress" || record?.status==="Approved") && <button className="appeal-button-r" style={{marginRight:"0.5rem"}}>Reject</button>}
+
+</div>
+      
       ),
     },
   ];
@@ -290,6 +429,15 @@ const QualityCheck = () => {
   const [selectedValue, setSelectedValue] = React.useState('');
   const [filteredData, setFilteredData] = React.useState(data); 
   const [paginationKey, setPaginationKey] = React.useState(0);
+  const [inputValue, setInputValue] = React.useState('');
+
+
+
+
+  const handleInputChange = (e) => {
+    // Update the state with the new input value
+    setInputValue(e.target.value);
+  };
 
   const [pagination, setPagination] = React.useState({
     current: 1,
@@ -347,9 +495,24 @@ const QualityCheck = () => {
   // }, []);
 
   React.useEffect(() => {
-  if(selectedValue!==""){
+  if(inputValue!==""){
+    // console.log(inputValue)
     setPageNumber(1);
-    const filtered = data.filter((item) => item.status === selectedValue);
+    let filtered = [];
+
+    // Escape special characters in inputValue to ensure they are treated as literals
+    const escapedInputValue = inputValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    
+    for (let i = 0; i < data?.length; i++) {
+      const text = data[i].memberName;
+      const pattern = new RegExp(escapedInputValue, "i"); // Using "i" for case-insensitive matching
+    
+      if (text.match(pattern)) {
+       
+        filtered.push(data[i]);
+      }
+    }
+   
     setFilteredData(filtered); 
     setTotalPages(Math.ceil(filtered.length / itemsPerPage));
     setPaginationKey((prevKey) => prevKey + 1);
@@ -359,7 +522,11 @@ const QualityCheck = () => {
   }
   
 
-  }, [selectedValue]);
+  }, [inputValue]);
+
+
+
+
 
   React.useEffect(() => {
     setDisplayItems((prevState) => {
@@ -446,10 +613,6 @@ const QualityCheck = () => {
         // Add the download URL to the array
         downloadUrls.push(downloadUrl);
       }
-  
-      // All files have been uploaded
-      // console.log('Files uploaded successfully!');
-      // console.log('Download URLs:', downloadUrls);
       setImageLoading(false);
        // Array of download URLs
        setDownloadUrlArray(downloadUrls)
@@ -495,10 +658,11 @@ const QualityCheck = () => {
           </p>
         </div>
 
-      <div>
-      <AutoComplete
+      <div style={{width:"100%",display:"flex",alignItems:"center"}}>
+      {/* <AutoComplete
     style={{
       width: 200,
+      marginRight:"1rem",
     }}
     onChange={handleAutoCompleteChange}
     options={statusOptions}
@@ -507,7 +671,11 @@ const QualityCheck = () => {
     filterOption={(inputValue, option) =>
       option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
     }
-  />
+  /> */}
+  <Input placeholder="Type name" 
+     value={inputValue} // Set the value of the Input to the state variable
+     onChange={handleInputChange} 
+  style={{width:200,marginRight:"1rem"}}/>
       </div>
 
         <div style={{ marginTop: "1rem", width: "100%", overflowX: "auto" }}>
@@ -540,31 +708,7 @@ const QualityCheck = () => {
           </div>}
 
           <div style={{ display: "flex", alignItems: "center" }}>
-            {/* {pageNumber != 1 && (
-              <KeyboardArrowLeftIcon
-                style={{ cursor: "pointer" }}
-                onClick={prevClick}
-              />
-            )}
-
-            <div
-              style={{
-                padding: "0.5rem",
-                border: "2px solid black",
-                borderRadius: "4px",
-                marginLeft: "1rem",
-                marginRight: "1rem",
-              }}
-            >
-              {pageNumber}
-            </div>
-
-            {totalPages !== pageNumber && (
-              <KeyboardArrowRightIcon
-                style={{ cursor: "pointer" }}
-                onClick={nextClick}
-              />
-            )} */}
+         
               <Pagination count={totalPages}  onChange={handlePageChange}     key={paginationKey} color="primary" />
           </div>
         </div>
@@ -694,4 +838,4 @@ return (
   );
 };
 
-export default QualityCheck;
+export default QualityCheckAuth;

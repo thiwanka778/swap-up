@@ -3,8 +3,13 @@ import "./Login.css";
 import swaplogo from "../../assets/swaplogo.png";
 import { Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { userLogin,userLogout } from "../../redux/userSlice";
+import toast, { Toaster } from "react-hot-toast";
+import { userLogout } from "../../redux/userSlice";
 import { useNavigate } from "react-router-dom";
+import { userLogin,resetUser ,userLoginTemp} from "../../redux/userSlice";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import WarningToast from "../../components/warningToast/WarningToast";
 
 const pStyles = {
   fontSize: "1.2rem",
@@ -32,9 +37,9 @@ const inputBoxStyles = {
 const Login = () => {
   const navigate=useNavigate();
   const dispatch=useDispatch();
-  const { screen } = useSelector((state) => state.user);
+  const { screen,userLoading,userError,userLoginStatus } = useSelector((state) => state.user);
   const [loginForm, setLoginForm] = React.useState({
-    gmail: "",
+    email: "",
     password: "",
   });
 
@@ -42,7 +47,7 @@ const Login = () => {
     const { name, value } = event.target;
     console.log(name);
     let inputValue="";
-  if(name==="gmail"){
+  if(name==="email"){
      inputValue=value.trim();
   }else{
      inputValue=value;
@@ -56,18 +61,32 @@ const Login = () => {
   };
 
   const loginBtnClick=()=>{
-    if(loginForm.gmail!=="" && loginForm.password!==""){
-      const {gmail,password}=loginForm;
-      if(gmail==="admin@gmail.com" && password==="admin@123"){
-        dispatch(userLogin("admin@gmail.com"));
+    if(loginForm.email!=="" && loginForm.password!==""){
+      const {email,password}=loginForm;
+      if(email==="user" || email==="qualityChecker" || email==="admin"){
+        dispatch(userLoginTemp(email));
         navigate("/")
+
       }
     }
+
+  //  const {email,password} =loginForm;
+
+  //  if(email=="" || password ==""){
+  //   toast.custom(<WarningToast message={"Email and password can't be empty !"}/>)
+  //  }else if(email!=="" && password!==""){
+  //   dispatch(userLogin({email,password}))
+  //  }
+
+   
+
+
   }
 
  
 
   return (
+    <>
     <div className="login">
       <div
         className="login-container"
@@ -92,13 +111,13 @@ const Login = () => {
           }}
         >
           <div style={{ width: "80%" }}>
-            <p style={pStyles}>Gmail</p>
+            <p style={pStyles}>Email</p>
             <Input
               style={inputBoxStyles}
-              placeholder="Gmail"
-              name="gmail"
+              placeholder="Email"
+              name="email"
               onChange={handleInputChange}
-              value={loginForm.gmail}
+              value={loginForm.email}
             />
 
             <p style={pStyles}>Password</p>
@@ -125,6 +144,53 @@ const Login = () => {
         </div>
       </div>
     </div>
+
+
+    <Backdrop
+        sx={{ color: 'blue',}}
+        open={userLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          // Define default options
+          className: "",
+          duration: 2000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+
+          // Default options for specific types
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+          custom: {
+            duration: 2000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
+
+
+
+
+    </>
   );
 };
 

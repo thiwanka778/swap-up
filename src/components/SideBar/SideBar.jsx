@@ -1,16 +1,32 @@
 import React from "react";
 import "./SideBar.css";
 import SideBarItem from "./SideBarItem";
-import sideBarData from "./sideBarData.js";
+import sideBarData2 from "./sideBarData2.js";
+import sideBarDataQC from "./sideBarDataQC";
 import swaplogo from "../../assets/swaplogo.png";
 import { userLogout } from "../../redux/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const SideBar = ({openSideBar,setOpenSideBar}) => {
   const dispatch=useDispatch();
+  const {user}=useSelector((state)=>state.user);
 
+
+  const [sideBarData,setSiderBarData]=React.useState(sideBarData2);
+
+React.useEffect(()=>{
+  setSiderBarData((prevState)=>{
+     if(user=="user"){
+      return sideBarData2;
+     }else if(user==="qualityChecker"){
+      return sideBarDataQC;
+     }
+  })
+},[user])
   
-  const sidebaritemdisplay = sideBarData.map((item, index) => {
+
+
+  const sidebaritemdisplay = sideBarData?.map((item, index) => {
     return <SideBarItem key={index} item={item} />;
   });
 

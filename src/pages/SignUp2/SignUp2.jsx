@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./SignUp2.css";
 import { Input, Select } from "antd";
 import { Radio } from "antd";
+import toast, { Toaster } from "react-hot-toast";
 // import { Checkbox } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,6 +12,12 @@ import Checkbox from "@mui/material/Checkbox";
 import { getUserEmail } from "../../redux/userSlice";
 import { FaTimes } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import WarningToast from "../../components/warningToast/WarningToast";
+import { userRegister,resetUser } from "../../redux/userSlice";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import { AiOutlineCheckCircle } from "react-icons/ai";
+import {  Modal } from 'antd';
 
 const validatePStyles = {
   color: "white",
@@ -76,30 +83,34 @@ const inputBoxStylesGmail = {
   fontWeight: "500",
   fontFamily: " 'Poppins', sans-serif",
   letterSpacing: "0.1rem",
-  color: "white",
+  color: "black",
   // marginBottom: "1.5rem",
 };
 
 const SignUp2 = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { userEmail, screen } = useSelector((state) => state.user);
+  const { userEmail, screen,userLoading,userError,userRegisterStatus,userRegisterMessage } = useSelector((state) => state.user);
   const [gender, setGender] = React.useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isNicValidate , setIsNicValidate]=React.useState(false);
+  const [phoneNumberValidation, setPhoneNumberValidation] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [form, setForm] = React.useState({
     firstName: "",
     lastName: "",
     address: "",
     address2: "",
+    email:"",
+    telephone:"",
   });
   const [nic, setNic] = React.useState("");
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
     let newValue = "";
-    if (name === "firstName" || name === "lastName") {
+    if (name === "firstName" || name === "lastName" || name==="email" || name=="telephone") {
       newValue = value.trim();
     } else {
       newValue = value;
@@ -146,10 +157,10 @@ const SignUp2 = () => {
       const nicRegex = /^(\d{9}[Vv]|\d{11})$/;
 
       if (nicRegex.test(nic)) {
-        console.log('Valid NIC');
+        // console.log('Valid NIC');
         setIsNicValidate(true)
       } else {
-        console.log('Invalid NIC');
+        // console.log('Invalid NIC');
         setIsNicValidate(false)
       }
     };
@@ -178,10 +189,137 @@ const SignUp2 = () => {
     hasSpecialChar: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]/.test(password),
   };
 
-  //  console.log({...form,gender,password,confirmPassword,gmail:userEmail,})
-  // console.log({ nic, isNicValidate });
+  React.useEffect(() => {
+    
+    // console.log(form.telephone)
+     const phoneRegex = /^(0\d{9}|\+94\d{9}|[1-9]\d{8})$/;
+  
+    setPhoneNumberValidation(phoneRegex.test(form.telephone));
+  }, [form.telephone]);
+// console.log(phoneNumberValidation)
+ 
+
+  const signUpClick=()=>{
+// setIsModalOpen(true)
+  const {firstName,lastName,address2,address,email,telephone}=form;
+  const {hasLength,hasUpperCase,hasLowerCase,hasNumber,hasSpecialChar}=passwordValidation;
+
+  if(firstName!=="" && telephone!=="" && phoneNumberValidation && address!==""&& email !==""  && password!=="" && confirmPassword!=="" && nic!=="" &&
+  hasLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && isPasswordMatch && isNicValidate){
+    console.log("RUN SIGN UP FUNCTION")
+     
+    const formData = {
+      email,
+      firstName,
+      lastName,
+      telephone,
+      address,
+      nic,
+      password,
+      profilePicture:"",
+      roll:null,
+    };
+
+    dispatch(userRegister(formData))
+
+  }else{
+
+    if(firstName===""){
+      toast.custom(<WarningToast message={"First name is required !"}/>)
+      return ;
+    }
+
+if(nic===""){
+  toast.custom(<WarningToast message={"NIC number is required !"}/>)
+  return ;
+}
+
+if(nic!=="" && !isNicValidate){
+  toast.custom(<WarningToast message={"Please provide valid NIC number !"}/>)
+  return ;
+}
+
+    if(email==""){
+      toast.custom(<WarningToast message={"Email is required !"}/>)
+      return ;
+    }
+
+
+    if(telephone==""){
+      toast.custom(<WarningToast message={"Phone number is required !"}/>)
+      return ;
+    }
+    if(telephone!=="" && !phoneNumberValidation){
+      toast.custom(<WarningToast message={"Enter valid phone number !"}/>)
+      return ;
+    }
+
+    if(address==="" ){
+      toast.custom(<WarningToast message={"At least one address is a must !"}/>)
+      return ;
+    }
+
+   
+
+    if(password===""){
+      toast.custom(<WarningToast message={"Password is required !"}/>)
+      return ;
+    }
+
+    if(password!=="" && (!hasLength || !hasSpecialChar || !hasLowerCase || !hasUpperCase || !hasNumber )){
+      toast.custom(<WarningToast message={"Please provide valid password !"}/>)
+      return ;
+    }
+    if(confirmPassword===""){
+      toast.custom(<WarningToast message={"Confirm Password can't be empty !"}/>)
+      return ;
+    }
+    if(confirmPassword!=="" && !isPasswordMatch){
+      toast.custom(<WarningToast message={"Password and Confirm Password must match !"}/>)
+      return ;
+    }
+
+
+  }
+
+};
+
+React.useEffect(()=>{
+if(userLoading==false){
+  if(userRegisterStatus===true && userRegisterMessage=="please check your mail for verify your account"){
+   
+    setForm({ firstName: "",
+    lastName: "",
+    address: "",
+    address2: "",
+    email:"",
+    telephone:"",})
+    setPassword("");
+    setConfirmPassword("");
+    setNic("");
+    setIsModalOpen(true);
+    dispatch(resetUser())
+
+  }else if(userRegisterMessage=="this user name already exist"){
+    console.log("user EXIST")
+    toast.custom(<WarningToast message={"Email already exist !"}/>)
+  }
+}
+},[userLoading]);
+
+  
+const showModal = () => {
+  setIsModalOpen(true);
+};
+const handleOk = () => {
+  setIsModalOpen(false);
+};
+const handleCancel = () => {
+  setIsModalOpen(false);
+};
 
   return (
+    <>
     <div className="sign-up2">
       <div className="main-signup-container">
         <div
@@ -192,6 +330,7 @@ const SignUp2 = () => {
             justifyContent: "center",
             flexDirection: "column",
             marginBottom: "2rem",
+            textAlign:"center",
           }}
         >
           <p
@@ -205,7 +344,7 @@ const SignUp2 = () => {
               textShadow: "3px 3px 1px black",
             }}
           >
-            Register To Become A Membe
+            Register To Become A Member
           </p>
           <p
             style={{
@@ -268,14 +407,15 @@ const SignUp2 = () => {
             </div>
           )}
 
-          <p style={pStyles}>Gmail</p>
+          <p style={pStyles}>Email</p>
           <Input
-            value={userEmail}
-            disabled
             style={inputBoxStylesGmail}
-            placeholder="Gmail"
+            placeholder="Email"
+            name="email"
+            value={form.email}
+            onChange={handleFormChange}
           />
-          <div
+          {/* <div
             style={{
               width: "100%",
               display: "flex",
@@ -295,7 +435,35 @@ const SignUp2 = () => {
             >
               change gmail
             </p>
-          </div>
+          </div> */}
+
+<p style={pStyles}>Phone Number</p>
+          <Input
+            style={inputBoxStylesGmail}
+            placeholder="Phone Number"
+            name="telephone"
+            value={form.telephone}
+            onChange={handleFormChange}
+          />
+
+{form.telephone !== "" && (
+            <div style={{ width: "100%", marginTop: "0.3rem" }}>
+              <div
+                style={{ width: "100%", display: "flex", alignItems: "center" }}
+              >
+                {phoneNumberValidation === true ? (
+                  <IoMdCheckmarkCircleOutline color="#41fc03" size={22} />
+                ) : (
+                  <FaTimes color="red" size={21} />
+                )}
+                <p style={validatePStyles}>
+                  {phoneNumberValidation === false
+                    ? "Please enter a valid phone number !"
+                    : "Valid phone number"}
+                </p>
+              </div>
+            </div>
+          )}
 
           <p style={pStyles}>Address Line 01</p>
           <Input
@@ -306,16 +474,16 @@ const SignUp2 = () => {
             value={form.address}
           />
 
-          <p style={pStyles}>Address Line 02 (optional)</p>
+          {/* <p style={pStyles}>Address Line 02 (optional)</p>
           <Input
             style={inputBoxStyles}
             onChange={handleFormChange}
             name="address2"
             value={form.address2}
             placeholder="Address Line 02 (optional)"
-          />
+          /> */}
 
-          <p style={pStyles}>Gender</p>
+          {/* <p style={pStyles}>Gender</p>
           <Radio.Group onChange={onChangeGender} value={gender}>
             <Radio
               value={"male"}
@@ -347,7 +515,7 @@ const SignUp2 = () => {
             >
               Other
             </Radio>
-          </Radio.Group>
+          </Radio.Group> */}
 
           <p style={pStyles}>Password</p>
           <Input.Password
@@ -473,11 +641,79 @@ const SignUp2 = () => {
               marginTop: "2rem",
             }}
           >
-            <button className="submit-btn">SIGN UP</button>
+            <button className="submit-btn" onClick={signUpClick}>SIGN UP</button>
           </div>
         </div>
       </div>
     </div>
+
+
+
+    <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          // Define default options
+          className: "",
+          duration: 2000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+
+          // Default options for specific types
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+          custom: {
+            duration: 2000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
+
+
+<Backdrop
+        sx={{ color: 'blue',}}
+        open={userLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
+
+      <Modal
+       title="" 
+       footer={null}
+       open={isModalOpen} 
+       onOk={handleOk} 
+       centered={true}
+       closable={false}
+      
+       >
+         <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",
+         flexDirection:"column"}}>
+         <AiOutlineCheckCircle size={80} style={{ color: "green" }} />
+           <p style={{fontSize:"1.5rem",letterSpacing:"0.1rem",color:"green"}}>
+            Verification email sent successfully
+            </p>
+            <p>Go and check your inbox</p>
+           {/* <button onClick={handleCancel} className="rs-modal-btn" style={{marginTop:"0.5rem"}}>OK</button> */}
+         </div>
+     
+      </Modal>
+
+
+    </>
   );
 };
 

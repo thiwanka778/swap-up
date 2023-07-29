@@ -1,4 +1,4 @@
-const sideBarData = [
+const sideBarData2 = [
     {
       title: "Home",
       icon: "bi-house-door-fill",
@@ -36,5 +36,5 @@ path:"/donate",
     // Add more menu items here...
   ];
 
-  export default sideBarData;
+  export default sideBarData2;
   

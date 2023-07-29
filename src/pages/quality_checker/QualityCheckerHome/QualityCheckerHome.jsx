@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "./UserHome.css";
+import "./QualityCheckerHome.css";
 import { useSelector,useDispatch } from "react-redux";
-import Carousel from "./Carousel";
 import CountUp from 'react-countup';
 // Import Swiper styles
 import 'swiper/css';
@@ -26,7 +25,7 @@ function formatDate(date) {
     return daysOfWeek[date.getDay()];
   }
 
-const UserHome = () => {
+const QualityCheckerHome = () => {
   const carouselRef = React.useRef(null);
 
     const {screen}=useSelector((state)=>state.user)
@@ -55,7 +54,7 @@ const UserHome = () => {
       
 
   return (
-    <div className='user-home'>
+    <div className='qc-home'>
 
        <div style={{width:"100%",display:"flex",
        alignContent:"center",
@@ -80,7 +79,7 @@ const UserHome = () => {
         marginBottom:screen<485?"1.5rem":"0rem",
         padding:"1rem",boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
         justifyContent:"center",flexDirection:"column",background:"#d3d3db",borderRadius:"10px"}}>
-            <p style={{fontFamily: "'Inter', sans-serif",fontSize:"2rem",color:"#00425A",fontWeight:500}}>Total Swaps</p>
+            <p style={{fontFamily: "'Inter', sans-serif",fontSize:"2rem",color:"#00425A",fontWeight:500}}>Total Checked</p>
             <p style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center"}} >
                 <span>
                <i className="bi-file-text" style={{fontSize:"1.5rem"}}></i>
@@ -123,32 +122,12 @@ const UserHome = () => {
        </div>
 
        {/* text slider start */}
-<div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",marginTop:"2rem"}}>
-
-<div style={{padding:"1rem",width:"fit-content",display:"flex",alignItems:"center",flexDirection:"column",
-       justifyContent:"center",background:"#d3d3db",borderRadius:"10px"}}>
-         <p style={{fontFamily: "'Inter', sans-serif",fontSize:"1.5rem",color:"#00425A",
-         fontWeight:600,marginBottom:"0.5rem"}}>Did you know ?</p>
-         <p style={{fontFamily: "'Inter', sans-serif",fontSize:"1.2rem",color:"#00425A",fontWeight:500}} >
-         Manufacturing a cotton shirt produces the same amount of emissions as driving 35 miles in a car.
-         </p>
-       </div>
 
 
-</div>
+
       
-
-       {/* text slider end */}
-
-<div style={{width:"100%",marginTop:"2.5rem",
-display:"flex",alignItems:"center",
-justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
-
-
-<Carousel/>
-</div>
         </div>
   )
 }
 
-export default UserHome
+export default QualityCheckerHome;

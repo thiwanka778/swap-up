@@ -1,5 +1,5 @@
 import React from "react";
-import "./Profile.css";
+import "./QualityCheckerProfile.css";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import Rating from "@mui/material/Rating";
 import Input from "antd/es/input/Input";
@@ -30,7 +30,7 @@ children:<EditProfile/>,
 
 
 
-const Profile = () => {
+const QualityCheckerProfile = () => {
   const {screen}=useSelector((state)=>state.user);
 
   return (
@@ -54,7 +54,7 @@ src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.
         fontSize: "1rem",
         fontFamily: "'Inter', sans-serif",
         marginTop: "0.2rem",
-      }} >Member</p>
+      }} >Quality Checker</p>
 </div>
 <p style={{
         color: "#00425A",
@@ -141,4 +141,4 @@ src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.
   );
 };
 
-export default Profile;
+export default QualityCheckerProfile;

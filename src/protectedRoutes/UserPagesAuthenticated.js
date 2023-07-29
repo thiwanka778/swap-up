@@ -3,16 +3,17 @@ import { useSelector } from "react-redux";
 
 
 
-const SignupAuth=()=>{
+const UserPagesAuthenticated=()=>{
     const location = useLocation();
     const {userEmail,user}=useSelector((state)=>state.user);
+    //duhfvhufv
 
     return (
-        !user
+        user==="user"
         ?<Outlet/>
         :<Navigate to="/" state={{from:location}} replace />
 
     )
 }
 
-export default SignupAuth;
+export default UserPagesAuthenticated;

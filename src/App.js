@@ -17,6 +17,13 @@ import Swap from "./pages/user/Swap/Swap";
 import Donate from "./pages/user/Donate/Donate";
 import Complaints from "./pages/user/Complaints/Complaints";
 import Profile from "./pages/user/Profile/Profile";
+import UserPagesAuthenticated from "./protectedRoutes/UserPagesAuthenticated";
+import QualityCheckAuth from "./pages/quality_checker/QualityCheckAuth/QualityCheckAuth";
+import VerifyPage from "./pages/user/VerifyPage/VerifyPage";
+import QualityCheckerComplaint from "./pages/quality_checker/QualityCheckerComplaint/QualityCheckerComplaint";
+import QualityCheckerProfile from "./pages/quality_checker/QualityCheckerProfile/QualityCheckerProfile";
+
+
 
 function App() {
   const dispatch = useDispatch();
@@ -57,11 +64,25 @@ function App() {
               <Route path="signup" element={<SignUp2/>}/>
             </Route>
 
-            <Route path="quality-check" element={<QualityCheck/>}/>
+
+      {/* user routes start */}
+        <Route element={<UserPagesAuthenticated/>}>
+        <Route path="quality-check" element={<QualityCheck/>}/>
             <Route path="swap" element={<Swap/>}/>
             <Route path="donate" element={<Donate/>}/>
             <Route path="complaints" element={<Complaints/>}/>
             <Route path="profile" element={<Profile/>}/>
+        </Route>
+         {/* user routes end */}
+
+
+         <Route path="quality-checker-quality-check-page" element={<QualityCheckAuth/>}/>
+         <Route path="quality-checker-complaints-page"    element={<QualityCheckerComplaint/>}/>
+         <Route path="quality-checker-profile-page" element={<QualityCheckerProfile/>}/>
+
+         <Route path="verifycode/:id" element={<VerifyPage/>}/>
+
+           
 
             
           </Routes>
