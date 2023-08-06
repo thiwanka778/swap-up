@@ -3,11 +3,16 @@ import "./VerifyPage.css";
 import { useParams } from "react-router-dom";
 import { useDispatch,useSelector } from 'react-redux';
 import { resetUser,userVerify } from '../../../redux/userSlice';
+import {useNavigate} from "react-router-dom";
+import { AiOutlineCheckCircle } from "react-icons/ai";
+import {  Modal } from 'antd';
 
 const VerifyPage = () => {
     const {id}=useParams();
+    const navigate=useNavigate();
     console.log(id)
     const dispatch=useDispatch();
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
     const {userVerifyMessage,userVerifyStatus,userLoading}=useSelector((state)=>state.user);
 
     const verifyClick=()=>{
@@ -19,15 +24,28 @@ const VerifyPage = () => {
 
     React.useEffect(()=>{
         if(userLoading==false){
-            if(userVerifyStatus===true){
-                console.log("user verified successfully !");
+            if(userVerifyStatus===true && userVerifyMessage=="Account Verified"){
+                // console.log("user verified successfully !");
                 dispatch(resetUser());
+                setIsModalOpen(true);
+                
+
             }
         }
 
-    },[userLoading])
+    },[userLoading]);
+
+    const handleOk = () => {
+      setIsModalOpen(false);
+    };
+
+    const handleCancel=()=>{
+      navigate("/login");
+      setIsModalOpen(false);
+    }
 
   return (
+    <>
     <div className='verify-page-main'>
         <div className='verify-page'>
         <div className='verification-text'>
@@ -40,6 +58,28 @@ const VerifyPage = () => {
         </div>
           
         </div>
+
+        <Modal
+       title="" 
+       footer={null}
+       open={isModalOpen} 
+       onOk={handleOk} 
+       centered={true}
+       closable={false}
+      
+       >
+         <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",
+         flexDirection:"column"}}>
+         <AiOutlineCheckCircle size={80} style={{ color: "green" }} />
+           <p style={{fontSize:"1.5rem",letterSpacing:"0.1rem",color:"green",textAlign:"center"}}>
+            Account has been verified successfully !
+            </p>
+            {/* <p>Go and check your inbox</p> */}
+           <button onClick={handleCancel} className="rs-modal-btn" style={{marginTop:"0.5rem"}}>Login</button>
+         </div>
+     
+      </Modal>
+        </>
   )
 }
 

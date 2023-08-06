@@ -6,6 +6,7 @@ import sideBarDataQC from "./sideBarDataQC";
 import swaplogo from "../../assets/swaplogo.png";
 import { userLogout } from "../../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import sideBarDataAdmin from "./sideBarDataAdmin";
 
 const SideBar = ({openSideBar,setOpenSideBar}) => {
   const dispatch=useDispatch();
@@ -20,6 +21,8 @@ React.useEffect(()=>{
       return sideBarData2;
      }else if(user==="qualityChecker"){
       return sideBarDataQC;
+     }else if(user==="admin"){
+      return sideBarDataAdmin;
      }
   })
 },[user])

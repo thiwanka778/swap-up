@@ -1,4 +1,4 @@
-.q-check{
+.manage-users{
     width:100%;
     min-height: 95vh;
     padding-top: 12vh;
@@ -6,6 +6,48 @@
     padding-right: 1rem;
     padding-bottom: 1rem;
 }
+
+.admin-complaint-view{
+    background-color: orange; /* Green background color */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    font-size:1rem; /* Font size */
+    cursor: pointer; /* Cursor on hover */
+    transition: transform 0.3s ease;
+}
+.admin-complaint-view:active{
+    transform: scale(0.7);
+}
+.admin-complaint-remove{
+    background-color: red; /* Green background color */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    font-size:1rem; /* Font size */
+    cursor: pointer; /* Cursor on hover */
+    transition: transform 0.3s ease;
+}
+.admin-complaint-remove:active{
+    transform: scale(0.7);
+}
+
+.admin-complaint-respond{
+    background-color: blue; /* Green background color */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    font-size:1rem; /* Font size */
+    cursor: pointer; /* Cursor on hover */
+    transition: transform 0.3s ease;
+}
+.admin-complaint-respond:active{
+    transform: scale(0.7);
+}
+
 
 .appeal-button {
     background-color: #4CAF50; /* Green background color */
@@ -15,7 +57,7 @@
     border-radius: 4px; /* Rounded corners */
     font-size:1rem; /* Font size */
     cursor: pointer; /* Cursor on hover */
-    transition: transform 0.9s ; /* Smooth transition for background color change */
+    transition: background-color 0.3s ease; /* Smooth transition for background color change */
   }
   .appeal-button[disabled] {
     background-color: #e0e0e0; /* Very light green for disabled button */
@@ -23,11 +65,8 @@
   }
   
   /* CSS for the button on hover (for enabled button) */
-  .appeal-button:not([disabled]) {
+  .appeal-button:not([disabled]):hover {
     background-color: #45a049; /* Slightly darker green on hover */
-  }
-  .appeal-button:active{
-    transform: scale(0.7);
   }
 
   .new-swap-button {

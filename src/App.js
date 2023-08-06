@@ -22,6 +22,11 @@ import QualityCheckAuth from "./pages/quality_checker/QualityCheckAuth/QualityCh
 import VerifyPage from "./pages/user/VerifyPage/VerifyPage";
 import QualityCheckerComplaint from "./pages/quality_checker/QualityCheckerComplaint/QualityCheckerComplaint";
 import QualityCheckerProfile from "./pages/quality_checker/QualityCheckerProfile/QualityCheckerProfile";
+import QualityCheckerAuthenticated from "./protectedRoutes/QualityCheckerAuthenticated";
+import AdminPagesAuth from "./protectedRoutes/AdminPagesAuth";
+import UserComplaints from "./pages/admin/UserComplaints/UserComplaints";
+import ViewProfile from "./pages/admin/ViewProfile/ViewProfile";
+import ManageUsers from "./pages/admin/ManageUsers/ManageUsers";
 
 
 
@@ -75,14 +80,38 @@ function App() {
         </Route>
          {/* user routes end */}
 
+         {/* qulaity checker pages start */}
 
-         <Route path="quality-checker-quality-check-page" element={<QualityCheckAuth/>}/>
+         <Route element={<QualityCheckerAuthenticated/>}>
+           <Route path="quality-checker-quality-check-page" element={<QualityCheckAuth/>}/>
          <Route path="quality-checker-complaints-page"    element={<QualityCheckerComplaint/>}/>
          <Route path="quality-checker-profile-page" element={<QualityCheckerProfile/>}/>
 
+           </Route>
+            {/* qulaity checker pages end */}
+
+
+
+            {/* admin pages auth start */}
+
+            <Route element={<AdminPagesAuth/>}>
+              <Route path="user-complaints" element={<UserComplaints/>}/>
+
+              <Route path="manage-users" element={<ManageUsers/>}/>
+              <Route path="view-profile/:id" element={<ViewProfile/>}/>
+
+            </Route>
+
+             {/* admin pages auth end */}
+
+             
+           
+
+        
+
          <Route path="verifycode/:id" element={<VerifyPage/>}/>
 
-           
+
 
             
           </Routes>

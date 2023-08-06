@@ -3,17 +3,17 @@ import { useSelector } from "react-redux";
 
 
 
-const UserPagesAuthenticated=()=>{
+const AdminPagesAuth=()=>{
     const location = useLocation();
     const {userEmail,user}=useSelector((state)=>state.user);
-   
+    //duhfvhufv
 
     return (
-        user==="user"
+        user==="admin"
         ?<Outlet/>
         :<Navigate to="/" state={{from:location}} replace />
 
     )
 }
 
-export default UserPagesAuthenticated;
+export default AdminPagesAuth;

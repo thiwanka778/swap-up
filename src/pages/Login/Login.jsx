@@ -61,11 +61,12 @@ const Login = () => {
   };
 
   const loginBtnClick=()=>{
+
     if(loginForm.email!=="" && loginForm.password!==""){
       const {email,password}=loginForm;
       if(email==="user" || email==="qualityChecker" || email==="admin"){
         dispatch(userLoginTemp(email));
-        navigate("/")
+        navigate("/");
 
       }
     }

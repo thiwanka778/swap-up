@@ -703,7 +703,7 @@ const handleCancel = () => {
          <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",
          flexDirection:"column"}}>
          <AiOutlineCheckCircle size={80} style={{ color: "green" }} />
-           <p style={{fontSize:"1.5rem",letterSpacing:"0.1rem",color:"green"}}>
+           <p style={{fontSize:"1.5rem",letterSpacing:"0.1rem",color:"green",textAlign:"center",}}>
             Verification email sent successfully
             </p>
             <p>Go and check your inbox</p>

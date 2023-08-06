@@ -63,7 +63,7 @@ export const userVerify = createAsyncThunk(
   async ({verifyCode}, thunkAPI) => {
     try {
   
-      const response = await axios.get(`${BASE_URL}/api/v1/user/verification/${verifyCode}`);
+      const response = await axios.get(`${BASE_URL}/api/v1/user/verification/?code=${verifyCode}`);
 
      
       return response.data;
@@ -173,6 +173,7 @@ const userSlice = createSlice({
         
       })
       .addCase(userVerify.fulfilled, (state, action) => {
+        console.log(action)
         state.userLoading = false;
         state.userError="";
         state.userVerifyMessage=action.payload;
@@ -181,6 +182,7 @@ const userSlice = createSlice({
     
       })
       .addCase(userVerify.rejected, (state, action) => {
+        console.log(action)
         state.userLoading = false;
         state.userError=action.payload;
         state.userVerifyMessage="";
