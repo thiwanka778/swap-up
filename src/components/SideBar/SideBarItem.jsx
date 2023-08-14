@@ -11,6 +11,7 @@ const SideBarItem = (props) => {
   };
 
   if (props.item?.children) {
+    
     const subItems = props.item.children.map((item, index) => {
       return <SideBarItem key={index} item={item} />;
     });

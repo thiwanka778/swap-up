@@ -43,6 +43,13 @@ const Login = () => {
     password: "",
   });
 
+
+  React.useEffect(()=>{
+if(userLoading==false && userLoginStatus==true){
+  dispatch(resetUser())
+}
+  },[userLoading])
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     console.log(name);
@@ -62,22 +69,22 @@ const Login = () => {
 
   const loginBtnClick=()=>{
 
-    if(loginForm.email!=="" && loginForm.password!==""){
-      const {email,password}=loginForm;
-      if(email==="user" || email==="qualityChecker" || email==="admin"){
-        dispatch(userLoginTemp(email));
-        navigate("/");
+    // if(loginForm.email!=="" && loginForm.password!==""){
+    //   const {email,password}=loginForm;
+    //   if(email==="user" || email==="qualityChecker" || email==="admin" || email==="inventoryManager"){
+    //     dispatch(userLoginTemp(email));
+    //     navigate("/");
 
-      }
-    }
+    //   }
+    // }
 
-  //  const {email,password} =loginForm;
+   const {email,password} =loginForm;
 
-  //  if(email=="" || password ==""){
-  //   toast.custom(<WarningToast message={"Email and password can't be empty !"}/>)
-  //  }else if(email!=="" && password!==""){
-  //   dispatch(userLogin({email,password}))
-  //  }
+   if(email=="" || password ==""){
+    toast.custom(<WarningToast message={"Email and password can't be empty !"}/>)
+   }else if(email!=="" && password!==""){
+    dispatch(userLogin({email,password}))
+   }
 
    
 

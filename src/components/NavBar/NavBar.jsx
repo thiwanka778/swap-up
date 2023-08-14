@@ -290,7 +290,7 @@ window.localStorage.setItem("openSideBar",JSON.stringify(openSideBar))
           'aria-labelledby': 'basic-button',
         }}
       >
-          <MenuItem onClick={handleCloseUser}><PersonIcon/>&nbsp;&nbsp;Thiwanka Udumulla</MenuItem>
+          <MenuItem onClick={handleCloseUser}><PersonIcon/>&nbsp;&nbsp;{user?.firstName} {user?.lastName}</MenuItem>
           <Divider />
        {!user && <MenuItem  onClick={handleClickOpen} ><AppRegistrationIcon/>&nbsp;&nbsp;Sign Up</MenuItem>}
 

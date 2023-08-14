@@ -32,7 +32,7 @@ const Home = () => {
     width: "100%",
     padding: "1rem",
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(200px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fill,minmax(200px, 1fr))",
   }:{
      width:"100%",
      display:"flex",

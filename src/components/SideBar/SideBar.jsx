@@ -7,6 +7,7 @@ import swaplogo from "../../assets/swaplogo.png";
 import { userLogout } from "../../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import sideBarDataAdmin from "./sideBarDataAdmin";
+import sideBarDataInventoryManager from "./sideBarDataInventoryManager";
 
 const SideBar = ({openSideBar,setOpenSideBar}) => {
   const dispatch=useDispatch();
@@ -17,12 +18,14 @@ const SideBar = ({openSideBar,setOpenSideBar}) => {
 
 React.useEffect(()=>{
   setSiderBarData((prevState)=>{
-     if(user=="user"){
+     if(user?.role?.toLowerCase()=="customer"){
       return sideBarData2;
      }else if(user==="qualityChecker"){
       return sideBarDataQC;
      }else if(user==="admin"){
       return sideBarDataAdmin;
+     }else if(user==="inventoryManager"){
+      return sideBarDataInventoryManager;
      }
   })
 },[user])

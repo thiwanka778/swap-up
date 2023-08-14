@@ -88,8 +88,8 @@ export const userLogin = createAsyncThunk(
     try {
   
       const response = await axios.post(`${BASE_URL}/api/v1/user/login`, {
-        email,
-        password,
+        userName:email,
+        userPassword:password,
       });
 
      
@@ -202,17 +202,19 @@ const userSlice = createSlice({
       .addCase(userLogin.fulfilled, (state, action) => {
         state.userLoading = false;
         console.log(action)
+        // const data2=action.payload?.user;
+        // const data3=action.payload?.jwtToken;
+        state.user=action.payload;
         state.userError="";
         state.userLoginStatus=true;
-       
+        window.localStorage.setItem("user",JSON.stringify(state.user));
   
     
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.userLoading = false;
         state.userError=action.payload;
-        state.userLoginStatus=false
-       
+        state.userLoginStatus=false 
      
       })
 

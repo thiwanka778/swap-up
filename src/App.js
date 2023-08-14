@@ -27,6 +27,9 @@ import AdminPagesAuth from "./protectedRoutes/AdminPagesAuth";
 import UserComplaints from "./pages/admin/UserComplaints/UserComplaints";
 import ViewProfile from "./pages/admin/ViewProfile/ViewProfile";
 import ManageUsers from "./pages/admin/ManageUsers/ManageUsers";
+import InventoryManagerAuth from "./protectedRoutes/InventoryManagerAuth";
+import Listing from "./pages/inventoryManager/Listing/Listing";
+import FavoriteItemPage from "./pages/user/FavoriteItemPage/FavoriteItemPage";
 
 
 
@@ -77,6 +80,7 @@ function App() {
             <Route path="donate" element={<Donate/>}/>
             <Route path="complaints" element={<Complaints/>}/>
             <Route path="profile" element={<Profile/>}/>
+            <Route path="favorite-items-page" element={<FavoriteItemPage/>}/>
         </Route>
          {/* user routes end */}
 
@@ -103,6 +107,15 @@ function App() {
             </Route>
 
              {/* admin pages auth end */}
+
+{/* inventory auth start */}
+             <Route element={<InventoryManagerAuth/>}>
+            
+             </Route>
+
+             <Route path="listing" element={<Listing/>}/>
+
+             {/* inventory auth end */}
 
              
            
