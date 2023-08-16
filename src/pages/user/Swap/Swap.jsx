@@ -13,6 +13,7 @@ import { Input } from 'antd';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Pagination from '@mui/material/Pagination';
+import { useSelector } from "react-redux";
 const { TextArea } = Input;
 
 
@@ -345,6 +346,7 @@ const data = [
 
 
 const Swap = () => {
+  const {screen,openRedux}=useSelector((state)=>state.user);
 
     const columns = [
         {
@@ -564,7 +566,7 @@ const Swap = () => {
 
   return (
     <>
-      <div className="swap">
+      <div className="swap"  style={{paddingLeft:(openRedux&&screen>650)?"270px":"1rem"}} >
         <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center" }}>
           <p
             style={{

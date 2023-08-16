@@ -162,5 +162,20 @@
     cursor: not-allowed; /* Cursor indicating that the button is not allowed */
   }
 
+  .custom-mui-button:hover {
+    background-color: red !important; /* Set the desired background color */
+    color: #fff !important; /* Set the desired text color */
+  }
+
+  .custom-mui-button2:hover {
+    background-color: orange !important; /* Set the desired background color */
+    color: #fff !important; /* Set the desired text color */
+  }
+  .custome-mui-button3{
+    background-color: green !important; /* Set the desired background color */
+    color: #fff !important;
+  }
+
+
 
 

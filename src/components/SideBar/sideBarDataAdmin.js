@@ -5,15 +5,21 @@ const sideBarDataAdmin = [
       path: "/",
     },
     {
+      title: "Staff Registration",
+      icon:"bi-box-arrow-in-right",
+      path:"/staff-signup",
+    },
+   
+    {
       title: "Manage Users",
       icon:"bi-people-fill",
       path:"/manage-users",
     },
-    {
-        title: "Quality Check",
-        icon:"bi-card-checklist",
-        path:"/admin-quality-check",
-      },
+    // {
+    //     title: "Quality Check",
+    //     icon:"bi-card-checklist",
+    //     path:"/admin-quality-check",
+    //   },
     {
       title:"User Complaints",
       icon:"bi-shield-fill-exclamation",

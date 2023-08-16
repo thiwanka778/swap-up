@@ -13,6 +13,7 @@ import { Input } from 'antd';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Pagination from '@mui/material/Pagination';
+import { useSelector } from "react-redux";
 const { TextArea } = Input;
 
 const pStyles = {
@@ -212,6 +213,8 @@ const data = [
 
 
 const QualityCheck = () => {
+
+  const {openRedux,screen}=useSelector((state)=>state.user)
 
   const columns = [
     {
@@ -480,7 +483,7 @@ const QualityCheck = () => {
 
   return (
     <>
-      <div className="q-check">
+      <div className="q-check"  style={{paddingLeft:(openRedux&&screen>650)?"270px":"1rem"}} >
         <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center",marginTop:"2rem"  }}>
           <p
             style={{

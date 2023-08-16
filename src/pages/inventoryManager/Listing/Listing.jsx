@@ -87,18 +87,7 @@ const types=[
       path:"jeans",
       isActive:false,
     },
-    {
-      id:8,
-      categoryName:"Leggings",
-      path:"leggings",
-      isActive:false,
-    },
-    {
-      id:9,
-      categoryName:"Mini Skirt",
-      path:"mini-dresses",
-      isActive:false,
-    },
+ 
 
 ];
 
@@ -448,12 +437,12 @@ setIsActive(true);
 <Checkbox onChange={onChangeActiveStatus} checked={isActive}>Active Status</Checkbox>
 </div>
 
-                <p style={pStyles}>Item Title</p>
+                {/* <p style={pStyles}>Item Title</p>
                     <Input size="large" 
                     onChange={onChangeHandleInput}
                     value={form.itemTitle}
                     name="itemTitle"
-                    style={{marginTop:"0.5rem",width:"100%"}} placeholder="Item Title"/>
+                    style={{marginTop:"0.5rem",width:"100%"}} placeholder="Item Title"/> */}
 
                     <div style={{width:"100%",marginTop:"1.5rem",}}>
 <Autocomplete

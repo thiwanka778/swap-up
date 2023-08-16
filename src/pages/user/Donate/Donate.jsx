@@ -12,6 +12,7 @@ import { auth } from "../../../firebase";
 import { Input } from 'antd';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useSelector } from "react-redux";
 const { TextArea } = Input;
 
 const pStyles = {
@@ -331,6 +332,7 @@ const Donate = () => {
 
   const [isModalOpena, setIsModalOpena] = React.useState(false);
   const [appealData,setAppealData]=React.useState({});
+  const {screen,openRedux}=useSelector((state)=>state.user);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -477,7 +479,7 @@ const Donate = () => {
 
   return (
     <>
-      <div className="donate">
+      <div className="donate" style={{paddingLeft:(openRedux&&screen>650)?"270px":"1rem"}} >
         <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center" ,marginTop:"2rem" }}>
           <p
             style={{

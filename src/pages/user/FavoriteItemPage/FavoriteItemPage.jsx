@@ -25,7 +25,7 @@ const {
     deleteFavoriteStatus,
     inventoryStatus,
   } = useSelector((state) => state.inventory);
-  const { screen, user } = useSelector((state) => state.user);
+  const { screen, user,openRedux } = useSelector((state) => state.user);
 
   const displayItemsStyles =
   screen <= 694
@@ -105,7 +105,7 @@ const {
 
   return (
     <>
-    <div className="favorite-item-page">
+    <div className="favorite-item-page" style={{paddingLeft:(openRedux&&screen>650)?"270px":"0px"}} >
 
         <div style={{width:"100%",display:"flex",
         alignItems:"center",justifyContent:"center",marginTop:"1.5rem",

@@ -1,0 +1,96 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    text-decoration: none;
+}
+
+.sign-up2admin{
+    width:100%;
+    padding-top: 12vh;
+    background-image: url("../../../assets/staffimage.jpg");
+    background-repeat: no-repeat;
+    background-size: cover; 
+   
+}
+.main-signup-container{
+    width:"100%";
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding:1.5rem;
+
+}
+.input-box-container{
+    width:440px;
+    /* background-color: #00425A; */
+    background-color:transparent;
+    backdrop-filter: blur(50px);
+    display: flex;
+    padding:0 2rem 2rem 2rem;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+}
+
+
+.submit-btn{
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.1rem;
+    border:none;
+    font-weight: 500;
+    color: #fff;
+    transition: transform 0.3s;
+    background-color: #0f66f2;
+}
+
+
+  
+  .submit-btn:hover {
+    background-color: #1409e8;
+
+  }
+  .submit-btn:active {
+    transform: scale(0.7);
+  }
+
+  @media screen and (max-width: 473px) {
+    .input-box-container{
+        width:95%;
+    
+    }
+  }
+
+
+  .custom-checkbox-group .ant-checkbox-group-item label {
+    color: white !important;
+  }
+
+  .rs-modal-btn{
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.1rem;
+    border:none;
+    font-weight: 500;
+    color: #fff;
+    transition: transform 0.3s;
+    background-color: #0f66f2;
+  }
+
+  .rs-modal-btn:active {
+    transform: scale(0.7);
+  }
+
+

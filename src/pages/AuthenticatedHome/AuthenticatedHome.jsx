@@ -26,7 +26,7 @@ switch (user?.role?.toLowerCase()) {
       componentToRender = <AdminHome />;
       break;
 
-      case "inventoryManager":
+      case "inventory_manager":
         componentToRender=<InventoryManagerHome/>;
         break;
 

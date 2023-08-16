@@ -21,12 +21,15 @@ const initialState = {
 
   userLoginStatus:false,
   userLoginMessage:"",
+  openRedux:false,
+
+  staffRegisterStatus:false,
 };
 
 // userRegister
 export const userRegister = createAsyncThunk(
   "user/register",
-  async ({ email, firstName, lastName, telephone,address, roll, password,profilePicture,nic }, thunkAPI) => {
+  async ({ email, firstName, lastName, telephone,address, role, password,profilePicture,nic }, thunkAPI) => {
     try {
   
       const response = await axios.post(`${BASE_URL}/api/v1/user/register-customer`, {
@@ -34,7 +37,7 @@ export const userRegister = createAsyncThunk(
         firstName,
         lastName,
         telephone,
-        roll,
+        role,
         password,
         profilePicture,
         nic,
@@ -109,6 +112,40 @@ export const userLogin = createAsyncThunk(
 
 
 
+export const staffRegister = createAsyncThunk(
+  "user/staffRegister",
+  async ({ email, firstName, lastName, telephone,address, role, password,profilePicture,nic }, thunkAPI) => {
+    try {
+  
+      const response = await axios.post(`${BASE_URL}/api/v1/user/register-staff`, {
+        email,
+        firstName,
+        lastName,
+        telephone,
+        role,
+        password,
+        profilePicture,
+        nic,
+        address,
+      });
+
+     
+      return response.data;
+    } catch (error) {
+     
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+    
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -122,6 +159,7 @@ const userSlice = createSlice({
       state.userVerifyMessage="";
       state.userLoginStatus=false;
       state.userLoginMessage="";
+      state.staffRegisterStatus=false;
     },
     getScreenWidth: (state, action) => {
       state.screen = action.payload;
@@ -130,12 +168,19 @@ const userSlice = createSlice({
         state.userEmail=action.payload;
     },
     userLoginTemp:(state,action)=>{
-      state.user=action.payload;
+      const tempAdmin={role:action.payload}
+      state.user=tempAdmin;
       window.localStorage.setItem("user",JSON.stringify(state.user));
     },
     userLogout:(state,action)=>{
       state.user=null;
       window.localStorage.setItem("user",JSON.stringify(state.user));
+    },
+    openSideBarRedux:(state)=>{
+      state.openRedux=true;
+    },
+    closeSideBarRedux:(state)=>{
+      state.openRedux=false;
     }
    
   },
@@ -218,10 +263,37 @@ const userSlice = createSlice({
      
       })
 
+      // staff register by admin
+
+      .addCase(staffRegister.pending, (state) => {
+        state.userLoading = true;
+        state.userError="";
+        state.staffRegisterStatus=false;
+      
+       
+        
+      })
+      .addCase(staffRegister.fulfilled, (state, action) => {
+        state.userLoading = false;
+        state.userError="";
+        state.staffRegisterStatus=true;
+   
+  
+    
+      })
+      .addCase(staffRegister.rejected, (state, action) => {
+        state.userLoading = false;
+        state.userError=action.payload;
+        state.staffRegisterStatus=false;
+       
+     
+      })
+
 
 
   },
 });
 
-export const { getScreenWidth ,getUserEmail,userLogout, resetUser,userLoginTemp} = userSlice.actions;
+export const { getScreenWidth ,getUserEmail,userLogout, resetUser,closeSideBarRedux,
+  openSideBarRedux,userLoginTemp} = userSlice.actions;
 export default userSlice.reducer;

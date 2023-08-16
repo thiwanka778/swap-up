@@ -1,0 +1,57 @@
+.admin-profile{
+    width:100%;
+    min-height: 95vh;
+    padding-top:12vh;
+  
+}
+
+.input-styles{
+    border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  box-shadow: none;
+  font-size: 1rem;
+  padding: 1rem;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.1rem;
+  
+}
+
+.p-edit-btn{
+    background-color: #05b328; /* Orange background color */
+    color: #ffffff; /* White text color */
+    padding: 8px 16px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Default cursor on hover */
+    font-family: 'Inter', sans-serif; /* Use 'Inter' font-family */
+    transition: all 0.3s ease;
+}
+
+.p-edit-btn:active{
+    transform: scale(0.7);
+}
+
+.r-edit-btn{
+    background-color: orange; /* Orange background color */
+    color: #ffffff; /* White text color */
+    padding: 8px 16px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Default cursor on hover */
+    font-family: 'Inter', sans-serif; /* Use 'Inter' font-family */
+    transition: all 0.3s ease;
+}
+.r-edit-btn:active{
+    transform: scale(0.7);
+}
+
+.p-styles{
+    font-size: 1.2rem;
+font-family: 'Ubuntu', sans-serif;
+font-weight: 500;
+letter-spacing: 0.1rem;
+
+}

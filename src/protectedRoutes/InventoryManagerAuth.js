@@ -9,7 +9,7 @@ const InventoryManagerAuth=()=>{
    
 
     return (
-        user=="inventoryManager"
+        user?.role=="INVENTORY_MANAGER"
         ?<Outlet/>
         :<Navigate to="/" state={{from:location}} replace />
 

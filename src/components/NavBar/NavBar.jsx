@@ -8,29 +8,28 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import WarningToast from "../../components/warningToast/WarningToast";
-import { getUserEmail, userLogout } from "../../redux/userSlice";
-import { useDispatch,useSelector } from "react-redux";
+import { getUserEmail, openSideBarRedux, userLogout } from "../../redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { Input } from "antd";
 import { NavLink } from "react-router-dom";
-import Avatar from '@mui/material/Avatar';
-import MenuIcon from '@mui/icons-material/Menu';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import PersonIcon from '@mui/icons-material/Person';
-import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import LoginIcon from '@mui/icons-material/Login';
-import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
-import Divider from '@mui/material/Divider';
+import Avatar from "@mui/material/Avatar";
+import MenuIcon from "@mui/icons-material/Menu";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import PersonIcon from "@mui/icons-material/Person";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+import LoginIcon from "@mui/icons-material/Login";
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import Divider from "@mui/material/Divider";
 import { Link } from "react-router-dom";
 import SideBar from "../SideBar/SideBar";
 import { CSSTransition } from "react-transition-group";
 import { useLocation } from "react-router-dom";
 
 const NavBar = () => {
- 
   const location = useLocation();
   const currentPath = location.pathname;
-const {userEmail,screen,user}=useSelector((state)=>state.user)
+  const { userEmail, screen, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -39,14 +38,19 @@ const {userEmail,screen,user}=useSelector((state)=>state.user)
   const [validGmail, setValidGmail] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openUser = Boolean(anchorEl);
-  const [openSideBar,setOpenSideBar]=React.useState(()=>{
-    const localOpenSideBar=window.localStorage.getItem("openSideBar")
-    return localOpenSideBar?JSON.parse(localOpenSideBar):false;
-  });
+  // const [openSideBar, setOpenSideBar] = React.useState(() => {
+  //   const localOpenSideBar = window.localStorage.getItem("openSideBar");
+  //   return localOpenSideBar ? JSON.parse(localOpenSideBar) : false;
+  // });
+
+  const [openSideBar,setOpenSideBar]=React.useState(false);
+  // const [isSideBarHovered, setIsSideBarHovered] = React.useState(false);
+ 
 
 
 
   const menuClick = () => {
+    dispatch(openSideBarRedux())
     setOpenSideBar((prevState) => {
       const newValue = !prevState;
       // console.log(newValue); // Check the value of openSideBar
@@ -54,11 +58,9 @@ const {userEmail,screen,user}=useSelector((state)=>state.user)
     });
   };
 
-  React.useEffect(()=>{
-window.localStorage.setItem("openSideBar",JSON.stringify(openSideBar))
-  },[openSideBar])
-
-  
+  React.useEffect(() => {
+    window.localStorage.setItem("openSideBar", JSON.stringify(openSideBar));
+  }, [openSideBar]);
 
   const handleClickUser = (event) => {
     setAnchorEl(event.currentTarget);
@@ -67,13 +69,13 @@ window.localStorage.setItem("openSideBar",JSON.stringify(openSideBar))
     setAnchorEl(null);
   };
 
-  const logoutBtnClick=()=>{
+  const logoutBtnClick = () => {
     setAnchorEl(null);
     dispatch(userLogout());
-  }
+  };
 
   const handleClickOpen = () => {
-  navigate("/signup");
+    navigate("/signup");
   };
 
   const handleClose = () => {
@@ -134,52 +136,74 @@ window.localStorage.setItem("openSideBar",JSON.stringify(openSideBar))
     }
   };
 
-
-
   return (
     <>
+      <div className="nav">
+        <img
+          src={swaplogo}
+          alt="swapup-logo"
+          style={{
+            width: "8vh",
+            marginLeft: "1.5rem",
+            marginRight: user ? "1.5rem" : "auto",
+          }}
+        />
 
-    
-
-
-
-    <div className='nav'>
-
-
-        <img src={swaplogo} alt='swapup-logo' style={{width:"8vh",marginLeft:"1.5rem",marginRight:user?"1.5rem":"auto"}} />
-
-    {user && <div style={{marginRight:"auto",cursor:"pointer"}} onClick={menuClick}>
-          <MenuIcon style={{color:"white"}}/>
-        </div>}
-        
-       {screen>=670 && <NavLink to="/" className="nav-text" >Home</NavLink>}
-      {screen>=670 &&  <p className="nav-text">About Us</p>}
-       {screen>=670 && <p className="nav-text">Contact Us</p>}
-     {!user && <button className="signup-btn" onClick={handleClickOpen} style={{marginRight:"1.5rem"}}>SIGN UP</button>}
-       {!user && <button className="login-btn" onClick={()=>navigate("/login")} style={{marginRight:"1.5rem"}}>LOGIN</button>}
-
-     
+        {user && (
+          <div
+            style={{ marginRight: "auto", cursor: "pointer" }}
        
-       {/* {screen<670 && <div style={{marginRight:"1.5rem",cursor:"pointer"}}>
+            onClick={menuClick}
+          >
+            <MenuIcon style={{ color: "white" }} />
+          </div>
+        )}
+
+        {screen >= 670 && (
+          <NavLink to="/" className="nav-text">
+            Home
+          </NavLink>
+        )}
+        {screen >= 670 && <p className="nav-text">About Us</p>}
+        {screen >= 670 && <p className="nav-text">Contact Us</p>}
+        {!user && (
+          <button
+            className="signup-btn"
+            onClick={handleClickOpen}
+            style={{ marginRight: "1.5rem" }}
+          >
+            SIGN UP
+          </button>
+        )}
+        {!user && (
+          <button
+            className="login-btn"
+            onClick={() => navigate("/login")}
+            style={{ marginRight: "1.5rem" }}
+          >
+            LOGIN
+          </button>
+        )}
+
+        {/* {screen<670 && <div style={{marginRight:"1.5rem",cursor:"pointer"}}>
           <MenuIcon style={{color:"white"}}/>
         </div>} */}
 
-       {user && <div style={{marginRight:"1.5rem",cursor:"pointer"}}  
+        {user && (
+          <div
+            style={{ marginRight: "1.5rem", cursor: "pointer" }}
             id="basic-button"
-            aria-controls={openUser ? 'basic-menu' : undefined}
+            aria-controls={openUser ? "basic-menu" : undefined}
             aria-haspopup="true"
-            aria-expanded={openUser ? 'true' : undefined}
-         onClick={handleClickUser}>
-        <Avatar alt="" src="#" />
-        </div>}
+            aria-expanded={openUser ? "true" : undefined}
+            onClick={handleClickUser}
+          >
+            <Avatar alt="" src="#" />
+          </div>
+        )}
+      </div>
 
-
-        </div>
-
-
-
-
-        <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose}>
         <DialogContent style={{ background: "ghostwhite" }}>
           <div
             style={{
@@ -280,38 +304,60 @@ window.localStorage.setItem("openSideBar",JSON.stringify(openSideBar))
         }}
       />
 
-
-<Menu
+      <Menu
         id="basic-menu"
         anchorEl={anchorEl}
         open={openUser}
         onClose={handleCloseUser}
         MenuListProps={{
-          'aria-labelledby': 'basic-button',
+          "aria-labelledby": "basic-button",
         }}
       >
-          <MenuItem onClick={handleCloseUser}><PersonIcon/>&nbsp;&nbsp;{user?.firstName} {user?.lastName}</MenuItem>
-          <Divider />
-       {!user && <MenuItem  onClick={handleClickOpen} ><AppRegistrationIcon/>&nbsp;&nbsp;Sign Up</MenuItem>}
+        <MenuItem onClick={handleCloseUser}>
+          <PersonIcon />
+          &nbsp;&nbsp;{user?.firstName} {user?.lastName}
+        </MenuItem>
+        <Divider />
+        {!user && (
+          <MenuItem onClick={handleClickOpen}>
+            <AppRegistrationIcon />
+            &nbsp;&nbsp;Sign Up
+          </MenuItem>
+        )}
 
-     {!user &&  <Link to="/login" style={{textDecoration:"none",color:"black"}}>
-       <MenuItem onClick={handleCloseUser}><LoginIcon/>&nbsp;&nbsp;Login</MenuItem>
-        </Link> }
+        {!user && (
+          <Link to="/login" style={{ textDecoration: "none", color: "black" }}>
+            <MenuItem onClick={handleCloseUser}>
+              <LoginIcon />
+              &nbsp;&nbsp;Login
+            </MenuItem>
+          </Link>
+        )}
 
-        <MenuItem onClick={logoutBtnClick}><PowerSettingsNewIcon />&nbsp;&nbsp;Logout</MenuItem>
+        <MenuItem onClick={logoutBtnClick}>
+          <PowerSettingsNewIcon />
+          &nbsp;&nbsp;Logout
+        </MenuItem>
       </Menu>
 
+      {openSideBar && user && (
+        <div style={{ width: "100%" }}>
+          <SideBar openSideBar={openSideBar} setOpenSideBar={setOpenSideBar} />
+        </div>
+      )}
 
-      { (openSideBar && user) && (
-  <div style={{ width: "100%" }}>
-   
-      <SideBar openSideBar={openSideBar} setOpenSideBar={setOpenSideBar} />
-  
-  </div>
-)}
 
-        </>
-  )
-}
 
-export default NavBar
+
+
+
+
+
+
+
+
+    </>
+  );
+};
+
+export default NavBar;

@@ -3,11 +3,6 @@ import "./ManageUsers.css";
 import { Space, Table, Tag } from "antd";
 import Avatar from '@mui/material/Avatar';
 import { Outlet ,useNavigate} from "react-router-dom";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { Button, Modal } from "antd";
-import { AutoComplete } from "antd";
-import { NoEncryption } from "@mui/icons-material";
 import { getStorage, ref, uploadBytes, getDownloadURL,uploadBytesResumable } from 'firebase/storage';
 import { nanoid } from 'nanoid';
 import { auth } from "../../../firebase";
@@ -15,6 +10,12 @@ import { Input } from 'antd';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Pagination from '@mui/material/Pagination';
+import { useDispatch, useSelector } from "react-redux";
+import { adminReset, fetchAllUsers, putUserOnHold, removeUserHold } from "../../../redux/adminSlice";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 const { TextArea } = Input;
 
 const pStyles = {
@@ -45,234 +46,100 @@ const options = [
   },
 ];
 
-const data = [
-  {
-    key: "1",
-    no: "01",
-    date: "02/06/2023",
-    name: "Sunil Perera",
-    userType: "Member",
-    accountStatus: "Enabled",
-    gender: "male",
-    url: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?w=2000",
-  },
-  {
-    key: "2",
-    no: "02",
-    date: "03/06/2023",
-    name: "Emma Watson",
-    userType: "Quality Checker",
-    accountStatus: "Disabled",
-    gender: "female",
-    url: "https://t4.ftcdn.net/jpg/02/24/86/95/360_F_224869519_aRaeLneqALfPNBzg0xxMZXghtvBXkfIA.jpg",
-  },
-  {
-    key: "3",
-    no: "03",
-    date: "04/06/2023",
-    name: "John Doe",
-    userType: "Delivery Manager",
-    accountStatus: "Enabled",
-    gender: "male",
-    url: "https://t4.ftcdn.net/jpg/02/14/74/61/360_F_214746128_31JkeaP6rU0NzzzdFC4khGkmqc8noe6h.jpg",
-  },
-  {
-    key: "4",
-    no: "04",
-    date: "05/06/2023",
-    name: "Alice Smith",
-    userType: "Member",
-    accountStatus: "Disabled",
-    gender: "female",
-    url: "https://images.pexels.com/photos/842811/pexels-photo-842811.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-842811.jpg&fm=jpg",
-  },
-  {
-    key: "5",
-    no: "05",
-    date: "06/06/2023",
-    name: "Robert Johnson",
-    userType: "Quality Checker",
-    accountStatus: "Enabled",
-    gender: "male",
-    url: "https://images.unsplash.com/photo-1600804889194-e6fbf08ddb39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aGFuZHNvbWUlMjBtYW58ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-  },
-  {
-    key: "6",
-    no: "06",
-    date: "07/06/2023",
-    name: "Sophia Lee",
-    userType: "Delivery Manager",
-    accountStatus: "Enabled",
-    gender: "female",
-    url: "https://img.freepik.com/free-photo/happiness-wellbeing-confidence-concept-cheerful-attractive-african-american-woman-curly-haircut-cross-arms-chest-self-assured-powerful-pose-smiling-determined-wear-yellow-sweater_176420-35063.jpg",
-  },
-  {
-    key: "7",
-    no: "07",
-    date: "08/06/2023",
-    name: "David Brown",
-    userType: "Member",
-    accountStatus: "Enabled",
-    gender: "male",
-    url: "https://discoverymood.com/wp-content/uploads/2020/04/Mental-Strong-Women-min.jpg",
-  },
-  {
-    key: "8",
-    no: "08",
-    date: "09/06/2023",
-    name: "Olivia Wilson",
-    userType: "Quality Checker",
-    accountStatus: "Disabled",
-    gender: "female",
-    url: "https://images.unsplash.com/photo-1506795660198-e95c77602129?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXRpZnVsJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-  },
-  {
-    key: "9",
-    no: "09",
-    date: "10/06/2023",
-    name: "Michael Anderson",
-    userType: "Delivery Manager",
-    accountStatus: "Enabled",
-    gender: "male",
-    url: "https://img.freepik.com/free-photo/cheerful-dark-skinned-woman-smiling-broadly-rejoicing-her-victory-competition-among-young-writers-standing-isolated-against-grey-wall-people-success-youth-happiness-concept_273609-1246.jpg",
-  },
-  {
-    key: "10",
-    no: "10",
-    date: "11/06/2023",
-    name: "Ava Martinez",
-    userType: "Member",
-    accountStatus: "Disabled",
-    gender: "female",
-    url: "https://img.freepik.com/free-photo/lifestyle-people-emotions-casual-concept-confident-nice-smiling-asian-woman-cross-arms-chest-confident-ready-help-listening-coworkers-taking-part-conversation_1258-59335.jpg",
-  },
-  {
-    key: "11",
-    no: "11",
-    date: "12/06/2023",
-    name: "James Robinson",
-    userType: "Quality Checker",
-    accountStatus: "Enabled",
-    gender: "male",
-    url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d29tYW4lMjBoZWFsdGh5fGVufDB8fDB8fHww&w=1000&q=80",
-  },
-  {
-    key: "12",
-    no: "12",
-    date: "13/06/2023",
-    name: "Isabella Clark",
-    userType: "Delivery Manager",
-    accountStatus: "Enabled",
-    gender: "female",
-    url: "https://img.freepik.com/free-photo/happiness-wellbeing-confidence-concept-cheerful-attractive-african-american-woman-curly-haircut-cross-arms-chest-self-assured-powerful-pose-smiling-determined-wear-yellow-sweater_176420-35063.jpg",
-  },
-  {
-    key: "13",
-    no: "13",
-    date: "14/06/2023",
-    name: "Daniel White",
-    userType: "Member",
-    accountStatus: "Enabled",
-    gender: "male",
-    url: "https://discoverymood.com/wp-content/uploads/2020/04/Mental-Strong-Women-min.jpg",
-  },
-  {
-    key: "14",
-    no: "14",
-    date: "15/06/2023",
-    name: "Mia Turner",
-    userType: "Quality Checker",
-    accountStatus: "Disabled",
-    gender: "female",
-    url: "https://images.unsplash.com/photo-1506795660198-e95c77602129?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXRpZnVsJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-  },
-  {
-    key: "15",
-    no: "15",
-    date: "16/06/2023",
-    name: "Ethan Adams",
-    userType: "Delivery Manager",
-    accountStatus: "Enabled",
-    gender: "male",
-    url: "https://img.freepik.com/free-photo/cheerful-dark-skinned-woman-smiling-broadly-rejoicing-her-victory-competition-among-young-writers-standing-isolated-against-grey-wall-people-success-youth-happiness-concept_273609-1246.jpg",
-  },
-  {
-    key: "16",
-    no: "16",
-    date: "17/06/2023",
-    name: "Emily Johnson",
-    userType: "Member",
-    accountStatus: "Enabled",
-    gender: "female",
-    url: "https://img.freepik.com/free-photo/lifestyle-people-emotions-casual-concept-confident-nice-smiling-asian-woman-cross-arms-chest-confident-ready-help-listening-coworkers-taking-part-conversation_1258-59335.jpg",
-  },
-];
+
   
 
 const ManageUsers = () => {
+  const dispatch=useDispatch();
+  const [openu, setOpenu] = React.useState(false);
+  const [data,setData]=React.useState([]);
+  const {userArrayByAdmin,putOnHoldStatus,adminLoading,removeUserHoldStatus}=useSelector((state)=>state.admin);
   const navigate=useNavigate();
+  const [enableData,setEnableData]=React.useState({});
+
+  React.useEffect(()=>{
+    const transformedArray = userArrayByAdmin.map((user, index) => {
+      return {
+        key: index + 1,
+        ...user
+      };
+    });
+
+    setData(transformedArray);
+  },[userArrayByAdmin]);
 
   const columns = [
+
     {
-      title: "No",
-      dataIndex: "no",
-      key: "no",
+      title:"USER ID",
+      dataIndex:"userId",
+      key:"userId"
     },
+ 
+
     {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
-    },
-    {
-      title: "Name",
-      key: "name",
+      title: "NAME",
       render:(_,record)=>{
+        const fullName=record?.firstName+" "+record?.lastName;
         return (
         <div style={{display:"flex",alignItems:"center",}}>
-<Avatar alt={record?.name} src={record?.url} />
-<p style={{fontSize:"1rem",fontWeight:"bold",marginLeft:"0.8rem"}}>{record?.name}</p>
+<Avatar alt={fullName} src={record?.profilePicture} />
+<p style={{fontSize:"1rem",fontWeight:"bold",marginLeft:"0.8rem"}}>{fullName}</p>
         </div>
         );
       }
     },
     {
-        title: "User Type",
-        dataIndex: "userType",
-        key: "userType",
-      },
-      {
-        title: "Gender",
-        key: "gender",
-        render:(_,record)=>{
-          const editedGender=record?.gender[0].toUpperCase()+record?.gender?.slice(1);
-          return <span>{editedGender}</span>
-        }
-      },
+      title:"EMAIL",
+      dataIndex:"email",
+      key:"email"
+
+    },
+
     {
-      title: "Account Status",
-      key: "accountStatus",
+      title: "USER TYPE",
+      render:(_,record)=>{
+        const userType=record?.role;
+        const userTypeFormatted = userType
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+        return (
+        <div style={{display:"flex",alignItems:"center",}}>
+            <p style={{fontSize:"1rem",fontWeight:"bold",marginLeft:"0.8rem"}}>{userTypeFormatted}</p>
+        </div>
+        );
+      }
+    },
+
+
+    {
+      title: "ACCOUNT STATUS",
+      
       render: (_, record) => {
        
-      if(record?.accountStatus==="Enabled"){
+      if(record?.activeStatus){
 
-        return <span style={{padding:"3px 6px",border:"3px solid #04db33",color:"#04db33"}}>{record?.accountStatus}</span>
+        return <span onClick={()=>enableClick(record)}
+        style={{padding:"3px 6px",border:"3px solid #04db33",color:"#04db33",cursor:"pointer"}}
+        >ENABLED</span>
       }else{
-        return <span style={{padding:"3px 6px",border:"3px solid #ff1605",color:"#ff1605"}} >{record?.accountStatus}</span>;
+        return <span onClick={()=>enableClick(record)}
+         style={{padding:"3px 6px",border:"3px solid #ff1605",color:"#ff1605",cursor:"pointer"}} >DISABLED</span>;
       }
   
        
       },
     },
+
   
     {
       title: "Action",
-      key: "action",
       render: (_, record) => (
         <span>
-            <button className="admin-complaint-view" onClick={()=>navigate(`/view-profile/${record?.no}`)}
+            <button className="admin-complaint-view" onClick={()=>navigate(`/view-profile/${record?.userId}`)}
             style={{marginRight:"0.4rem"}}>View</button>
-            {/* <button className="admin-complaint-remove" style={{marginRight:"0.4rem"}}>Remove</button>
-            <button className="admin-complaint-respond" style={{marginRight:"0.4rem"}}>Respond</button> */}
+          
         </span>
       ),
     },
@@ -296,7 +163,11 @@ const ManageUsers = () => {
 
   const [isModalOpena, setIsModalOpena] = React.useState(false);
   const [viewData,setViewData]=React.useState({});
-  const [filteredData, setFilteredData] = React.useState(data); 
+  const [filteredData, setFilteredData] = React.useState([]); 
+
+React.useEffect(()=>{
+setFilteredData(data);
+},[data,userArrayByAdmin])
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -320,12 +191,19 @@ const ManageUsers = () => {
     setDownloadUrlArray([])
   };
 
-  React.useEffect(() => {
-    // console.log(data?.length);
-    setTotalPages(Math.ceil(data.length / itemsPerPage));
-  }, []);
 
- 
+  React.useEffect(()=>{
+dispatch(fetchAllUsers())
+  },[]);
+
+
+
+  React.useEffect(() => {
+   
+    setTotalPages(Math.ceil(data.length / itemsPerPage));
+  }, [data]);
+
+//  console.log("filtered data ",filteredData);
 
 
   React.useEffect(() => {
@@ -340,18 +218,6 @@ const ManageUsers = () => {
       return slicedData;
     });
   }, [pageNumber,filteredData]);
-
-  const prevClick = () => {
-    setPageNumber((prevState) => {
-      return prevState > 1 ? prevState - 1 : prevState;
-    });
-  };
-
-  const nextClick = () => {
-    setPageNumber((prevState) => {
-      return prevState < totalPages ? prevState + 1 : prevState;
-    });
-  };
 
 
 
@@ -442,6 +308,52 @@ const ManageUsers = () => {
   const handlePageChange = (event, page) => {
     setPageNumber(page)
   };
+
+  //dialog 
+  const handleClickOpenu = () => {
+    setOpenu(true);
+  };
+
+  const handleCloseu = () => {
+    setOpenu(false);
+  };
+
+  const handleCloseDisableClick=()=>{
+    setOpenu(false);
+    const userId=enableData?.userId;
+    if(enableData?.activeStatus==true){
+      dispatch(putUserOnHold({userId}));
+    }else if(enableData?.activeStatus==false){
+      console.log("already disabled")
+      dispatch(removeUserHold({userId}))
+    }
+    
+  }
+
+  React.useEffect(()=>{
+    if(adminLoading==false &&removeUserHoldStatus==true ){
+      dispatch(adminReset());
+      dispatch(fetchAllUsers());
+
+    }
+
+  },[adminLoading])
+
+  React.useEffect(()=>{
+
+    if(adminLoading==false && putOnHoldStatus==true){
+      dispatch(fetchAllUsers());
+      dispatch(adminReset())
+    }
+
+  },[adminLoading])
+
+  const enableClick=(data)=>{
+console.log(data);
+setEnableData(data);
+setOpenu(true);
+
+  }
   
   
  
@@ -519,89 +431,7 @@ const ManageUsers = () => {
 
       </div>
 
-      <Modal
-        title={<h2 style={{color:"#00425A",
-        fontSize:"1.5rem",marginBottom:"1rem"}}>Report a complaint</h2>}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        <div style={{ width: "100%" }}>
-
-          <p style={pStyles}>Complaint Subject</p>
-          <Input style={{width:"100%",marginTop:"0.3rem"}} placeholder="Complaint Subject"/>
-          {/* <AutoComplete
-    style={{
-     width:"100%",
-marginTop:"0.3rem",
-
-    }}
-    options={options}
-    placeholder="Item type"
-    filterOption={(inputValue, option) =>
-      option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-    }
-  /> */}
-  <p style={pStyles}>Complaint description</p>
-
-  <TextArea rows={4} style={{marginTop:"0.3rem",width:"100%",}} />
-
-  <p style={pStyles}>Desired outcome</p>
-  <TextArea rows={3} style={{marginTop:"0.3rem",width:"100%",}} />
-
- 
-
-  <label className="custom-file-upload" onChange={handleFileSelect} style={{marginTop:"1rem"}}>
-    <input type="file" multiple />
-    Choose images
-</label>
-
-<div style={{width:"100%",marginTop:"1rem"}}>
-
-  {
-    fileArray?.map((item,index)=>{
-      return (
-        <p key={index} style={{overflowX:"auto",marginBottom:"0.5rem"}}>{item}</p>
-      )
-    })
-  }
-</div>
-
-{/* {fileArray?.length>=1 &&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
-{fileArray?.length<2?"Please select at least 5 images !":""}
-</div>} */}
-
-{fileArray?.length>=1 && <div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem"}}>
-<button className="q-upload-btn" onClick={handleUpload} disabled={downloadUrlArray?.length>=1?true:false}
->Upload</button>
-</div>}
-
-
-{downloadUrlArray?.length>=1 &&<div style={{width:"100%",display:"flex",flexDirection:"column",alignItems:"center",marginTop:"1rem"}}>
-{
-  downloadUrlArray?.map((item,index)=>{
-return (
-  <img src={item} key={index} style={{width:"100%",
-  marginBottom:"1rem",borderRadius:"8px",
-  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-}}/>
-)
-  })
-}
-</div>}
-
-
-
-<div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"1rem"}}>
-<button  className="q-submit-btn" onClick={handleCancel}>Submit</button>
-<button className="q-cancel-btn" onClick={handleCancel} style={{marginLeft:"1rem"}}>Cancel </button>
-</div>
-
-     
-        </div>
-        
-      </Modal>
+    
 
 
       <Backdrop
@@ -611,38 +441,42 @@ return (
       >
         <CircularProgress color="inherit" size={50} />
       </Backdrop>
-     
 
-      <Modal title={<h2 style={{color:"#00425A",
-        fontSize:"1.5rem",marginBottom:"1rem"}}>View Complaint</h2>}
-       open={isModalOpena} onOk={handleOka} onCancel={handleCancela}
-       footer={null}
-       >
 
-       <div style={{width:"100%",}}>
-        
-        <p style={pStyles}>Name : <span style={p2Styles}>{viewData?.name}</span></p>
-        <p style={pStyles}>User Type : <span style={p2Styles}>{viewData?.userType}</span></p>
-        <p style={pStyles}>Subject : <span style={p2Styles}>{viewData?.subject}</span></p>
-        <p style={pStyles}>Description : <span style={p2Styles}>{viewData?.description}</span></p>
-        <p style={pStyles}>Contact number : <span style={p2Styles}>{viewData?.contactNumber}</span></p>
-        <p style={pStyles}>Date Reported : <span style={p2Styles}>{viewData?.date}</span></p>
-            <br/>
-        <p style={pStyles} >Reason for appeal</p>
-        <Input placeholder="Reason for appeal" style={{width:"100%",marginTop:"0.3rem"}}/>
-
-        <p style={pStyles}>Describe Objection</p>
-        <TextArea rows={4} style={{marginTop:"0.3rem",width:"100%",}} />
-
-        <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"1rem"}}>
-        <button className="q-submit-btn" onClick={handleCancela}>Submit</button>
-        <button className="q-cancel-btn" style={{marginLeft:"1rem"}} onClick={handleCancela}>Cancel</button>
-        </div>
+      <Dialog
+        open={openu}
+        onClose={handleCloseu}
+      
+      >
+  
+        <DialogContent>
+       <div style={{width:"100%",display:"flex",flexDirection:"column"}}>
+        <p style={{fontSize:"1.2rem",fontFamily:" 'Poppins', sans-serif",fontWeight:"bold"}}>
+          Are you sure you want to {enableData?.activeStatus?"disable":"enable"}  this account ?</p>
+          <p style={{fontSize:"1rem",fontFamily:" 'Poppins', sans-serif",}}>
+            <span style={{fontSize:"1rem",fontFamily:" 'Poppins', sans-serif",}}>{enableData?.firstName}</span> &nbsp;
+             <span style={{fontSize:"1rem",fontFamily:" 'Poppins', sans-serif",}}>{enableData?.lastName}</span></p>
+          <p style={{fontSize:"1rem",fontFamily:" 'Poppins', sans-serif",}}>{enableData?.email}</p>
 
        </div>
 
 
-      </Modal>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDisableClick} 
+          className={enableData?.activeState === true ? "custom-mui-button" : "custome-mui-button3"}
+           variant="contained" sx={{background:enableData?.activeStatus?"red":"green"}}
+          size="small">{enableData?.activeStatus?"DISABLE":"ENABLE"}</Button>
+
+          <Button onClick={handleCloseu}   className="custom-mui-button2"
+           variant="contained" size="small" sx={{background:"orange"}}>
+            CANCEL
+          </Button>
+        </DialogActions>
+      </Dialog>
+     
+
+    
 
 
     </>

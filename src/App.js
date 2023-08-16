@@ -30,6 +30,10 @@ import ManageUsers from "./pages/admin/ManageUsers/ManageUsers";
 import InventoryManagerAuth from "./protectedRoutes/InventoryManagerAuth";
 import Listing from "./pages/inventoryManager/Listing/Listing";
 import FavoriteItemPage from "./pages/user/FavoriteItemPage/FavoriteItemPage";
+import StaffSignup from "./pages/admin/StaffSignup/StaffSignup";
+import AdminProfile from "./pages/admin/AdminProfile/AdminProfile";
+import InventoryManagerProfile from "./pages/inventoryManager/InventoryManagerProfile/InventoryManagerProfile";
+
 
 
 
@@ -100,9 +104,10 @@ function App() {
 
             <Route element={<AdminPagesAuth/>}>
               <Route path="user-complaints" element={<UserComplaints/>}/>
-
+              <Route path="admin-profile" element={<AdminProfile/>}/>
               <Route path="manage-users" element={<ManageUsers/>}/>
               <Route path="view-profile/:id" element={<ViewProfile/>}/>
+              <Route path="staff-signup" element={<StaffSignup/>}/>
 
             </Route>
 
@@ -110,10 +115,13 @@ function App() {
 
 {/* inventory auth start */}
              <Route element={<InventoryManagerAuth/>}>
-            
+             <Route path="listing" element={<Listing/>}/>
+             {/* <Route path="inventory-manager-profile" element={<InventoryManagerProfile/>}/> */}
+             {/* <Route path="inventory-manager-complaint" element={<InventoryManagerComplaint/>}/> */}
+       
              </Route>
 
-             <Route path="listing" element={<Listing/>}/>
+          
 
              {/* inventory auth end */}
 

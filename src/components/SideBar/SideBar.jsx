@@ -4,14 +4,17 @@ import SideBarItem from "./SideBarItem";
 import sideBarData2 from "./sideBarData2.js";
 import sideBarDataQC from "./sideBarDataQC";
 import swaplogo from "../../assets/swaplogo.png";
-import { userLogout } from "../../redux/userSlice";
+import { closeSideBarRedux, userLogout } from "../../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import sideBarDataAdmin from "./sideBarDataAdmin";
 import sideBarDataInventoryManager from "./sideBarDataInventoryManager";
 
-const SideBar = ({openSideBar,setOpenSideBar}) => {
+const SideBar = ({openSideBar, setOpenSideBar }) => {
   const dispatch=useDispatch();
   const {user}=useSelector((state)=>state.user);
+ 
+
+
 
 
   const [sideBarData,setSiderBarData]=React.useState(sideBarData2);
@@ -20,11 +23,11 @@ React.useEffect(()=>{
   setSiderBarData((prevState)=>{
      if(user?.role?.toLowerCase()=="customer"){
       return sideBarData2;
-     }else if(user==="qualityChecker"){
+     }else if(user?.role?.toLowerCase()=="quality_checker"){
       return sideBarDataQC;
-     }else if(user==="admin"){
+     }else if(user?.role==="admin"){
       return sideBarDataAdmin;
-     }else if(user==="inventoryManager"){
+     }else if(user?.role?.toLowerCase()==="inventory_manager"){
       return sideBarDataInventoryManager;
      }
   })
@@ -37,6 +40,7 @@ React.useEffect(()=>{
   });
 
   const sideBarClose=()=>{
+    dispatch(closeSideBarRedux())
     setOpenSideBar((prevState)=>{
 return !prevState;
     })
@@ -49,7 +53,9 @@ return !prevState;
       },[openSideBar])
 
   return (
-  <div  className="sidebar">
+  <div  className="sidebar"
+
+  >
     <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",padding:"1rem 1rem 0 0"}}>
     <i className="bi-x-circle" style={{fontSize:"1rem",cursor:"pointer"}} onClick={sideBarClose} ></i>
     </div>

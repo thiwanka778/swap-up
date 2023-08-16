@@ -5,6 +5,7 @@ import Rating from "@mui/material/Rating";
 import { Input } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { fetchAllUsers } from "../../../redux/adminSlice";
 
 const pStyles = {
   fontSize: "1.2rem",
@@ -189,16 +190,24 @@ const data = [
 ];
 
 const ViewProfile = () => {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const { screen } = useSelector((state) => state.user);
   const [userDetails, setUserDetails] = React.useState({});
+const {userArrayByAdmin}=useSelector((state)=>state.admin);
+// console.log(userArrayByAdmin)
+React.useEffect(()=>{
+dispatch(fetchAllUsers());
+},[id])
 
-  const { id } = useParams();
+ 
 
   React.useEffect(() => {
-    const userObject = data?.find((item) => item?.no === id);
+    const userObject = userArrayByAdmin?.find((item) => item?.userId == id);
     setUserDetails(userObject);
-  }, [id]);
+  }, [id,userArrayByAdmin]);
+
+
   console.log(userDetails);
 
   return (
@@ -215,7 +224,7 @@ const ViewProfile = () => {
           style={{
             width: screen < 660 ? "100%" : "400px",
             height: screen < 660 ? "" : "83vh",
-            padding: "1rem",
+            padding: "2rem",
             display: "flex",
             alignItems: "center",
             flexDirection: "column",
@@ -236,7 +245,7 @@ const ViewProfile = () => {
             <img
               style={{ width: "100%", borderRadius: "8px",boxShadow:"rgba(0, 0, 0, 0.35) 0px 5px 15px",
              }}
-              src={userDetails?.url}
+              src={userDetails?.profilePicture==""?"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png":userDetails?.profilePicture}
               alt="profile"
             />
             <div
@@ -256,12 +265,12 @@ const ViewProfile = () => {
                   marginTop: "0.2rem",
                 }}
               >
-                {userDetails?.userType}
+                {userDetails?.role}
               </p>
             </div>
           </div>
 
-          <p
+          {/* <p
             style={{
               color: "#00425A",
               fontWeight: "bold",
@@ -273,7 +282,7 @@ const ViewProfile = () => {
             {userDetails?.gender == "male"
               ? `Mr. ${userDetails?.name}`
               : `Miss ${userDetails?.name}`}
-          </p>
+          </p> */}
 
           <div
             style={{
@@ -368,25 +377,25 @@ const ViewProfile = () => {
 
             <div style={{ width: "100%" }}>
               <p style={pStyles}>First Name</p>
-              <Input style={inputStyles} value={"Ron"} />
+              <Input style={inputStyles} value={userDetails?.firstName} />
 
               <p style={pStyles}>Last Name</p>
-              <Input style={inputStyles} value={"James"} />
+              <Input style={inputStyles} value={userDetails?.lastName} />
 
               <p style={pStyles}>Address Line 01</p>
               <Input
                 style={inputStyles}
-                value={"46 Gates Lane Bethesda, MD 20814"}
+                value={userDetails?.address}
               />
 
-              <p style={pStyles}>Address Line 02</p>
-              <Input style={inputStyles} value={""} />
+              {/* <p style={pStyles}>Address Line 02</p>
+              <Input style={inputStyles} value={""} /> */}
 
               <p style={pStyles}>NIC</p>
-              <Input style={inputStyles} value={"123778458"} />
+              <Input style={inputStyles} value={userDetails?.nic} />
 
               <p style={pStyles}>Phone Number</p>
-              <Input style={inputStyles} value={"77456676"} />
+              <Input style={inputStyles} value={userDetails?.telephone} />
             </div>
           </div>
         </section>

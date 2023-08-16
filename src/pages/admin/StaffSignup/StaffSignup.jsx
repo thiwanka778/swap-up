@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./SignUp2.css";
+import "./StaffSignup.css";
 import { Input, Select } from "antd";
-import { Radio } from "antd";
+import { Radio, Space } from "antd";
 import toast, { Toaster } from "react-hot-toast";
 // import { Checkbox } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,11 @@ import { useSelector, useDispatch } from "react-redux";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { getUserEmail } from "../../redux/userSlice";
+import { getUserEmail, staffRegister } from "../../../redux/userSlice";
 import { FaTimes } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import WarningToast from "../../components/warningToast/WarningToast";
-import { userRegister,resetUser } from "../../redux/userSlice";
+import WarningToast from "../../../components/warningToast/WarningToast";
+import { userRegister,resetUser } from "../../../redux/userSlice";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { AiOutlineCheckCircle } from "react-icons/ai";
@@ -27,27 +27,9 @@ const validatePStyles = {
   marginLeft: "0.3rem",
 };
 
-const plainOptions = ["Sinhala", "Tamil", "English"];
 
-const options = [
-  {
-    value: "Select your gender",
-    label: "Select your gender",
-    disabled: true,
-  },
-  {
-    value: "male",
-    label: "Male",
-  },
-  {
-    value: "female",
-    label: "Female",
-  },
-  {
-    value: "other",
-    label: "Other",
-  },
-];
+
+
 
 const pStyles = {
   fontSize: "1.2rem",
@@ -56,9 +38,17 @@ const pStyles = {
   letterSpacing: "0.2rem",
   marginBottom: "0.6rem",
   marginTop: "2rem",
-  color: "black",
+  color: "white",
   //  textShadow:"2px 2px 1px black",
 };
+
+const pStylesOnRagio={
+  fontSize: "0.8rem",
+  fontFamily: " 'Poppins', sans-serif",
+  fontWeight: "500",
+  letterSpacing: "0.2rem",
+  color: "white",
+}
 
 const inputBoxStyles = {
   borderRadius: "4px",
@@ -87,10 +77,12 @@ const inputBoxStylesGmail = {
   // marginBottom: "1.5rem",
 };
 
-const SignUp2 = () => {
+const StaffSignup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { userEmail, screen,userLoading,userError,userRegisterStatus,userRegisterMessage } = useSelector((state) => state.user);
+  const { userEmail, screen,userLoading,userError,
+    userRegisterStatus,staffRegisterStatus,
+    userRegisterMessage } = useSelector((state) => state.user);
   const [gender, setGender] = React.useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -106,6 +98,8 @@ const SignUp2 = () => {
     telephone:"",
   });
   const [nic, setNic] = React.useState("");
+  const [userRole, setUserRole] = useState("INVENTORY_MANAGER");
+
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -148,6 +142,10 @@ const SignUp2 = () => {
     value = value.replace(/v/g, "V");
 
     setNic(value);
+  };
+  const onChangeRole = (e) => {
+   
+    setUserRole(e.target.value);
   };
 
   
@@ -196,7 +194,7 @@ const SignUp2 = () => {
   
     setPhoneNumberValidation(phoneRegex.test(form.telephone));
   }, [form.telephone]);
-// console.log(phoneNumberValidation)
+
  
 
   const signUpClick=()=>{
@@ -217,10 +215,13 @@ const SignUp2 = () => {
       nic,
       password,
       profilePicture:"",
-      role:null,
+      role:userRole,
     };
 
-    dispatch(userRegister(formData))
+    console.log(formData)
+   
+
+    dispatch(staffRegister(formData))
 
   }else{
 
@@ -286,7 +287,7 @@ if(nic!=="" && !isNicValidate){
 
 React.useEffect(()=>{
 if(userLoading==false){
-  if(userRegisterStatus===true && userRegisterMessage=="please check your mail for verify your account"){
+  if(staffRegisterStatus===true){
    
     setForm({ firstName: "",
     lastName: "",
@@ -300,10 +301,11 @@ if(userLoading==false){
     setIsModalOpen(true);
     dispatch(resetUser())
 
-  }else if(userError=="Request failed with status code 409"){
-    console.log("user EXIST")
-    toast.custom(<WarningToast message={"Email already exist !"}/>)
   }
+  // else if(userRegisterMessage=="this user name already exist"){
+  //   console.log("user EXIST")
+  //   toast.custom(<WarningToast message={"Email already exist !"}/>)
+  // }
 }
 },[userLoading]);
 
@@ -316,11 +318,15 @@ const handleOk = () => {
 };
 const handleCancel = () => {
   setIsModalOpen(false);
+   
 };
+
+
+
 
   return (
     <>
-    <div className="sign-up2">
+    <div className="sign-up2admin">
       <div className="main-signup-container">
         <div
           style={{
@@ -344,14 +350,13 @@ const handleCancel = () => {
               textShadow: "3px 3px 1px black",
             }}
           >
-            Register To Become A Member
+            Staff Registration
           </p>
           <p
             style={{
               fontFamily: "'Ubuntu', sans-serif",
               fontSize: "1.75rem",
               color: "white",
-              fontWeight: "500",
               marginTop: "1rem",
               fontWeight: "600",
               width: "fit-content",
@@ -359,7 +364,7 @@ const handleCancel = () => {
               textShadow: "3px 3px 1px black",
             }}
           >
-            We Need Your Details To Complete Your Registration.
+            Staff details to Complete the Registation
           </p>
         </div>
         <div className="input-box-container">
@@ -415,27 +420,21 @@ const handleCancel = () => {
             value={form.email}
             onChange={handleFormChange}
           />
-          {/* <div
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              marginTop: "0.3rem",
-            }}
-          >
-            <p
-              onClick={changeEmailClick}
-              style={{
-                color: "white",
-                fontFamily: "'Ubuntu', sans-serif",
-                fontSize: "1rem",
-                cursor: "pointer",
-              }}
-            >
-              change gmail
-            </p>
-          </div> */}
+
+<p style={pStyles}>Select user role</p>
+<div>
+<Radio.Group onChange={onChangeRole} value={userRole}>
+       <Space direction="vertical">
+      <Radio value={"INVENTORY_MANAGER"}><p style={pStylesOnRagio}>INVENTORY MANAGER</p></Radio>
+      <Radio value={"QUALITY_CHECKER"}><p style={pStylesOnRagio}>QUALITY CHECKER</p></Radio>
+      <Radio value={"HELP_ASSISTANT"}><p style={pStylesOnRagio}>HELP ASSISTANT</p></Radio>
+      <Radio value={"ADMIN"}><p style={pStylesOnRagio}>ADMIN</p></Radio>
+      </Space>
+    </Radio.Group>
+</div>
+
+
+        
 
 <p style={pStyles}>Phone Number</p>
           <Input
@@ -474,48 +473,8 @@ const handleCancel = () => {
             value={form.address}
           />
 
-          {/* <p style={pStyles}>Address Line 02 (optional)</p>
-          <Input
-            style={inputBoxStyles}
-            onChange={handleFormChange}
-            name="address2"
-            value={form.address2}
-            placeholder="Address Line 02 (optional)"
-          /> */}
+        
 
-          {/* <p style={pStyles}>Gender</p>
-          <Radio.Group onChange={onChangeGender} value={gender}>
-            <Radio
-              value={"male"}
-              style={{
-                color: "black",
-                fontWeight: "bold",
-                fontFamily: "'Ubuntu', sans-serif",
-              }}
-            >
-              Male
-            </Radio>
-            <Radio
-              value={"female"}
-              style={{
-                color: "black",
-                fontWeight: "bold",
-                fontFamily: "'Ubuntu', sans-serif",
-              }}
-            >
-              Female
-            </Radio>
-            <Radio
-              value={"other"}
-              style={{
-                color: "black",
-                fontWeight: "bold",
-                fontFamily: "'Ubuntu', sans-serif",
-              }}
-            >
-              Other
-            </Radio>
-          </Radio.Group> */}
 
           <p style={pStyles}>Password</p>
           <Input.Password
@@ -704,10 +663,11 @@ const handleCancel = () => {
          flexDirection:"column"}}>
          <AiOutlineCheckCircle size={80} style={{ color: "green" }} />
            <p style={{fontSize:"1.5rem",letterSpacing:"0.1rem",color:"green",textAlign:"center",}}>
-            Verification email sent successfully
+            Registered Successfully !
             </p>
-            <p>Go and check your inbox</p>
+            <p></p>
            {/* <button onClick={handleCancel} className="rs-modal-btn" style={{marginTop:"0.5rem"}}>OK</button> */}
+           <button onClick={handleCancel} className="rs-modal-btn" style={{marginTop:"0.5rem"}}>OKAY</button>
          </div>
      
       </Modal>
@@ -717,4 +677,4 @@ const handleCancel = () => {
   );
 };
 
-export default SignUp2;
+export default StaffSignup;

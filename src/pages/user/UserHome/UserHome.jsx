@@ -140,7 +140,7 @@ const UserHome = () => {
     inventoryStatus,
   } = useSelector((state) => state.inventory);
   const navigate=useNavigate();
-  const { screen, user } = useSelector((state) => state.user);
+  const { screen, user ,openRedux} = useSelector((state) => state.user);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const [updatedListingItems, setUpdatedListingItems] =
@@ -290,7 +290,9 @@ const UserHome = () => {
   }, [user]);
 
   return (
-    <div className="user-home">
+    <div className="user-home" 
+    style={{paddingLeft:(openRedux&&screen>650)?"270px":"1rem"}} 
+    >
       <div
         style={{
           width: "100%",
