@@ -32,3 +32,20 @@
   .custom-scrollbar::-webkit-scrollbar-track {
     background-color: gray;
   }
+
+  .price-range{
+    height:6px;
+    width:100%;
+    background-color: #6c41f0;
+    border-radius: 10px;
+
+  }
+  .price-range .thumb{
+    width:15px;
+    height:15px;
+    cursor: grab;
+    background:blue;
+    border-radius: 50%;
+    top:-5px;
+  }
+ 

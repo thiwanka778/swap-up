@@ -5,7 +5,7 @@ import Subtitle from "./Subtitle";
 import "./Slider.css";
 
 
-const bogliasco = "https://i.imgur.com/Gu5Cznz.jpg";
+const bogliasco = "https://c1.wallpaperflare.com/preview/403/473/138/shop-clothes-clothing-shopping-mall.jpg";
 const countyClare = "https://i.imgur.com/idjXzVQ.jpg";
 const craterRock = "https://i.imgur.com/8DYumaY.jpg";
 const giauPass = "https://i.imgur.com/8IuucQZ.jpg";
@@ -41,13 +41,13 @@ export default function Slider() {
         </Wrapper>
       </Overlay>
 
-      <Slide
+      {/* <Slide
         shouldRenderMask
         // label="Giau Pass - Italy"
         background={{
           backgroundImageSrc: giauPass
         }}
-      />
+      /> */}
 
       <Slide
         shouldRenderMask
@@ -57,21 +57,21 @@ export default function Slider() {
         }}
       />
 
-      <Slide
+      {/* <Slide
         shouldRenderMask
         // label="County Clare - Ireland"
         background={{
           backgroundImageSrc: countyClare
         }}
-      />
+      /> */}
 
-      <Slide
+      {/* <Slide
         shouldRenderMask
         // label="Crater Rock, OR - United States"
         background={{
           backgroundImageSrc: craterRock
         }}
-      />
+      /> */}
 
       {/* <MenuNav /> */}
     </HeroSlider>

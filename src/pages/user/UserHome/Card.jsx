@@ -28,7 +28,7 @@ const Card = (props) => {
 
 
 const requiredObject=sizeOptions2.find((item)=>item?.value?.toLowerCase()==props.item.size.toLowerCase());
-console.log(favoriteList,"CARD PAGE");
+// console.log(favoriteList,"CARD PAGE");
 
 const addFavoriteLocalClick=(data)=>{
   props.addFavoriteClick(data)
@@ -51,15 +51,17 @@ const oneFavoriteObject=favoriteList?.find((item)=>item.itemId==props.item.itemI
          </div>
 
          <div style={{width:"100%",display:"flex",
-         alignItems:"center",marginTop:"0.2rem",
+         alignItems:"center",marginTop:"auto",
          justifyContent:"flex-start",}}>
           <p style={{fontSize:"1.5rem"}}>Rs. {props.item.priceRange}</p>
          </div>
 
-         <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"auto"}}>
+        {props.noHeart==false && <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"auto"}}>
                <FavoriteIcon style={{color:oneFavoriteObject?.itemId==props.item.itemId?"red":"gray",fontSize:"2rem",cursor:"pointer"}} 
                onClick={()=>addFavoriteLocalClick(props.item)}/>
-         </div>
+         </div>}
+
+
         </div>
   )
 }

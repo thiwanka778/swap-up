@@ -465,7 +465,7 @@ const handleCancel = () => {
             </div>
           )}
 
-          <p style={pStyles}>Address Line 01</p>
+          <p style={pStyles}>Address</p>
           <Input
             style={inputBoxStyles}
             placeholder="Address Line 01"

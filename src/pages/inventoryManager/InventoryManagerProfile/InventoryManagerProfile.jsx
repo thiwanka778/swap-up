@@ -54,7 +54,7 @@ src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.
         fontSize: "1rem",
         fontFamily: "'Inter', sans-serif",
         marginTop: "0.2rem",
-      }} >Quality Checker</p>
+      }} >Inventory Manager</p>
 </div>
 <p style={{
         color: "#00425A",

@@ -33,6 +33,8 @@ const {
         width: "100%",
         marginTop: "1.5rem",
         display: "flex",
+        // padding:"1rem",
+        paddingLeft:"1rem",
         alignItems: "center",
         flexDirection: "column",
       }
@@ -105,7 +107,7 @@ const {
 
   return (
     <>
-    <div className="favorite-item-page" style={{paddingLeft:(openRedux&&screen>650)?"270px":"0px"}} >
+    <div className="favorite-item-page" style={{paddingLeft:(openRedux&&screen>650)?"270px":"0rem"}} >
 
         <div style={{width:"100%",display:"flex",
         alignItems:"center",justifyContent:"center",marginTop:"1.5rem",

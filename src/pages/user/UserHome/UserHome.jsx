@@ -4,8 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import TryIcon from "@mui/icons-material/Try";
-import Badge from '@mui/material/Badge';
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import Badge from "@mui/material/Badge";
 import CountUp from "react-countup";
+import Slider from "react-slider";
 // Import Swiper styles
 import "swiper/css";
 import {
@@ -16,6 +19,23 @@ import {
   fetchFavoriteItemsByUser,
 } from "../../../redux/inventorySlice";
 import Card from "./Card";
+
+const gender = ["unisex", "male", "female"];
+
+const sizeOptions2 = [
+   
+  { value: "xs", label: "X-Small" },
+  { value: "s", label: "Small" },
+  { value: "m", label: "Medium" },
+  { value: "l", label: "Large" },
+  { value: "xl", label: "X-Large" },
+  { value: "xxl", label: "XX-Large" },
+  { value: "xxxl", label: "XXX-Large" },
+  { value: "4xl", label: "4X-Large" },
+  { value: "5xl", label: "5X-Large" },
+  { value: "6xl", label: "6X-Large" },
+
+];
 
 const data = [
   {
@@ -139,10 +159,14 @@ const UserHome = () => {
     deleteFavoriteStatus,
     inventoryStatus,
   } = useSelector((state) => state.inventory);
-  const navigate=useNavigate();
-  const { screen, user ,openRedux} = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const { screen, user, openRedux } = useSelector((state) => state.user);
   const [currentDate, setCurrentDate] = useState(new Date());
-
+  const [uniqueColors, setUniqueColors] = useState([]);
+  const [priceRange, setPriceRange] = React.useState([]);
+  const [uniqueQualityStatus,setUniqueQualityStatus]=React.useState([]);
+  const [min, setMin] = React.useState(0);
+  const [max, setMax] = React.useState(100);
   const [updatedListingItems, setUpdatedListingItems] =
     React.useState(listingItems);
 
@@ -150,19 +174,86 @@ const UserHome = () => {
     const localData = window.localStorage.getItem("categoryData");
     return localData ? JSON.parse(localData) : data;
   });
+  const [selectedColor, setSelectedColor] = React.useState(null);
+  const [selectedGender, setSelectedGender] = React.useState(null);
+  const [selectedSize, setSelectedSize] = React.useState(null);
+  const [selectedQuality, setSelectedQuality] = React.useState(null);
+  function extractUniqueQualityStatus(array) {
+    const uniqueQualityStatus = [];
+    for (const item of array) {
+      if (!uniqueQualityStatus.includes(item.qualityStatus)) {
+        uniqueQualityStatus.push(item.qualityStatus);
+      }
+    }
+    return uniqueQualityStatus;
+  };
 
+  useEffect(() => {
+    // Call the function and update the state with unique qualityStatus values
+    const uniqueQualityStatusValues = extractUniqueQualityStatus(listingItems);
+    setUniqueQualityStatus(uniqueQualityStatusValues);
+  }, [listingItems]);
+
+  // console.log(uniqueQualityStatus)
+
+  const handleGenderChange = (_, newValue) => {
+    setSelectedGender(newValue);
+  };
+
+  const handleColorChange = (event, newValue) => {
+    setSelectedColor(newValue); // Set the selected color when it changes
+  };
+
+  useEffect(() => {
+    // Extract an array of all prices from the listing items
+    const prices = listingItems.map((item) => parseInt(item.priceRange));
+
+    // Calculate the minimum and maximum prices
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+
+    setMin(minPrice);
+    setMax(maxPrice);
+
+    setPriceRange([minPrice, maxPrice]);
+
+    // Log the results
+    console.log("Minimum Price:", minPrice);
+    console.log("Maximum Price:", maxPrice);
+  }, [listingItems]);
+
+  useEffect(() => {
+    // Function to extract unique colors from listingItems
+    const extractUniqueColors = () => {
+      const colors = [];
+      for (const item of listingItems) {
+        if (!colors.includes(item.color)) {
+          colors.push(item.color);
+        }
+      }
+      return colors;
+    };
+
+    // Call the function and update the uniqueColors state
+    const extractedColors = extractUniqueColors();
+    setUniqueColors(extractedColors);
+  }, [listingItems]);
+
+  // console.log(uniqueColors)
+
+  console.log(listingItems);
   const displayItemsStyles =
     screen <= 694
       ? {
           width: "100%",
-          marginTop: "1.5rem",
+          marginTop: "1rem",
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
         }
       : {
           width: "100%",
-          marginTop: "1.5rem",
+          marginTop: "1rem",
           gridGap: "10px",
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill,minmax(320px,1fr))",
@@ -172,6 +263,8 @@ const UserHome = () => {
     setCurrentDate(new Date());
     dispatch(getItemsOnListing());
   }, []);
+
+  // console.log(listingItems)
 
   const formattedDate = formatDate(currentDate);
   const dayOfWeek = getDayOfWeek(currentDate);
@@ -255,13 +348,13 @@ const UserHome = () => {
     }
   };
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     if (inventoryLoading == false && deleteFavoriteStatus == true) {
       dispatch(inventoryReset());
       const userId = user?.userId;
       dispatch(fetchFavoriteItemsByUser({ userId }));
     }
-  },[inventoryLoading])
+  }, [inventoryLoading]);
 
   React.useEffect(() => {
     if (inventoryLoading == false && addFavoriteStatus == true) {
@@ -271,12 +364,54 @@ const UserHome = () => {
     }
   }, [inventoryLoading]);
 
-  const itemDisplay = updatedListingItems?.map((item, index) => {
+  const filteredItems = selectedColor
+    ? updatedListingItems.filter(
+        (item) =>
+          item.color.toLowerCase().trim() === selectedColor.toLowerCase().trim()
+      )
+    : updatedListingItems;
+
+  const filteredItemsByGender = (selectedGender && selectedGender!=="unisex")
+    ? filteredItems.filter(
+        (item) =>
+          item.gender.toLowerCase().trim() ===
+          selectedGender.toLowerCase().trim()
+      )
+    : filteredItems;
+
+ 
+  // Assuming priceRange is an array [minPrice, maxPrice]
+const filteredItemsByPriceRange = priceRange
+? filteredItemsByGender.filter(
+    (item) =>
+      parseInt(item.priceRange) >= priceRange[0] &&
+      parseInt(item.priceRange) <= priceRange[1]
+  )
+: filteredItemsByGender;
+
+const filteredItemsBySize = selectedSize
+  ? filteredItemsByPriceRange.filter(
+      (item) =>
+        item.size.toLowerCase().trim() ===
+        selectedSize.value.toLowerCase().trim()
+    )
+  : filteredItemsByPriceRange;
+
+  const filteredItemsBySizeAndQuality = selectedQuality
+  ? filteredItemsBySize.filter(
+      (item) =>
+        item.qualityStatus.toLowerCase().trim() ===
+        selectedQuality.toLowerCase().trim()
+    )
+  : filteredItemsBySize;
+
+  const itemDisplay = filteredItemsBySizeAndQuality?.map((item, index) => {
     if (item?.activeState == true) {
       return (
         <Card
           key={index}
           item={item}
+          noHeart={false}
           addFavoriteClick={addFavoriteClick}
           favoriteList={favoriteList}
         />
@@ -289,9 +424,19 @@ const UserHome = () => {
     dispatch(fetchFavoriteItemsByUser({ userId }));
   }, [user]);
 
+  console.log(priceRange);
+
+  let priceRangeWidth = "400px";
+  if (openRedux && screen < 738) {
+    priceRangeWidth = "100%";
+  } else if (openRedux === false && screen < 440) {
+    priceRangeWidth = "100%";
+  }
+
   return (
-    <div className="user-home" 
-    style={{paddingLeft:(openRedux&&screen>650)?"270px":"1rem"}} 
+    <div
+      className="user-home"
+      style={{ paddingLeft: openRedux && screen > 650 ? "290px" : "1rem" }}
     >
       <div
         style={{
@@ -512,7 +657,26 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
 <Carousel/>
 </div> */}
 
-
+       {/* <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          marginTop: "1.5rem",
+          paddingRight: "1rem",
+        }}
+      >
+        <Badge
+          badgeContent={favoriteList?.length}
+          color="primary"
+          sx={{ marginLeft: "auto" }}
+        >
+          <TryIcon
+            style={{ fontSize: "3rem", cursor: "pointer" }}
+            onClick={() => navigate("/favorite-items-page")}
+          />
+        </Badge>
+      </div> */}
 
       <div
         style={{
@@ -537,18 +701,160 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
         </div>
       </div>
 
-      {/* favo rite button*/}  
-       
-      
-      <div style={{width:"100%",display:"flex",alignItems:"center",
-      justifyContent:"flex-end",marginTop:"1rem",paddingRight:"1rem"}}>
-        <Badge badgeContent={favoriteList?.length} color="primary">
- <TryIcon style={{fontSize:"3rem",cursor:"pointer"}} onClick={()=>navigate("/favorite-items-page")}/>
- </Badge>
-</div>
+      {/* favo rite button*/}
 
-      <div style={displayItemsStyles}>
-        {itemDisplay}</div>
+      {priceRange && priceRange?.length>=1 && 
+      <div style={{display:"flex",justifyContent:"flex-end"}}>
+       <div
+        style={{
+          marginTop: "1rem",
+          background: "#ecebf2",
+          borderRadius: "10px",
+          width: priceRangeWidth,
+          padding: "1rem",
+          boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+        }}
+      >
+        <p
+          style={{
+            fontWeight: "bold",
+            letterSpacing: "0.1rem",
+            fontFamily: "'Ubuntu', sans-serif",
+            fontSize: "1.2rem",
+          }}
+        >
+          Price Range
+        </p>
+
+        <p
+          style={{
+            fontWeight: "bold",
+            letterSpacing: "0.1rem",
+            marginTop: "0.2rem",
+            fontFamily: "'Poppins', sans-serif",
+          }}
+        >
+          Rs. {priceRange[0]} - Rs. {priceRange[1]}
+        </p>
+
+        <div style={{ marginTop: "1.5rem" }}>
+          <Slider
+            onChange={setPriceRange}
+            className="price-range"
+            value={priceRange}
+            min={min}
+            max={max}
+          />
+        </div>
+      </div>
+      </div>}
+
+      <div
+        style={{
+          // width: "100%",
+          // display: "flex",
+          // flexDirection: screen < 360 ? "column" : "row",
+          // marginTop: "1rem",
+          // paddingRight: "1rem",
+          width: "100%",
+          marginTop: "1rem",
+          gridGap: "10px",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))",
+        }}
+      >
+        <div
+          style={{
+            // marginRight: "1.5rem",
+            // marginBottom: screen < 360 ? "1rem" : "0rem",
+          }}
+        >
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={uniqueColors}
+            sx={{ width: 150 }}
+            size="small"
+            onChange={handleColorChange} // Handle color selection
+            value={selectedColor} // Set the value to control the selected color
+            renderInput={(params) => (
+              <TextField {...params} label="Choose color" />
+            )}
+          />
+        </div>
+
+        <div style={{
+          //  marginRight: "1.5rem" 
+           }}>
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={gender}
+            sx={{ width: 150 }}
+            size="small"
+            onChange={handleGenderChange} // Handle color selection
+            value={selectedGender} // Set the value to control the selected color
+            renderInput={(params) => (
+              <TextField {...params} label="Choose gender" />
+            )}
+          />
+        </div>
+
+        <div>
+        <Autocomplete
+    disablePortal
+    id="size-combo-box"
+    size="small"
+    options={sizeOptions2}
+    sx={{ width: 150 }}
+    value={selectedSize}
+    onChange={(event, newValue) => {
+      setSelectedSize(newValue);
+    }}
+    renderInput={(params) => <TextField {...params} label="Size" />}
+  />
+        </div>
+
+        <div>
+        <Autocomplete
+    disablePortal
+    id="size-combo-box"
+    size="small"
+    options={uniqueQualityStatus}
+    sx={{ width: 150 }}
+    value={selectedQuality}
+    onChange={(event, newValue) => {
+      setSelectedQuality(newValue);
+    }}
+    renderInput={(params) => <TextField {...params} label="Quality" />}
+  />
+        </div>
+      </div>
+
+    
+
+      {/* <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          marginTop: "1.5rem",
+          paddingRight: "1rem",
+        }}
+      >
+        <Badge
+          badgeContent={favoriteList?.length}
+          color="primary"
+          sx={{ marginLeft: "auto" }}
+        >
+          <TryIcon
+            style={{ fontSize: "3rem", cursor: "pointer" }}
+            onClick={() => navigate("/favorite-items-page")}
+          />
+        </Badge>
+      </div> */}
+
+      <div style={displayItemsStyles}>{itemDisplay}</div>
     </div>
   );
 };

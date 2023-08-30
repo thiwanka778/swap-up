@@ -3,7 +3,7 @@ import "./Card.css";
 import { FiArrowLeft } from 'react-icons/fi';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 
-const Card = ({id,title,description}) => {
+const CardHome = ({id,title,description}) => {
   return (
     <div className="myCard">
     <div className="innerCard">
@@ -22,4 +22,4 @@ const Card = ({id,title,description}) => {
   )
 }
 
-export default Card
+export default CardHome

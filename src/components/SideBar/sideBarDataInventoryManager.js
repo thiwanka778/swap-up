@@ -5,8 +5,8 @@ const sideBarDataInventoryManager = [
       path: "/",
     },
     {
-      title: "Add Listing",
-      icon:"bi-cloud-plus-fill",
+      title: "Add Items",
+      icon:"bi-pencil-square",
       path:"/listing",
     },
    

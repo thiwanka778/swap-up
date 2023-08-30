@@ -5,6 +5,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import toast, { Toaster } from "react-hot-toast";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import TryIcon from "@mui/icons-material/Try";
+import Badge from "@mui/material/Badge";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import WarningToast from "../../components/warningToast/WarningToast";
@@ -25,9 +27,22 @@ import { Link } from "react-router-dom";
 import SideBar from "../SideBar/SideBar";
 import { CSSTransition } from "react-transition-group";
 import { useLocation } from "react-router-dom";
+import { fetchFavoriteItemsByUser } from "../../redux/inventorySlice";
+
 
 const NavBar = () => {
   const location = useLocation();
+  const {
+    inventoryLoading,
+    inventoryErrorMessage,
+    inventoryError,
+    inventoryCreateItemStatus,
+    listingItems,
+    addFavoriteStatus,
+    favoriteList,
+    deleteFavoriteStatus,
+    inventoryStatus,
+  } = useSelector((state) => state.inventory);
   const currentPath = location.pathname;
   const { userEmail, screen, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -166,6 +181,23 @@ const NavBar = () => {
         )}
         {screen >= 670 && <p className="nav-text">About Us</p>}
         {screen >= 670 && <p className="nav-text">Contact Us</p>}
+
+        {user &&  user?.role==="CUSTOMER" &&<div
+        className="nav-text"
+      >
+        <Badge
+          badgeContent={favoriteList?.length}
+          color="primary"
+          
+        >
+          <TryIcon
+            style={{ fontSize: "3rem", cursor: "pointer" }}
+            onClick={() => navigate("/favorite-items-page")}
+          />
+        </Badge>
+      </div>}
+
+
         {!user && (
           <button
             className="signup-btn"

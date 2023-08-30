@@ -32,7 +32,9 @@ import Listing from "./pages/inventoryManager/Listing/Listing";
 import FavoriteItemPage from "./pages/user/FavoriteItemPage/FavoriteItemPage";
 import StaffSignup from "./pages/admin/StaffSignup/StaffSignup";
 import AdminProfile from "./pages/admin/AdminProfile/AdminProfile";
-import InventoryManagerProfile from "./pages/inventoryManager/InventoryManagerProfile/InventoryManagerProfile";
+import InventoryManagerProfile from "./pages/inventoryManager/InventoryManagerProfile/InventoryManagerProfile"
+import InventoryManagerComplaint from "./pages/inventoryManager/InventoryManagerComplaint/InventoryManagerComplaint";
+
 
 
 
@@ -118,7 +120,8 @@ function App() {
              <Route path="listing" element={<Listing/>}/>
              {/* <Route path="inventory-manager-profile" element={<InventoryManagerProfile/>}/> */}
              {/* <Route path="inventory-manager-complaint" element={<InventoryManagerComplaint/>}/> */}
-       
+       <Route path="inventory-manager-profile" element={<InventoryManagerProfile/>}/>
+       <Route path="inventory-manager-complaint" element={<InventoryManagerComplaint/>}/>
              </Route>
 
           
