@@ -1,5 +1,5 @@
 import React from "react";
-import "./QualityCheckAuth.css";
+import "./TokenRequest.css";
 import { Space, Table, Tag } from "antd";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -23,7 +23,6 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import { useNavigate } from "react-router-dom";
 const { TextArea } = Input;
 
 const pStyles = {
@@ -57,157 +56,264 @@ const options = [
 ];
 
 const data = [
-  {
-    key: "1",
-    swapId: "501",
-    itemName: "Shirt",
-    customerName: "Nimal Lansa",
-    status: "Pending",
-    customerId: "200",
-    itemId: "2",
-    customerAddress: "21, New Road, Kaluthara",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "2",
-    swapId: "502",
-    itemName: "Pants",
-    customerName: "John Doe",
-    status: "Accepted",
-    customerId: "201",
-    itemId: "3",
-    customerAddress: "123 Main Street, Cityville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "3",
-    swapId: "503",
-    itemName: "Shoes",
-    customerName: "Jane Smith",
-    status: "Rejected",
-    customerId: "202",
-    itemId: "4",
-    customerAddress: "45 Oak Avenue, Townsville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "4",
-    swapId: "504",
-    itemName: "Hat",
-    customerName: "Alice Johnson",
-    status: "Pending",
-    customerId: "203",
-    itemId: "5",
-    customerAddress: "67 Elm Street, Villagetown",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "5",
-    swapId: "505",
-    itemName: "Dress",
-    customerName: "Bob Anderson",
-    status: "Accepted",
-    customerId: "204",
-    itemId: "6",
-    customerAddress: "89 Maple Road, Hamletsville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "6",
-    swapId: "506",
-    itemName: "Socks",
-    customerName: "Eve Taylor",
-    status: "Rejected",
-    customerId: "205",
-    itemId: "7",
-    customerAddress: "34 Pine Lane, Woodsville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "7",
-    swapId: "507",
-    itemName: "T-shirt",
-    customerName: "David Wilson",
-    status: "Pending",
-    customerId: "206",
-    itemId: "8",
-    customerAddress: "56 Cedar Street, Riverside",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "8",
-    swapId: "508",
-    itemName: "Jeans",
-    customerName: "Grace Martinez",
-    status: "Accepted",
-    customerId: "207",
-    itemId: "9",
-    customerAddress: "78 Oakwood Drive, Hillside",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "9",
-    swapId: "509",
-    itemName: "Sweater",
-    customerName: "Frank Brown",
-    status: "Rejected",
-    customerId: "208",
-    itemId: "10",
-    customerAddress: "90 Elm Avenue, Lakeside",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "10",
-    swapId: "510",
-    itemName: "Jacket",
-    customerName: "Olivia White",
-    status: "Pending",
-    customerId: "209",
-    itemId: "11",
-    customerAddress: "12 Cedar Lane, Brookside",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "11",
-    swapId: "511",
-    itemName: "Scarf",
-    customerName: "Sophia Lee",
-    status: "Accepted",
-    customerId: "210",
-    itemId: "12",
-    customerAddress: "45 Oak Avenue, Townsville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "12",
-    swapId: "512",
-    itemName: "Gloves",
-    customerName: "James Green",
-    status: "Rejected",
-    customerId: "211",
-    itemId: "13",
-    customerAddress: "34 Pine Lane, Woodsville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "13",
-    swapId: "513",
-    itemName: "Skirt",
-    customerName: "Liam Harris",
-    status: "Pending",
-    customerId: "212",
-    itemId: "14",
-    customerAddress: "56 Cedar Street, Riverside",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-];
-
-
+    {
+      key: "1",
+      swapId: "501",
+      itemName: "Shirt",
+      customerName: "Nimal Lansa",
+      status: "Pending",
+      customerId: "200",
+      itemId: "2",
+      customerAddress: "21, New Road, Kaluthara",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "2",
+      swapId: "502",
+      itemName: "Pants",
+      customerName: "John Doe",
+      status: "Shipped",
+      customerId: "201",
+      itemId: "3",
+      customerAddress: "123 Main Street, Cityville",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "3",
+      swapId: "503",
+      itemName: "Shoes",
+      customerName: "Jane Smith",
+      status: "Stored",
+      customerId: "202",
+      itemId: "4",
+      customerAddress: "45 Oak Avenue, Townsville",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "4",
+      swapId: "504",
+      itemName: "Hat",
+      customerName: "Alice Johnson",
+      status: "Pending",
+      customerId: "203",
+      itemId: "5",
+      customerAddress: "67 Elm Street, Villagetown",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "5",
+      swapId: "505",
+      itemName: "Dress",
+      customerName: "Bob Anderson",
+      status: "Shipped",
+      customerId: "204",
+      itemId: "6",
+      customerAddress: "89 Maple Road, Hamletsville",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "6",
+      swapId: "506",
+      itemName: "Socks",
+      customerName: "Eve Taylor",
+      status: "Stored",
+      customerId: "205",
+      itemId: "7",
+      customerAddress: "34 Pine Lane, Woodsville",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "7",
+      swapId: "507",
+      itemName: "T-shirt",
+      customerName: "David Wilson",
+      status: "Pending",
+      customerId: "206",
+      itemId: "8",
+      customerAddress: "56 Cedar Street, Riverside",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "8",
+      swapId: "508",
+      itemName: "Jeans",
+      customerName: "Grace Martinez",
+      status: "Shipped",
+      customerId: "207",
+      itemId: "9",
+      customerAddress: "78 Oakwood Drive, Hillside",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "9",
+      swapId: "509",
+      itemName: "Sweater",
+      customerName: "Frank Brown",
+      status: "Stored",
+      customerId: "208",
+      itemId: "10",
+      customerAddress: "90 Elm Avenue, Lakeside",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "10",
+      swapId: "510",
+      itemName: "Jacket",
+      customerName: "Olivia White",
+      status: "Pending",
+      customerId: "209",
+      itemId: "11",
+      customerAddress: "12 Cedar Lane, Brookside",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "11",
+      swapId: "511",
+      itemName: "Scarf",
+      customerName: "Sophia Lee",
+      status: "Shipped",
+      customerId: "210",
+      itemId: "12",
+      customerAddress: "45 Oak Avenue, Townsville",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "12",
+      swapId: "512",
+      itemName: "Gloves",
+      customerName: "James Green",
+      status: "Stored",
+      customerId: "211",
+      itemId: "13",
+      customerAddress: "34 Pine Lane, Woodsville",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "13",
+      swapId: "513",
+      itemName: "Skirt",
+      customerName: "Liam Harris",
+      status: "Pending",
+      customerId: "212",
+      itemId: "14",
+      customerAddress: "56 Cedar Street, Riverside",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "14",
+      swapId: "514",
+      itemName: "Belt",
+      customerName: "Emma Turner",
+      status: "Shipped",
+      customerId: "213",
+      itemId: "15",
+      customerAddress: "78 Oakwood Drive, Hillside",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "15",
+      swapId: "515",
+      itemName: "Shorts",
+      customerName: "Mia Collins",
+      status: "Stored",
+      customerId: "214",
+      itemId: "16",
+      customerAddress: "90 Elm Avenue, Lakeside",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "16",
+      swapId: "516",
+      itemName: "Sweatshirt",
+      customerName: "Noah Clark",
+      status: "Pending",
+      customerId: "215",
+      itemId: "17",
+      customerAddress: "12 Cedar Lane, Brookside",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "17",
+      swapId: "517",
+      itemName: "Blouse",
+      customerName: "Ava Adams",
+      status: "Shipped",
+      customerId: "216",
+      itemId: "18",
+      customerAddress: "21, New Road, Kaluthara",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "18",
+      swapId: "518",
+      itemName: "Sandals",
+      customerName: "William Lewis",
+      status: "Stored",
+      customerId: "217",
+      itemId: "19",
+      customerAddress: "123 Main Street, Cityville",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "19",
+      swapId: "519",
+      itemName: "Sweatpants",
+      customerName: "Isabella Hall",
+      status: "Pending",
+      customerId: "218",
+      itemId: "20",
+      customerAddress: "45 Oak Avenue, Townsville",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "20",
+      swapId: "520",
+      itemName: "Cap",
+      customerName: "Mason Scott",
+      status: "Shipped",
+      customerId: "219",
+      itemId: "21",
+      customerAddress: "67 Elm Street, Villagetown",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "21",
+      swapId: "521",
+      itemName: "Sunglasses",
+      customerName: "Sophie Mitchell",
+      status: "Stored",
+      customerId: "220",
+      itemId: "22",
+      customerAddress: "89 Maple Road, Hamletsville",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "22",
+      swapId: "522",
+      itemName: "Backpack",
+      customerName: "Lucas Wright",
+      status: "Pending",
+      customerId: "221",
+      itemId: "23",
+      customerAddress: "34 Pine Lane, Woodsville",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+    {
+      key: "23",
+      swapId: "523",
+      itemName: "Watch",
+      customerName: "Aiden Turner",
+      status: "Shipped",
+      customerId: "222",
+      itemId: "24",
+      customerAddress: "56 Cedar Street, Riverside",
+      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
+    },
+  ];
   
   
 
-const QualityCheckAuth= () => {
-  const navigate=useNavigate();
+const TokenRequest= () => {
   const columns = [
     {
       title: "Requested Id",
@@ -233,11 +339,11 @@ const QualityCheckAuth= () => {
           case "pending":
             color = "blue";
             break;
-          case "accepted":
+          case "shipped":
             color = "#13d609";
             break;
-            case "rejected":
-                color="red";
+            case "stored":
+                color="gray";
                 break;
           default:
             color = "black"; // Fallback color for any other status
@@ -280,12 +386,12 @@ const QualityCheckAuth= () => {
             return (
                 <div>
 
-               {record?.status?.toLowerCase().trim()!=="rejected" && <button  className="donation-request-view-button-reject" style={{margin:"0.1rem"}}>
-                     Reject
+               {record?.status?.toLowerCase().trim()!=="shipped" && <button  className="donation-request-view-button-shipped" style={{margin:"0.1rem"}}>
+                     Shipped
               </button>}
 
-             {record?.status?.toLowerCase().trim()!=="accepted" && <button  className="donation-request-view-button-accept" style={{margin:"0.1rem"}}>
-                Accept
+             {record?.status?.toLowerCase().trim()!=="stored" && <button  className="donation-request-view-button-stored" style={{margin:"0.1rem"}}>
+                Stored
               </button>}
 
               { record?.status?.toLowerCase().trim()!=="pending" && <button  className="donation-request-view-button-pending" style={{margin:"0.1rem"}}>
@@ -328,7 +434,6 @@ const QualityCheckAuth= () => {
   const [filteredData, setFilteredData] = React.useState(data);
   const [statusData, setStatusData] = React.useState({});
   const [openu, setOpenu] = React.useState(false);
-  
 
   const statusClick = (data) => {
     console.log(data);
@@ -476,7 +581,7 @@ const QualityCheckAuth= () => {
 
   return (
     <>
-      <div className="quality-checker-token-request">
+      <div className="token-request">
         <div
           style={{
             width: "100%",
@@ -499,7 +604,7 @@ const QualityCheckAuth= () => {
           </p>
         </div>
 
-        <div
+        {/* <div
           style={{
             width: "100%",
             display: "flex",
@@ -508,13 +613,10 @@ const QualityCheckAuth= () => {
             marginTop: "2rem",
           }}
         >
-          <button className="new-swap-button" 
-          // onClick={showModal}
-          onClick={()=>navigate("/listing")}
-          >
-            Add New Item
+          <button className="new-swap-button" onClick={showModal}>
+            Complain
           </button>
-        </div>
+        </div> */}
 
         <div style={{ marginTop: "2rem", width: "100%", overflowX: "auto" }}>
           <Table
@@ -612,7 +714,7 @@ const QualityCheckAuth= () => {
               marginBottom: "1rem",
             }}
           >
-            Add a new item
+            Report a complaint
           </h2>
         }
         open={isModalOpen}
@@ -667,11 +769,11 @@ marginTop:"0.3rem",
             })}
           </div>
 
-          {fileArray?.length>=1&&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
-{fileArray?.length<5?"Please select at least 5 images !":""}
-</div>}
+          {/* {fileArray?.length>=1 &&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
+{fileArray?.length<2?"Please select at least 5 images !":""}
+</div>} */}
 
-          {fileArray?.length >= 5 && (
+          {fileArray?.length >= 1 && (
             <div
               style={{
                 width: "100%",
@@ -783,9 +885,9 @@ marginTop:"0.3rem",
             Item Id : <span style={pStyles}>{appealData?.itemId}</span>
           </p>
 
-          <div style={{width:"100%", marginTop: "1rem",}}>
+          {/* <div style={{width:"100%", marginTop: "1rem",}}>
            <img src={appealData?.itemPicture}  style={{width:"100%",borderRadius:"10px",}}/>
-          </div>
+          </div> */}
 
           <br />
         
@@ -870,4 +972,4 @@ marginTop:"0.3rem",
   );
 };
 
-export default QualityCheckAuth;
+export default TokenRequest;

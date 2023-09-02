@@ -46,17 +46,17 @@ const oneFavoriteObject=favoriteList?.find((item)=>item.itemId==props.item.itemI
         <img src={props.item.imageURL}
          style={{width:"100%",borderRadius:"10px",}}/>
 
-         <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end"}}>
+         <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginBottom:"auto"}}>
           <p>{requiredObject?.label}</p>
          </div>
 
          <div style={{width:"100%",display:"flex",
-         alignItems:"center",marginTop:"auto",
+         alignItems:"center",
          justifyContent:"flex-start",}}>
           <p style={{fontSize:"1.5rem"}}>Rs. {props.item.priceRange}</p>
          </div>
 
-        {props.noHeart==false && <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"auto"}}>
+        {props.noHeart==false && <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",}}>
                <FavoriteIcon style={{color:oneFavoriteObject?.itemId==props.item.itemId?"red":"gray",fontSize:"2rem",cursor:"pointer"}} 
                onClick={()=>addFavoriteLocalClick(props.item)}/>
          </div>}

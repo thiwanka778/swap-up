@@ -9,7 +9,7 @@ const QualityCheckerAuthenticated=()=>{
     //duhfvhufv
 
     return (
-        user?.role==="QUALITY_CHECKER"
+        user?.role?.toLowerCase().trim()==="quality_checker"
         ?<Outlet/>
         :<Navigate to="/" state={{from:location}} replace />
 

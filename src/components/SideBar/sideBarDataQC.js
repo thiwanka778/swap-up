@@ -5,7 +5,7 @@ const sideBarDataQC = [
       path: "/",
     },
     {
-      title: "Quality Check",
+      title: "Token Request",
       icon:"bi-card-checklist",
       path:"/quality-checker-quality-check-page",
     },

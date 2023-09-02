@@ -172,6 +172,10 @@ const userSlice = createSlice({
       state.user=tempAdmin;
       window.localStorage.setItem("user",JSON.stringify(state.user));
     },
+    qualityCheckerTemp:(state,action)=>{
+       state.user={role:"quality_checker"}
+       window.localStorage.setItem("user",JSON.stringify(state.user));
+    },
     userLogout:(state,action)=>{
       state.user=null;
       window.localStorage.setItem("user",JSON.stringify(state.user));
@@ -295,5 +299,5 @@ const userSlice = createSlice({
 });
 
 export const { getScreenWidth ,getUserEmail,userLogout, resetUser,closeSideBarRedux,
-  openSideBarRedux,userLoginTemp} = userSlice.actions;
+  openSideBarRedux,userLoginTemp,qualityCheckerTemp} = userSlice.actions;
 export default userSlice.reducer;

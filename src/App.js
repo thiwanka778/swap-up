@@ -28,12 +28,15 @@ import UserComplaints from "./pages/admin/UserComplaints/UserComplaints";
 import ViewProfile from "./pages/admin/ViewProfile/ViewProfile";
 import ManageUsers from "./pages/admin/ManageUsers/ManageUsers";
 import InventoryManagerAuth from "./protectedRoutes/InventoryManagerAuth";
-import Listing from "./pages/inventoryManager/Listing/Listing";
+import Listing from "./pages/quality_checker/Listing/Listing";
 import FavoriteItemPage from "./pages/user/FavoriteItemPage/FavoriteItemPage";
 import StaffSignup from "./pages/admin/StaffSignup/StaffSignup";
 import AdminProfile from "./pages/admin/AdminProfile/AdminProfile";
 import InventoryManagerProfile from "./pages/inventoryManager/InventoryManagerProfile/InventoryManagerProfile"
 import InventoryManagerComplaint from "./pages/inventoryManager/InventoryManagerComplaint/InventoryManagerComplaint";
+import DonationRequest from "./pages/inventoryManager/DonationRequest/DonationRequest";
+import SwapRequest from "./pages/inventoryManager/SwapRequest/SwapRequest";
+import TokenRequest from "./pages/inventoryManager/TokenRequest/TokenRequest";
 
 
 
@@ -96,7 +99,7 @@ function App() {
            <Route path="quality-checker-quality-check-page" element={<QualityCheckAuth/>}/>
          <Route path="quality-checker-complaints-page"    element={<QualityCheckerComplaint/>}/>
          <Route path="quality-checker-profile-page" element={<QualityCheckerProfile/>}/>
-
+                  <Route path="listing" element={<Listing/>}/>
            </Route>
             {/* qulaity checker pages end */}
 
@@ -117,9 +120,10 @@ function App() {
 
 {/* inventory auth start */}
              <Route element={<InventoryManagerAuth/>}>
-             <Route path="listing" element={<Listing/>}/>
-             {/* <Route path="inventory-manager-profile" element={<InventoryManagerProfile/>}/> */}
-             {/* <Route path="inventory-manager-complaint" element={<InventoryManagerComplaint/>}/> */}
+             {/* <Route path="listing" element={<Listing/>}/> */}
+        <Route path="swap-request" element={<SwapRequest/>}/>
+             <Route path="donation-request" element={<DonationRequest/>}/>
+             <Route path="token-request" element={<TokenRequest/>}/>
        <Route path="inventory-manager-profile" element={<InventoryManagerProfile/>}/>
        <Route path="inventory-manager-complaint" element={<InventoryManagerComplaint/>}/>
              </Route>

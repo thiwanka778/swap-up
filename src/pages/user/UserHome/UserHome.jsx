@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Badge from "@mui/material/Badge";
 import CountUp from "react-countup";
-import Slider from "react-slider";
+import Slider from "@mui/material/Slider";
 // Import Swiper styles
 import "swiper/css";
 import {
@@ -23,7 +23,6 @@ import Card from "./Card";
 const gender = ["unisex", "male", "female"];
 
 const sizeOptions2 = [
-   
   { value: "xs", label: "X-Small" },
   { value: "s", label: "Small" },
   { value: "m", label: "Medium" },
@@ -34,7 +33,6 @@ const sizeOptions2 = [
   { value: "4xl", label: "4X-Large" },
   { value: "5xl", label: "5X-Large" },
   { value: "6xl", label: "6X-Large" },
-
 ];
 
 const data = [
@@ -164,9 +162,10 @@ const UserHome = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [uniqueColors, setUniqueColors] = useState([]);
   const [priceRange, setPriceRange] = React.useState([]);
-  const [uniqueQualityStatus,setUniqueQualityStatus]=React.useState([]);
+  const [uniqueQualityStatus, setUniqueQualityStatus] = React.useState([]);
   const [min, setMin] = React.useState(0);
-  const [max, setMax] = React.useState(100);
+  const [max, setMax] = React.useState(0);
+  const [sliderValue, setSliderValue] = React.useState(5000);
   const [updatedListingItems, setUpdatedListingItems] =
     React.useState(listingItems);
 
@@ -186,7 +185,7 @@ const UserHome = () => {
       }
     }
     return uniqueQualityStatus;
-  };
+  }
 
   useEffect(() => {
     // Call the function and update the state with unique qualityStatus values
@@ -203,6 +202,9 @@ const UserHome = () => {
   const handleColorChange = (event, newValue) => {
     setSelectedColor(newValue); // Set the selected color when it changes
   };
+  const handleSliderChange = (event, newValue) => {
+    setSliderValue(newValue);
+  };
 
   useEffect(() => {
     // Extract an array of all prices from the listing items
@@ -214,6 +216,7 @@ const UserHome = () => {
 
     setMin(minPrice);
     setMax(maxPrice);
+    setSliderValue(maxPrice);
 
     setPriceRange([minPrice, maxPrice]);
 
@@ -221,6 +224,10 @@ const UserHome = () => {
     console.log("Minimum Price:", minPrice);
     console.log("Maximum Price:", maxPrice);
   }, [listingItems]);
+
+  React.useEffect(() => {
+    setSliderValue(max);
+  }, [max]);
 
   useEffect(() => {
     // Function to extract unique colors from listingItems
@@ -371,41 +378,39 @@ const UserHome = () => {
       )
     : updatedListingItems;
 
-  const filteredItemsByGender = (selectedGender && selectedGender!=="unisex")
-    ? filteredItems.filter(
+  const filteredItemsByGender =
+    selectedGender && selectedGender !== "unisex"
+      ? filteredItems.filter(
+          (item) =>
+            item.gender.toLowerCase().trim() ===
+            selectedGender.toLowerCase().trim()
+        )
+      : filteredItems;
+
+  const filteredItemsBySize = selectedSize
+    ? filteredItemsByGender.filter(
         (item) =>
-          item.gender.toLowerCase().trim() ===
-          selectedGender.toLowerCase().trim()
+          item.size.toLowerCase().trim() ===
+          selectedSize.value.toLowerCase().trim()
       )
-    : filteredItems;
+    : filteredItemsByGender;
 
- 
+  // const filteredItemsBySizeAndQuality = selectedQuality
+  // ? filteredItemsBySize.filter(
+  //     (item) =>
+  //       item.qualityStatus.toLowerCase().trim() ===
+  //       selectedQuality.toLowerCase().trim()
+  //   )
+  // : filteredItemsBySize;
+
   // Assuming priceRange is an array [minPrice, maxPrice]
-const filteredItemsByPriceRange = priceRange
-? filteredItemsByGender.filter(
-    (item) =>
-      parseInt(item.priceRange) >= priceRange[0] &&
-      parseInt(item.priceRange) <= priceRange[1]
-  )
-: filteredItemsByGender;
+  const filteredItemsByPriceRange = sliderValue
+    ? filteredItemsBySize.filter(
+        (item) => parseInt(item.priceRange) <= sliderValue
+      )
+    : filteredItemsBySize;
 
-const filteredItemsBySize = selectedSize
-  ? filteredItemsByPriceRange.filter(
-      (item) =>
-        item.size.toLowerCase().trim() ===
-        selectedSize.value.toLowerCase().trim()
-    )
-  : filteredItemsByPriceRange;
-
-  const filteredItemsBySizeAndQuality = selectedQuality
-  ? filteredItemsBySize.filter(
-      (item) =>
-        item.qualityStatus.toLowerCase().trim() ===
-        selectedQuality.toLowerCase().trim()
-    )
-  : filteredItemsBySize;
-
-  const itemDisplay = filteredItemsBySizeAndQuality?.map((item, index) => {
+  const itemDisplay = filteredItemsByPriceRange?.map((item, index) => {
     if (item?.activeState == true) {
       return (
         <Card
@@ -424,15 +429,14 @@ const filteredItemsBySize = selectedSize
     dispatch(fetchFavoriteItemsByUser({ userId }));
   }, [user]);
 
-  console.log(priceRange);
-
-  let priceRangeWidth = "400px";
-  if (openRedux && screen < 738) {
-    priceRangeWidth = "100%";
-  } else if (openRedux === false && screen < 440) {
-    priceRangeWidth = "100%";
-  }
-
+  // let priceRangeWidth = "400px";
+  // if (openRedux && screen < 738) {
+  //   priceRangeWidth = "100%";
+  // } else if (openRedux === false && screen < 440) {
+  //   priceRangeWidth = "100%";
+  // }
+  console.log("max", max);
+  console.log("slidervalue", sliderValue);
   return (
     <div
       className="user-home"
@@ -657,7 +661,7 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
 <Carousel/>
 </div> */}
 
-       {/* <div
+      {/* <div
         style={{
           width: "100%",
           display: "flex",
@@ -701,9 +705,49 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
         </div>
       </div>
 
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: "1.5rem",
+          marginTop: "1rem",
+        }}
+      >
+        <div
+          style={{
+            width: 300,
+            padding: "1.5rem 2rem",
+            background: "#edeef0",
+            borderRadius: "8px",
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px ",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: " 'Poppins', sans-serif",
+              letterSpacing: "0.1rem",
+              fontWeight: "bold",
+            }}
+          >
+            Price range upto Rs.{sliderValue}
+          </p>
+
+          <Slider
+            size="small"
+            defaultValue={800000000}
+            aria-label="Small"
+            valueLabelDisplay="auto"
+            max={max}
+            onChange={handleSliderChange}
+          />
+        </div>
+      </div>
+
       {/* favo rite button*/}
 
-      {priceRange && priceRange?.length>=1 && 
+      {/* {priceRange && priceRange?.length>=1 && 
       <div style={{display:"flex",justifyContent:"flex-end"}}>
        <div
         style={{
@@ -747,7 +791,7 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
           />
         </div>
       </div>
-      </div>}
+      </div>} */}
 
       <div
         style={{
@@ -764,10 +808,12 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
         }}
       >
         <div
-          style={{
-            // marginRight: "1.5rem",
-            // marginBottom: screen < 360 ? "1rem" : "0rem",
-          }}
+          style={
+            {
+              // marginRight: "1.5rem",
+              // marginBottom: screen < 360 ? "1rem" : "0rem",
+            }
+          }
         >
           <Autocomplete
             disablePortal
@@ -783,9 +829,13 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
           />
         </div>
 
-        <div style={{
-          //  marginRight: "1.5rem" 
-           }}>
+        <div
+          style={
+            {
+              //  marginRight: "1.5rem"
+            }
+          }
+        >
           <Autocomplete
             disablePortal
             id="combo-box-demo"
@@ -801,21 +851,21 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
         </div>
 
         <div>
-        <Autocomplete
-    disablePortal
-    id="size-combo-box"
-    size="small"
-    options={sizeOptions2}
-    sx={{ width: 150 }}
-    value={selectedSize}
-    onChange={(event, newValue) => {
-      setSelectedSize(newValue);
-    }}
-    renderInput={(params) => <TextField {...params} label="Size" />}
-  />
+          <Autocomplete
+            disablePortal
+            id="size-combo-box"
+            size="small"
+            options={sizeOptions2}
+            sx={{ width: 150 }}
+            value={selectedSize}
+            onChange={(event, newValue) => {
+              setSelectedSize(newValue);
+            }}
+            renderInput={(params) => <TextField {...params} label="Size" />}
+          />
         </div>
 
-        <div>
+        {/* <div>
         <Autocomplete
     disablePortal
     id="size-combo-box"
@@ -828,10 +878,8 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
     }}
     renderInput={(params) => <TextField {...params} label="Quality" />}
   />
-        </div>
+        </div> */}
       </div>
-
-    
 
       {/* <div
         style={{

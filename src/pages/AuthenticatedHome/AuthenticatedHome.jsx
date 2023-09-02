@@ -13,12 +13,12 @@ const AuthenticatedHome = () => {
 
  let componentToRender = <div>Unknown user role</div>
 
-switch (user?.role?.toLowerCase()) {
+switch (user?.role?.toLowerCase().trim()) {
   case "customer":
     componentToRender = <UserHome />;
     break;
 
-    case "qualityChecker":
+    case "quality_checker":
     componentToRender = <QualityCheckerHome />;
     break;
 
