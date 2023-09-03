@@ -5,6 +5,7 @@ import QualityCheckerHome from '../quality_checker/QualityCheckerHome/QualityChe
 import AdminHome from '../admin/AdminHome/AdminHome';
 import { useSelector } from 'react-redux';
 import Home from "../Home/Home";
+import HelpAssistantHome from '../helpAssistant/HelpAssistantHome/HelpAssistantHome';
 import InventoryManagerHome from '../inventoryManager/InventoryManagerHome/InventoryManagerHome';
 
 const AuthenticatedHome = () => {
@@ -29,6 +30,10 @@ switch (user?.role?.toLowerCase().trim()) {
       case "inventory_manager":
         componentToRender=<InventoryManagerHome/>;
         break;
+
+        case "help_assistant":
+          componentToRender=<HelpAssistantHome/>;
+          break;
 
     default:
     componentToRender = <Home/>;

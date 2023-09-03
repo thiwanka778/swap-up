@@ -140,6 +140,7 @@ color:"gray",letterSpacing:"0.1rem",fontWeight:"bold"}}>No Favorite Items</p>}
 
 <div>
 <Dialog
+style={{zIndex:"15000"}}
         open={open}
         onClose={handleClose}
        

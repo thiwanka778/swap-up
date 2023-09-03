@@ -37,6 +37,9 @@ import InventoryManagerComplaint from "./pages/inventoryManager/InventoryManager
 import DonationRequest from "./pages/inventoryManager/DonationRequest/DonationRequest";
 import SwapRequest from "./pages/inventoryManager/SwapRequest/SwapRequest";
 import TokenRequest from "./pages/inventoryManager/TokenRequest/TokenRequest";
+import HelpAssistantAuth from "./protectedRoutes/HelpAssistantAuth";
+import HelpRequest from "./pages/helpAssistant/HelpRequest/HelpRequest";
+import Membership from "./pages/user/Membership/Membership";
 
 
 
@@ -88,6 +91,7 @@ function App() {
             <Route path="swap" element={<Swap/>}/>
             <Route path="donate" element={<Donate/>}/>
             <Route path="complaints" element={<Complaints/>}/>
+            <Route path="user-membership" element={<Membership/>}/>
             <Route path="profile" element={<Profile/>}/>
             <Route path="favorite-items-page" element={<FavoriteItemPage/>}/>
         </Route>
@@ -131,6 +135,17 @@ function App() {
           
 
              {/* inventory auth end */}
+
+
+
+             {/* help assistant auth start */}
+
+             <Route element={<HelpAssistantAuth/>}>
+              <Route path="help-request" element={<HelpRequest/>}/>
+             </Route>
+
+             
+             {/* help assistant auth end*/}
 
              
            

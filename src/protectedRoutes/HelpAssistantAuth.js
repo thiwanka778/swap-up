@@ -3,17 +3,17 @@ import { useSelector } from "react-redux";
 
 
 
-const InventoryManagerAuth=()=>{
+const HelpAssistantAuth=()=>{
     const location = useLocation();
     const {userEmail,user}=useSelector((state)=>state.user);
    
 
     return (
-        user?.role?.toLowerCase().trim()=="inventory_manager"
+        user?.role?.toLowerCase().trim()=="help_assistant"
         ?<Outlet/>
         :<Navigate to="/" state={{from:location}} replace />
 
     )
 }
 
-export default InventoryManagerAuth;
+export default HelpAssistantAuth;

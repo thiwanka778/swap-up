@@ -337,6 +337,7 @@ const NavBar = () => {
       />
 
       <Menu
+      style={{zIndex:"50000"}}
         id="basic-menu"
         anchorEl={anchorEl}
         open={openUser}
@@ -349,6 +350,11 @@ const NavBar = () => {
           <PersonIcon />
           &nbsp;&nbsp;{user?.firstName} {user?.lastName}
         </MenuItem>
+
+
+       
+
+
         <Divider />
         {!user && (
           <MenuItem onClick={handleClickOpen}>

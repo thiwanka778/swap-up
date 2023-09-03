@@ -5,7 +5,12 @@ const sideBarData2 = [
       path: "/",
     },
     {
-      title: "Quality Check",
+      title: "Membership",
+      icon: "bi-gem",
+      path: "/user-membership",
+    },
+    {
+      title: "Request Token",
       icon:"bi-card-checklist",
       path:"/quality-check",
     },

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import { userLogout } from "../../redux/userSlice";
 import { useNavigate } from "react-router-dom";
-import { userLogin,resetUser ,userLoginTemp,qualityCheckerTemp} from "../../redux/userSlice";
+import { userLogin,resetUser ,userLoginTemp,qualityCheckerTemp,helpAssistantTemp} from "../../redux/userSlice";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import WarningToast from "../../components/warningToast/WarningToast";
@@ -92,6 +92,9 @@ if(userLoading==false && userLoginStatus==true){
    }else if(email==="qualityChecker"){
         dispatch(qualityCheckerTemp(email));
         navigate("/");
+   }else if(email==="help"){
+    dispatch(helpAssistantTemp(email));
+    navigate("/");
    }
    else{
     if(email=="" || password ==""){

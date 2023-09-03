@@ -669,6 +669,7 @@ const Swap = () => {
       </div>
 
       <Modal
+      
         title={<h2 style={{color:"#00425A",
         fontSize:"1.5rem",marginBottom:"1rem"}}>Submit the item you want to swap</h2>}
         open={isModalOpen}
@@ -759,7 +760,9 @@ return (
       </Backdrop>
      
 
-      <Modal title={<h2 style={{color:"#00425A",
+      <Modal 
+      
+      title={<h2 style={{color:"#00425A",
         fontSize:"1.5rem",marginBottom:"1rem"}}>Appeal</h2>}
        open={isModalOpena} onOk={handleOka} onCancel={handleCancela}
        footer={null}

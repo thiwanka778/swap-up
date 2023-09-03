@@ -8,6 +8,7 @@ import { closeSideBarRedux, userLogout } from "../../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import sideBarDataAdmin from "./sideBarDataAdmin";
 import sideBarDataInventoryManager from "./sideBarDataInventoryManager";
+import sideBarDataHelp from "./sideBarDataHelp";
 
 const SideBar = ({openSideBar, setOpenSideBar }) => {
   const dispatch=useDispatch();
@@ -29,6 +30,8 @@ React.useEffect(()=>{
       return sideBarDataAdmin;
      }else if(user?.role?.toLowerCase()==="inventory_manager"){
       return sideBarDataInventoryManager;
+     }else if(user?.role?.toLowerCase().trim()==="help_assistant"){
+      return sideBarDataHelp;
      }
   })
 },[user])
