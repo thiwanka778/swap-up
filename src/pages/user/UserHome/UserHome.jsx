@@ -3,11 +3,16 @@ import "./UserHome.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import TryIcon from "@mui/icons-material/Try";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import Badge from "@mui/material/Badge";
 import CountUp from "react-countup";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import Slider from "@mui/material/Slider";
 // Import Swiper styles
 import "swiper/css";
@@ -165,9 +170,15 @@ const UserHome = () => {
   const [uniqueQualityStatus, setUniqueQualityStatus] = React.useState([]);
   const [min, setMin] = React.useState(0);
   const [max, setMax] = React.useState(0);
+  const filterBoxRef = React.useRef(null);
+  const [fromPrice, setFromPrice] = React.useState("");
+  const [toPrice, setToPrice] = useState("");
   const [sliderValue, setSliderValue] = React.useState(5000);
+  const [isFilterVisible, setIsFilterVisible] = React.useState(false);
   const [updatedListingItems, setUpdatedListingItems] =
     React.useState(listingItems);
+    const [anchorElf, setAnchorElf] = React.useState(null);
+  const openf = Boolean(anchorElf);
 
   const [categoryData, setCategoryData] = useState(() => {
     const localData = window.localStorage.getItem("categoryData");
@@ -404,13 +415,28 @@ const UserHome = () => {
   // : filteredItemsBySize;
 
   // Assuming priceRange is an array [minPrice, maxPrice]
-  const filteredItemsByPriceRange = sliderValue
-    ? filteredItemsBySize.filter(
-        (item) => parseInt(item.priceRange) <= sliderValue
-      )
-    : filteredItemsBySize;
+  // const filteredItemsByPriceRange = sliderValue
+  //   ? filteredItemsBySize.filter(
+  //       (item) => parseInt(item.priceRange) <= sliderValue
+  //     )
+  //   : filteredItemsBySize;
 
-  const itemDisplay = filteredItemsByPriceRange?.map((item, index) => {
+    const filteredItemsByPrice = filteredItemsBySize.filter((item) => {
+      const price = parseInt(item.priceRange); 
+      if(fromPrice==="" && toPrice===""){
+        return filteredItemsBySize;
+      }else if(fromPrice>=0 && toPrice===""){
+        return price>=fromPrice;
+      }else if(fromPrice==="" && toPrice>=0){
+        return price<=toPrice
+      }else if(fromPrice>=0 && toPrice>=0){
+        return price>=fromPrice && price<=toPrice;
+      }
+      
+  
+    });
+
+  const itemDisplay = filteredItemsByPrice?.map((item, index) => {
     if (item?.activeState == true) {
       return (
         <Card
@@ -435,35 +461,48 @@ const UserHome = () => {
   // } else if (openRedux === false && screen < 440) {
   //   priceRangeWidth = "100%";
   // }
-  console.log("max", max);
-  console.log("slidervalue", sliderValue);
+  // console.log("max", max);
+  // console.log("slidervalue", sliderValue);
+
+  const toggleFilter = () => {
+    setIsFilterVisible(!isFilterVisible);
+  };
+
+
+  
+  const handleClickf = (event) => {
+    setAnchorElf(event.currentTarget);
+  };
+  const handleClosef = () => {
+    setAnchorElf(null);
+  };
+
+
+  
+  
+
+  const handleFromPriceChange = (event) => {
+    const value = event.target.value;
+    // Check if the value is not negative before updating the state
+    if (value >= 0) {
+      setFromPrice(value);
+    }
+  };
+
+  const handleToPriceChange = (event) => {
+    const value = event.target.value;
+    // Check if the value is not negative before updating the state
+    if (value >= 0) {
+      setToPrice(value);
+    }
+  };
+
   return (
     <div
       className="user-home"
       style={{ paddingLeft: openRedux && screen > 650 ? "290px" : "1rem" }}
     >
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          alignContent: "center",
-          justifyContent: "flex-end",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: " 'Poppins', sans-serif",
-            fontSize: "1.2rem",
-            fontWeight: 600,
-            letterSpacing: "0.1rem",
-            color: "#00425A",
-          }}
-        >
-          {formattedDate}
-        </p>
-      </div>
-
-      <div
+      {/* <div
         style={{
           width: "100%",
           display: "flex",
@@ -477,27 +516,50 @@ const UserHome = () => {
             fontSize: "0.8rem",
             fontWeight: 600,
             letterSpacing: "0.1rem",
+            color: "#00425A",
+          }}
+        >
+          {formattedDate}
+     
+        </p>
+      </div> */}
+
+      {/* <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignContent: "center",
+          justifyContent: "flex-end",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: " 'Poppins', sans-serif",
+            fontSize: "0.6rem",
+            fontWeight: 600,
+            letterSpacing: "0.1rem",
           }}
         >
           {dayOfWeek}
         </p>
-      </div>
+      </div> */}
 
-      <div
+      {/* <div
         style={{
+          marginBottom:"0.5rem",
           width: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          flexDirection: screen < 485 ? "column" : "row",
+          flexDirection: screen < 400 ? "column" : "row",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            marginRight: screen < 485 ? "0rem" : "2rem",
-            marginBottom: screen < 485 ? "1.5rem" : "0rem",
+            marginRight: screen < 400 ? "0rem" : "1rem",
+            marginBottom: screen < 400 ? "1rem" : "0rem",
             padding: "1rem",
             boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
             justifyContent: "center",
@@ -509,7 +571,7 @@ const UserHome = () => {
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontSize: "2rem",
+              fontSize: "1.5rem",
               color: "#00425A",
               fontWeight: 500,
             }}
@@ -542,7 +604,7 @@ const UserHome = () => {
                 start={0}
                 end={85}
                 duration={3}
-                style={{ fontSize: "2rem" }}
+                style={{ fontSize: "1.5rem" }}
               />
             </span>
           </p>
@@ -563,7 +625,7 @@ const UserHome = () => {
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontSize: "2rem",
+              fontSize: "1.5rem",
               color: "#00425A",
               fontWeight: 500,
             }}
@@ -599,12 +661,12 @@ const UserHome = () => {
                 start={0}
                 end={70}
                 duration={3}
-                style={{ fontSize: "2rem" }}
+                style={{ fontSize: "1.5rem" }}
               />
             </span>
           </p>
         </div>
-      </div>
+      </div> */}
 
       {/* text slider start */}
       <div
@@ -613,10 +675,10 @@ const UserHome = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          marginTop: "2rem",
+          marginTop: "0rem",
         }}
       >
-        <div
+        {/* <div
           style={{
             padding: "1rem",
             width: "fit-content",
@@ -650,7 +712,9 @@ const UserHome = () => {
             Manufacturing a cotton shirt produces the same amount of emissions
             as driving 35 miles in a car.
           </p>
-        </div>
+        </div> */}
+
+
       </div>
 
       {/* text slider end */}
@@ -684,28 +748,151 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
 
       <div
         style={{
-          width: "100",
+          width: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          marginTop:"1rem",
         }}
       >
+
+<div className="filter-icon" style={{cursor:"pointer",
+marginBottom: "1rem",position:"relative",
+marginRight:"1rem"}}>
+          <Tooltip title="Filter" placement="bottom">
+          <FilterAltIcon 
+                id="basic-button"
+                aria-controls={openf ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={openf ? 'true' : undefined}
+                onClick={handleClickf}
+          // onClick={toggleFilter}
+           />
+          </Tooltip> 
+
+            <Menu
+            style={{zIndex:"25000"}}
+        id="basic-menu"
+        anchorEl={anchorElf}
+        open={openf}
+        onClose={handleClosef}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+       
+      >
+        <div  style={{padding:"1rem"}}>
+
+          <p style={{marginLeft:"1.5rem",
+          fontFamily:" 'Poppins', sans-serif",
+           fontSize:"1.5rem",fontWeight:"bold",letterSpacing:"0.1rem"}}>Apply Filters</p>
+
+        <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={uniqueColors}
+            sx={{ width: 264,margin:"1.5rem" }}
+            size="small"
+            onChange={handleColorChange} // Handle color selection
+            value={selectedColor} // Set the value to control the selected color
+            renderInput={(params) => (
+              <TextField {...params} label="Choose color" />
+            )}
+          />
+
+       <Autocomplete
+            disablePortal
+            id="size-combo-box"
+            size="small"
+            options={sizeOptions2}
+            sx={{ width: 264,margin:"1.5rem" }}
+            value={selectedSize}
+            onChange={(event, newValue) => {
+              setSelectedSize(newValue);
+            }}
+            renderInput={(params) => <TextField {...params} label="Size" />}
+          />
+
+
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={gender}
+            sx={{ width: 264,margin:"1.5rem" }}
+            size="small"
+            onChange={handleGenderChange} // Handle color selection
+            value={selectedGender} // Set the value to control the selected color
+            renderInput={(params) => (
+              <TextField {...params} label="Choose gender" />
+            )}
+          />
+          <div>
+          <TextField 
+          value={fromPrice}
+          onChange={handleFromPriceChange}
+      type="number"
+     label="From price" variant="outlined"
+      sx={{ width: 125, marginLeft:"1.5rem",marginRight:"1rem"}}
+            size="small"
+       />
+
+<TextField 
+   value={toPrice}
+   onChange={handleToPriceChange}
+      type="number"
+     label="To price" variant="outlined"
+      sx={{ width: 125, }}
+            size="small"
+       />
+          </div>
+  
+<div style={{width:"100%",display:"flex",justifyContent:"flex-end"}}> 
+
+<button  onClick={handleClosef}
+className="apply-changes-button" 
+style={{marginLeft:"1.5rem",marginTop:"1.5rem",marginRight:"1.5rem"}}>
+        Apply
+        </button>
+</div>
+       
+      
+        </div>
+        
+      </Menu>  
+         </div>
         <div
           className="custom-scrollbar"
           style={{
-            marginTop: "2rem",
-
+            marginTop: "0rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-start",
             overflowX: "auto",
+        
           }}
         >
           {categoryDisplay}
+
         </div>
+       
+
       </div>
 
-      <div
+      {/* <div style={{width:"100%",display:"flex",alignItems:"center",}}>
+        <div style={{cursor:"pointer"}}>
+             <FilterAltIcon/>
+        </div>
+      </div> */}
+
+      {/* <div
         style={{
           width: "100%",
           display: "flex",
@@ -743,7 +930,7 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
             onChange={handleSliderChange}
           />
         </div>
-      </div>
+      </div> */}
 
       {/* favo rite button*/}
 
@@ -793,13 +980,9 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
       </div>
       </div>} */}
 
-      <div
+      {/* <div
         style={{
-          // width: "100%",
-          // display: "flex",
-          // flexDirection: screen < 360 ? "column" : "row",
-          // marginTop: "1rem",
-          // paddingRight: "1rem",
+         
           width: "100%",
           marginTop: "1rem",
           gridGap: "10px",
@@ -808,12 +991,7 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
         }}
       >
         <div
-          style={
-            {
-              // marginRight: "1.5rem",
-              // marginBottom: screen < 360 ? "1rem" : "0rem",
-            }
-          }
+         
         >
           <Autocomplete
             disablePortal
@@ -865,21 +1043,8 @@ justifyContent:"center",paddingLeft:screen<588?"0":"3%"}}>
           />
         </div>
 
-        {/* <div>
-        <Autocomplete
-    disablePortal
-    id="size-combo-box"
-    size="small"
-    options={uniqueQualityStatus}
-    sx={{ width: 150 }}
-    value={selectedQuality}
-    onChange={(event, newValue) => {
-      setSelectedQuality(newValue);
-    }}
-    renderInput={(params) => <TextField {...params} label="Quality" />}
-  />
-        </div> */}
-      </div>
+       
+      </div> */}
 
       {/* <div
         style={{

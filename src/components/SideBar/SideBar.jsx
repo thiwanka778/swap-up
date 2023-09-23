@@ -13,11 +13,6 @@ import sideBarDataHelp from "./sideBarDataHelp";
 const SideBar = ({openSideBar, setOpenSideBar }) => {
   const dispatch=useDispatch();
   const {user}=useSelector((state)=>state.user);
- 
-
-
-
-
   const [sideBarData,setSiderBarData]=React.useState(sideBarData2);
 
 React.useEffect(()=>{
@@ -59,9 +54,9 @@ return !prevState;
   <div  className="sidebar"
 
   >
-    <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",padding:"1rem 1rem 0 0"}}>
+    {/* <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",padding:"1rem 1rem 0 0"}}>
     <i className="bi-x-circle" style={{fontSize:"1rem",cursor:"pointer"}} onClick={sideBarClose} ></i>
-    </div>
+    </div> */}
 
     <div style={{width:"100%",padding:"1rem",display:"flex",alignItems:"center",}}>
     <img src={swaplogo} style={{marginRight:"auto",width:"80px"}}/>

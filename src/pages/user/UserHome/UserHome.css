@@ -49,3 +49,23 @@
     top:-5px;
   }
  
+  .filter-box{
+   right:-1px;
+   top:20px;
+    position: absolute;
+  }
+  .apply-changes-button{
+    background-color: #007bff; /* Blue background color */
+  color: #fff; /* White text color */
+  padding: 6px 12px; /* Padding around the text */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 1rem; /* Font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for a raised effect */
+  transition: background-color 0.3s, color 0.3s;
+  }
+  .apply-changes-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+ 

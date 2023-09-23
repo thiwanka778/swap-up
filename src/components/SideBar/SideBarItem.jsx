@@ -1,8 +1,11 @@
 import React from 'react';
 import './SideBar.css';
 import { NavLink } from 'react-router-dom';
+import { closeSideBarRedux, openSideBarRedux } from '../../redux/userSlice';
+import { useDispatch } from 'react-redux';
 
 const SideBarItem = (props) => {
+  const dispatch=useDispatch();
   const [open, setOpen] = React.useState(false);
   const arrowIconClass = open ? 'bi-chevron-up' : 'bi-chevron-down';
 
@@ -38,7 +41,8 @@ const SideBarItem = (props) => {
     );
   } else {
     return (
-      <div className={open ? 'sidebar-main-item open' : 'sidebar-main-item'}>
+      <div className={open ? 'sidebar-main-item open' : 'sidebar-main-item'} 
+      onClick={()=>dispatch(closeSideBarRedux())}>
         <NavLink to={props.item?.path} className="sidebar-item">
           <span>
             <i

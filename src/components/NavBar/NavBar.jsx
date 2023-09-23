@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./NavBar.css";
 import swaplogo from "../../assets/swaplogo.png";
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import toast, { Toaster } from "react-hot-toast";
@@ -10,7 +12,7 @@ import Badge from "@mui/material/Badge";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import WarningToast from "../../components/warningToast/WarningToast";
-import { getUserEmail, openSideBarRedux, userLogout } from "../../redux/userSlice";
+import { getUserEmail, openSideBarRedux, userLogout,closeSideBarRedux } from "../../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Input } from "antd";
 import { NavLink } from "react-router-dom";
@@ -28,6 +30,8 @@ import SideBar from "../SideBar/SideBar";
 import { CSSTransition } from "react-transition-group";
 import { useLocation } from "react-router-dom";
 import { fetchFavoriteItemsByUser } from "../../redux/inventorySlice";
+import { SubscriptionsOutlined } from "@mui/icons-material";
+
 
 
 const NavBar = () => {
@@ -44,7 +48,7 @@ const NavBar = () => {
     inventoryStatus,
   } = useSelector((state) => state.inventory);
   const currentPath = location.pathname;
-  const { userEmail, screen, user } = useSelector((state) => state.user);
+  const { userEmail, screen, user,openRedux } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -61,7 +65,11 @@ const NavBar = () => {
   const [openSideBar,setOpenSideBar]=React.useState(false);
   // const [isSideBarHovered, setIsSideBarHovered] = React.useState(false);
  
+  const [state, setState] = React.useState({
 
+    left: false,
+  
+  });
 
 
   const menuClick = () => {
@@ -120,36 +128,46 @@ const NavBar = () => {
     }
   }, [email]);
 
-  const verifyBtnClick = () => {
-    if (email === "") {
-      // toast.error('Gmail is required !');
-      toast.custom(<WarningToast message={"Gmail is required !"} />);
-    } else if (validGmail === false && email !== "") {
-      // toast.error('Please enter valid gmail address !');
-      toast.custom(
-        <WarningToast message={"Please enter valid gmail address !"} />
-      );
-    } else if (validGmail === true && email !== "") {
-      // google sign up firebase function
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          // console.log(result?.user?.email);
-          if (result?.user?.email === email) {
-            dispatch(getUserEmail(result?.user?.email));
-            setOpen(false);
-            navigate("/signup");
-            setEmail("");
-          } else {
-            toast.error(
-              "Gmail you have entered and verified gmail do not match !"
-            );
-          }
-        })
-        .catch((error) => {
-          toast.error("Unexpected error. Try again later !");
-        });
+  
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
     }
+    setState({ ...state, [anchor]: open });
   };
+
+React.useEffect(()=>{
+console.log("state",state)
+if(state.left===false){
+  dispatch(closeSideBarRedux())
+  setOpenSideBar((prevState) => {
+    const newValue = false;
+    // console.log(newValue); // Check the value of openSideBar
+    return newValue;
+  });
+}else if(state.left===true){
+  dispatch(openSideBarRedux());
+  setOpenSideBar((prevState) => {
+    const newValue = true;
+    // console.log(newValue); // Check the value of openSideBar
+    return newValue;
+  });
+}
+},[state])
+
+React.useEffect(()=>{
+if(openRedux===false){
+  setState((prevState)=>{
+     return {left:false}
+  });
+  setOpenSideBar((prevState) => {
+    const newValue = false;
+    // console.log(newValue); // Check the value of openSideBar
+    return newValue;
+  });
+}
+},[openRedux])
 
   return (
     <>
@@ -168,9 +186,9 @@ const NavBar = () => {
           <div
             style={{ marginRight: "auto", cursor: "pointer" }}
        
-            onClick={menuClick}
+            // onClick={menuClick}
           >
-            <MenuIcon style={{ color: "white" }} />
+            <MenuIcon style={{ color: "white" }}  onClick={toggleDrawer("left", true)} />
           </div>
         )}
 
@@ -235,73 +253,7 @@ const NavBar = () => {
         )}
       </div>
 
-      <Dialog open={open} onClose={handleClose}>
-        <DialogContent style={{ background: "ghostwhite" }}>
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <p
-              style={{
-                fontFamily: " 'Poppins', sans-serif",
-                fontSize: "1.5rem",
-                marginBottom: "1.5rem",
-              }}
-            >
-              Please verify your gmail address.
-            </p>
-
-            <Input
-              placeholder="Enter your gmail"
-              value={email}
-              onChange={handleEmailChange}
-              style={{
-                borderRadius: "4px",
-                border: "1px solid #d9d9d9",
-                boxShadow: "none",
-                fontSize: "1rem",
-                padding: "1rem",
-                width: "100%",
-                fontWeight: "500",
-                fontFamily: " 'Poppins', sans-serif",
-                letterSpacing: "0.1rem",
-              }}
-            />
-
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                marginBottom: "1.5rem",
-              }}
-            >
-              {validGmail === false && (
-                <p
-                  style={{
-                    color: "red",
-                    fontWeight: "600",
-                    fontFamily: " 'Poppins', sans-serif",
-                    letterSpacing: "0.1rem",
-                    fontSize: "0.8rem",
-                  }}
-                >
-                  *Please enter a valid gmail address.
-                </p>
-              )}
-            </div>
-
-            <button onClick={verifyBtnClick} className="verify-button">
-              Verify My Gmail
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
+     
 
       <Toaster
         position="top-center"
@@ -378,15 +330,34 @@ const NavBar = () => {
         </MenuItem>
       </Menu>
 
-      {openSideBar && user && (
+      
+
+
+
+{user &&<div key={"left"} >
+         
+          <Drawer
+          style={{zIndex:"20000"}}
+            anchor={"left"}
+            open={state["left"]}
+            onClose={toggleDrawer("left", false)}
+          >
+ <Box
+      sx={{ width: "left" === 'top' || "left"=== 'bottom' ? 'auto' : 260,
+      height:"100vh",zIndex:"20000",}}
+      role="presentation"
+      onClick={toggleDrawer("letf", false)}
+      onKeyDown={toggleDrawer("left", false)}
+    >
+    
+   
         <div style={{ width: "100%" }}>
           <SideBar openSideBar={openSideBar} setOpenSideBar={setOpenSideBar} />
         </div>
-      )}
-
-
-
-
+      
+    </Box>
+          </Drawer>
+        </div>}
 
 
 
