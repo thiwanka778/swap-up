@@ -7,7 +7,19 @@
     padding-bottom: 1rem;
 }
 
-
+.view-button{
+  background-color: #edac2b; /* Green background color */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    font-size:1rem; /* Font size */
+    cursor: pointer; /* Cursor on hover */
+    transition: transform 1s ; 
+}
+.view-button:active{
+  transform: scale(-0.7);
+}
 
 .appeal-button {
     background-color: #4CAF50; /* Green background color */

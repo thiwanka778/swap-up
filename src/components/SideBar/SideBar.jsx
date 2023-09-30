@@ -21,7 +21,7 @@ React.useEffect(()=>{
       return sideBarData2;
      }else if(user?.role?.toLowerCase()=="quality_checker"){
       return sideBarDataQC;
-     }else if(user?.role==="admin"){
+     }else if(user?.role?.toLowerCase().trim()==="admin"){
       return sideBarDataAdmin;
      }else if(user?.role?.toLowerCase()==="inventory_manager"){
       return sideBarDataInventoryManager;

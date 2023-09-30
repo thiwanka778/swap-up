@@ -217,7 +217,7 @@ const SignUp2 = () => {
       nic,
       password,
       profilePicture:"",
-      role:null,
+      role:"CUSTOMER",
     };
 
     dispatch(userRegister(formData))

@@ -1,17 +1,32 @@
-import React from "react";
+import React,{useState} from "react";
 import "./Complaints.css";
 import { Space, Table, Tag } from "antd";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Button, Modal } from "antd";
+import Pagination from "@mui/material/Pagination";
+import { useDispatch } from "react-redux";
 import { AutoComplete } from "antd";
 import { NoEncryption } from "@mui/icons-material";
-import { getStorage, ref, uploadBytes, getDownloadURL,uploadBytesResumable } from 'firebase/storage';
-import { nanoid } from 'nanoid';
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { nanoid } from "nanoid";
 import { auth } from "../../../firebase";
-import { Input } from 'antd';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+import { Input } from "antd";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useSelector } from "react-redux";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { getHelpRequestById, helpRequest, resetUser } from "../../../redux/userSlice";
+const { RangePicker } = DatePicker;
+const dateFormat = "YYYY/MM/DD";
 const { TextArea } = Input;
 
 const pStyles = {
@@ -19,96 +34,34 @@ const pStyles = {
   fontFamily: "'Inter', sans-serif",
   fontWeight: "600",
   letterSpacing: "0.1rem",
-  marginTop:"0.5rem",
+  marginTop: "0.5rem",
 };
 
-const options = [
-  {
-    value: "Burns Bay Road",
-  },
-  {
-    value: "Downing Street",
-  },
-  {
-    value: "Wall Street",
-  },
-];
-
-const data = [
-    {
-      key: "1",
-      id: "501",
-      dateReported: "02/06/2023",
-      subject: "System breakdown",
-      status: "Completed",
-    },
-    {
-      key: "2",
-      id: "502",
-      dateReported: "03/06/2023",
-      subject: "Late Response",
-      status: "Submitted",
-    },
-    {
-      key: "3",
-      id: "503",
-      dateReported: "04/06/2023",
-      subject: "Network Outage",
-      status: "In Progress",
-    },
-    {
-      key: "4",
-      id: "504",
-      dateReported: "05/06/2023",
-      subject: "Payment Issue",
-      status: "Completed",
-    },
-    {
-      key: "5",
-      id: "505",
-      dateReported: "06/06/2023",
-      subject: "Login Problem",
-      status: "Submitted",
-    },
-    // More objects...
-    {
-      key: "20",
-      id: "520",
-      dateReported: "21/06/2023",
-      subject: "Missing Items",
-      status: "Completed",
-    },
-    {
-      key: "21",
-      id: "521",
-      dateReported: "22/06/2023",
-      subject: "Slow Performance",
-      status: "In Progress",
-    },
-    {
-      key: "22",
-      id: "522",
-      dateReported: "23/06/2023",
-      subject: "Incorrect Data",
-      status: "Submitted",
-    },
-  ];
-  
 
 
 
 const Complaints = () => {
-
+  const dispatch=useDispatch();
+  const {screen,createHelpRequest,userLoading,user,complaintArray,openRedux}=useSelector((state)=>state.user);
+  const [selectedValue, setSelectedValue] = React.useState("");
   const columns = [
     {
-      title: "Complaint ID",
-      dataIndex: "id",
-      key: "id",
+      title: "Help Request Id",
+      dataIndex: "helpRequestId",
+      key: "helpRequestId",
     },
     {
       title: "Date Reported",
-      dataIndex: "dateReported",
-      key: "dateReported",
+      key: "receivedTime",
+      render:(_,record)=>{
+         // Convert the UTC date to a local date
+    const utcDate = new Date(record.receivedTime);
+    const localDate = utcDate.toLocaleString();
+
+        return (
+          <span>{localDate}</span>
+        )
+      }
     },
     {
       title: "Subject",
@@ -116,29 +69,35 @@ const Complaints = () => {
       key: "subject",
     },
     {
+      title: "Message",
+      dataIndex: "message",
+      key: "message",
+    },
+    {
       title: "Status",
       key: "status",
       render: (_, record) => {
         let color;
         switch (record.status) {
-          case "Submitted":
-            color = "blue";
-            break;
-          case "Completed":
+          case true:
             color = "#13d609";
             break;
-          case "In progress":
+          case false:
             color = "blue";
             break;
           default:
             color = "black"; // Fallback color for any other status
             break;
         }
-  
-        return <span style={{ color,fontWeight:"bold",fontSize:"1rem" }}>{record.status}</span>;
+
+        return (
+          <span style={{ color, fontWeight: "bold", fontSize: "1rem",whiteSpace:"nowrap" }}>
+            {record.status?"Completed":"In progress"}
+          </span>
+        );
       },
     },
-  
+
     // {
     //   title: "Action",
     //   key: "action",
@@ -160,59 +119,148 @@ const Complaints = () => {
   const [displayItems, setDisplayItems] = React.useState([]);
   const [from, setFrom] = React.useState(0);
   const [to, setTo] = React.useState(0);
-
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [fileArray,setFileArray]=React.useState([]);
-  const [uploadFile,setUploadFile]=React.useState(null);
+  const [filteredArrayByDate, setFilteredArrayByDate] = React.useState([]);
+  const [fileArray, setFileArray] = React.useState([]);
+  const [uploadFile, setUploadFile] = React.useState(null);
   const [progress, setProgress] = React.useState(0);
-  const [validImages,setValidImages]=React.useState("");
-  const [downloadUrlArray,setDownloadUrlArray]=React.useState([]);
-  const [imageLoading,setImageLoading]=React.useState(false);
+  const [validImages, setValidImages] = React.useState("");
+  const [data,setData] =React.useState([]);
+  const [filteredData, setFilteredData] = React.useState(data);
+  const [downloadUrlArray, setDownloadUrlArray] = React.useState([]);
+  const [imageLoading, setImageLoading] = React.useState(false);
+  const [paginationKey, setPaginationKey] = React.useState(0);
+  const [selectedDates, setSelectedDates] = React.useState([null, null]);
 
   const [isModalOpena, setIsModalOpena] = React.useState(false);
-  const [appealData,setAppealData]=React.useState({});
+  const [appealData, setAppealData] = React.useState({});
+
+
+  React.useEffect(()=>{
+  dispatch(getHelpRequestById(user?.userId))
+  },[user]);
+
+  React.useEffect(()=>{
+   const getData=complaintArray.map((item,index)=>{
+                 return {...item,key:index}
+   });
+   setData(getData);
+  },[complaintArray]);
+
+  React.useEffect(()=>{
+        setFilteredData(data);
+  },[data])
 
   const showModal = () => {
     setIsModalOpen(true);
     setFileArray([]);
-    setValidImages("")
-    setUploadFile(null)
-    setDownloadUrlArray([])
+    setValidImages("");
+    setUploadFile(null);
+    setDownloadUrlArray([]);
   };
   const handleOk = () => {
     setIsModalOpen(false);
     setFileArray([]);
-    setValidImages("")
-    setUploadFile(null)
-    setDownloadUrlArray([])
+    setValidImages("");
+    setUploadFile(null);
+    setDownloadUrlArray([]);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
-    setFileArray([]);
-    setValidImages("")
-    setUploadFile(null)
-    setDownloadUrlArray([])
+    // setFileArray([]);
+    // setValidImages("");
+    // setUploadFile(null);
+    // setDownloadUrlArray([]);
   };
+  const submitComplain=()=>{
+    if(message!=="" && subject!==""){
+      const customerId=user?.userId;
+      dispatch(helpRequest({customerId,message,subject}))
+    }
+  }
+
+  React.useEffect(()=>{
+    if(userLoading===false){
+      if(createHelpRequest){
+        setIsModalOpen(false);
+        setMessage("");
+        setSubject("");
+        dispatch(resetUser());
+        dispatch(getHelpRequestById(user?.userId))
+      }
+    
+    }
+
+  },[userLoading])
+
+
 
   React.useEffect(() => {
-    // console.log(data?.length);
-    setTotalPages(Math.ceil(data.length / itemsPerPage));
-  }, []);
+    if (selectedValue !== "") {
+      setPageNumber(1);
+      
+     const filtered = data.filter((item)=>{
+         if(selectedValue==="in progress"){
+             if(item?.status===false){
+              return item
+             }
+         }else{
+            if(item?.status){
+              return item
+            }
+         }
+     });
+      setFilteredData(filtered);
+      setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+      setPaginationKey((prevKey) => prevKey + 1);
+    } else {
+      setFilteredData(data);
+      setTotalPages(Math.ceil(data.length / itemsPerPage));
+    }
+  }, [selectedValue, data]);
 
- 
+  React.useEffect(() => {
+    if (
+      selectedDates[0] !== null &&
+      selectedDates[1] !== null &&
+      selectedDates[0] !== "" &&
+      selectedDates[1] !== ""
+    ) {
+      // Convert selected dates to Date objects
+      const startDate = new Date(selectedDates[0]);
+      const endDate = new Date(selectedDates[1]);
+
+      // Filter the data based on the selected date range
+      const filteredDataByDateRange = filteredData.filter((item) => {
+        const requestDate = new Date(item.receivedTime);
+
+        return requestDate >= startDate && requestDate <= endDate;
+      });
+      setPageNumber(1);
+      // console.log("filteredDataByDateRange",filteredDataByDateRange)
+      setFilteredArrayByDate(filteredDataByDateRange);
+      setTotalPages(Math.ceil(filteredDataByDateRange.length / itemsPerPage));
+      setPaginationKey((prevKey) => prevKey + 1);
+    } else {
+      setFilteredArrayByDate(filteredData);
+      setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+    }
+  }, [selectedDates, data, filteredData]);
 
   React.useEffect(() => {
     setDisplayItems((prevState) => {
       const startIndex = pageNumber * itemsPerPage - itemsPerPage;
       const endIndex = pageNumber * itemsPerPage - 1;
       setFrom(startIndex + 1);
-      const slicedData = data?.slice(startIndex, endIndex + 1);
+      const slicedData = filteredArrayByDate?.slice(startIndex, endIndex + 1);
       const actualItemsPerPage = slicedData.length;
       const toValue = startIndex + actualItemsPerPage;
       setTo(toValue);
       return slicedData;
     });
-  }, [pageNumber]);
+  }, [pageNumber, filteredData, data,filteredArrayByDate]);
 
   const prevClick = () => {
     setPageNumber((prevState) => {
@@ -226,78 +274,70 @@ const Complaints = () => {
     });
   };
 
-
-
   const handleFileSelect = (event) => {
-   
-  setDownloadUrlArray([])
+    setDownloadUrlArray([]);
     const selectedFiles = event.target.files;
     const fileNamesArray = [];
     setUploadFile(selectedFiles);
-    let count=0;
+    let count = 0;
     // Iterate through the FileList and extract the names of each file
     for (let i = 0; i < selectedFiles.length; i++) {
-      count=count+1;
+      count = count + 1;
       const fileName = selectedFiles[i].name;
       fileNamesArray.push(fileName);
     }
 
-    if(count>=5){
-      setValidImages("Please select at least 5 images !")
-    }else{
+    if (count >= 5) {
+      setValidImages("Please select at least 5 images !");
+    } else {
       setValidImages("");
     }
 
-    setFileArray((prevState)=>{
+    setFileArray((prevState) => {
       return fileNamesArray;
-    })
-
-   
+    });
   };
 
-   
-
+  const handlePageChange = (event, page) => {
+    setPageNumber(page);
+  };
   const handleUpload = async () => {
     // console.log('bulla', uploadFile);
     if (!uploadFile || uploadFile.length < 1) {
       return;
     }
-  
+
     try {
       setImageLoading(true);
       const downloadUrls = []; // Array to store the download URLs of the uploaded images
-  
+
       // Upload each file to Firebase Storage
       for (let i = 0; i < uploadFile.length; i++) {
         const file = uploadFile[i];
         const fileId = nanoid(); // Generate a unique ID for the file using nanoid
         const storageRef = ref(getStorage(), `images/${fileId}_${file.name}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
-  
+
         // Wait for the file to be uploaded before moving to the next one
         await uploadTask;
-  
+
         // Get the download URL of the uploaded file
         const downloadUrl = await getDownloadURL(storageRef);
-  
+
         // Add the download URL to the array
         downloadUrls.push(downloadUrl);
       }
-  
-      // All files have been uploaded
-      // console.log('Files uploaded successfully!');
-      // console.log('Download URLs:', downloadUrls);
       setImageLoading(false);
-       // Array of download URLs
-       setDownloadUrlArray(downloadUrls)
+      // Array of download URLs
+      setDownloadUrlArray(downloadUrls);
     } catch (error) {
       console.log(error);
       setImageLoading(false);
     }
   };
-  
-  const appealClick=(data)=>{
-    console.log(data)
+
+  const appealClick = (data) => {
+    console.log(data);
     setAppealData(data);
     setIsModalOpena(true);
   };
@@ -311,42 +351,109 @@ const Complaints = () => {
   const handleCancela = () => {
     setIsModalOpena(false);
   };
-  
-  
+
  
+
+  const handleSubjectChange = (e) => {
+    setSubject(e.target.value);
+  };
+
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+  };
+  const handleDateChange = (dates, dateStrings) => {
+    setSelectedDates(dateStrings);
+  };
+  const handleAutoCompleteChange = (value) => {
+    setSelectedValue(value);
+  };
+console.log(selectedValue)
 
   return (
     <>
-      <div className="complaints">
-        <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center",marginTop:"2rem" }}>
+      <div className="complaints"  style={{paddingLeft:(openRedux&&screen>650)?"270px":"1rem"}} >
+      <div
+          style={{
+            width: "100%",
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "1rem",
+            marginBottom: "1rem",
+          }}
+        >
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
               color: "#00425A",
+              textAlign: "center",
               fontSize: "1.5rem",
               fontWeight: "bold",
-              marginTop: "1rem",
+              position: screen < 584 ? "" : "absolute",
             }}
           >
-            Complaints
+            Submitted Complaints
           </p>
-        </div>
 
+          <button
+            style={{
+              marginLeft: screen < 584 ? "1rem" : "auto",
+              whiteSpace: "nowrap",
+            }}
+            className="new-swap-button"
+            onClick={showModal}
+          >
+            New Complain
+          </button>
+        </div>
+       
         <div
           style={{
             width: "100%",
             display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            marginTop: "2rem",
+            flexDirection: screen < 520 ? "column" : "row",
           }}
         >
-          <button className="new-swap-button" onClick={showModal}>
-            Complain
-          </button>
-        </div>
+          <div
+            style={{
+              marginRight: screen < 520 ? "0rem" : "2rem",
+              marginBottom: screen < 520 ? "1rem" : "0rem",
+            }}
+          >
+            <AutoComplete
+              style={{
+                width: 200,
+              }}
+              onChange={handleAutoCompleteChange}
+              options={[
+                {
+                value:"in progress"},
+                {
+                value:"completed"}
+              ]}
+              allowClear={true}
+              placeholder="Filter by status"
+              filterOption={(inputValue, option) =>
+                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+                -1
+              }
+            />
+          </div>
 
-        <div style={{ marginTop: "2rem", width: "100%", overflowX: "auto" }}>
+          <RangePicker
+            defaultValue={
+              [
+                // dayjs(thirtyDaysAgo, dateFormat),
+                // dayjs(currentDate, dateFormat),
+              ]
+            }
+            format={dateFormat}
+            onChange={handleDateChange}
+          />
+        </div>
+       
+
+        <div style={{ marginTop: "1rem", width: "100%", overflowX: "auto" }}>
           <Table
             columns={columns}
             dataSource={displayItems}
@@ -361,166 +468,220 @@ const Complaints = () => {
             alignItems: "center",
             justifyContent: "space-between",
             marginTop: "1rem",
+            overflowX: "auto",
           }}
         >
-           {displayItems?.length>1 &&  <div>
-            from {from} to {to} out of {data?.length} item{data?.length==1?"":"s"}
-          </div>}
+          {displayItems?.length > 1 && (
+            <div>
+              {from} - {to} of {filteredData?.length}
+            </div>
+          )}
 
-        {displayItems?.length==1 &&  <div>
-          {from} item out of {data?.length} item{data?.length==1?"":"s"}
-          </div>}
+          {displayItems?.length == 1 && (
+            <div>
+              {from} item out of {filteredData?.length}
+            </div>
+          )}
 
           <div style={{ display: "flex", alignItems: "center" }}>
-            {pageNumber != 1 && (
-              <KeyboardArrowLeftIcon
-                style={{ cursor: "pointer" }}
-                onClick={prevClick}
-              />
-            )}
-
-            <div
-              style={{
-                padding: "0.5rem",
-                border: "2px solid black",
-                borderRadius: "4px",
-                marginLeft: "1rem",
-                marginRight: "1rem",
-              }}
-            >
-              {pageNumber}
-            </div>
-
-            {totalPages !== pageNumber && (
-              <KeyboardArrowRightIcon
-                style={{ cursor: "pointer" }}
-                onClick={nextClick}
-              />
-            )}
+            <Pagination
+              count={totalPages}
+              onChange={handlePageChange}
+              key={paginationKey}
+              color="primary"
+            />
           </div>
         </div>
       </div>
 
       <Modal
-        title={<h2 style={{color:"#00425A",
-        fontSize:"1.5rem",marginBottom:"1rem"}}>Report a complaint</h2>}
+        title={
+          <h2
+            style={{
+              color: "#00425A",
+              fontSize: "1.5rem",
+              marginBottom: "1rem",
+            }}
+          >
+            Report a complaint
+          </h2>
+        }
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
       >
         <div style={{ width: "100%" }}>
+          <p style={pStyles}>Subject</p>
+          <Input
+           value={subject}
+           onChange={handleSubjectChange}
+            style={{ width: "100%", marginTop: "0.3rem" }}
+            placeholder="Complaint Subject"
+          />
+          <p style={pStyles}>Message</p>
+          <TextArea 
+           value={message}
+           onChange={handleMessageChange}
+          rows={4} style={{ marginTop: "0.3rem", width: "100%" }} />
 
-          <p style={pStyles}>Complaint Subject</p>
-          <Input style={{width:"100%",marginTop:"0.3rem"}} placeholder="Complaint Subject"/>
-          {/* <AutoComplete
-    style={{
-     width:"100%",
-marginTop:"0.3rem",
+       
 
-    }}
-    options={options}
-    placeholder="Item type"
-    filterOption={(inputValue, option) =>
-      option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-    }
-  /> */}
-  <p style={pStyles}>Complaint description</p>
+          {/* <label
+            className="custom-file-upload"
+            onChange={handleFileSelect}
+            style={{ marginTop: "1rem" }}
+          >
+            <input type="file" multiple />
+            Choose images
+          </label> */}
 
-  <TextArea rows={4} style={{marginTop:"0.3rem",width:"100%",}} />
+          {/* <div style={{ width: "100%", marginTop: "1rem" }}>
+            {fileArray?.map((item, index) => {
+              return (
+                <p
+                  key={index}
+                  style={{ overflowX: "auto", marginBottom: "0.5rem" }}
+                >
+                  {item}
+                </p>
+              );
+            })}
+          </div> */}
 
-  <p style={pStyles}>Desired outcome</p>
-  <TextArea rows={3} style={{marginTop:"0.3rem",width:"100%",}} />
-
- 
-
-  <label className="custom-file-upload" onChange={handleFileSelect} style={{marginTop:"1rem"}}>
-    <input type="file" multiple />
-    Choose images
-</label>
-
-<div style={{width:"100%",marginTop:"1rem"}}>
-
-  {
-    fileArray?.map((item,index)=>{
-      return (
-        <p key={index} style={{overflowX:"auto",marginBottom:"0.5rem"}}>{item}</p>
-      )
-    })
-  }
-</div>
-
-{/* {fileArray?.length>=1 &&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
+          {/* {fileArray?.length>=1 &&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
 {fileArray?.length<2?"Please select at least 5 images !":""}
 </div>} */}
 
-{fileArray?.length>=1 && <div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem"}}>
-<button className="q-upload-btn" onClick={handleUpload} disabled={downloadUrlArray?.length>=1?true:false}
->Upload</button>
-</div>}
+          {/* {fileArray?.length >= 1 && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                marginTop: "1rem",
+              }}
+            >
+              <button
+                className="q-upload-btn"
+                onClick={handleUpload}
+                disabled={downloadUrlArray?.length >= 1 ? true : false}
+              >
+                Upload
+              </button>
+            </div>
+          )} */}
 
+          {/* {downloadUrlArray?.length >= 1 && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "1rem",
+              }}
+            >
+              {downloadUrlArray?.map((item, index) => {
+                return (
+                  <img
+                    src={item}
+                    key={index}
+                    style={{
+                      width: "100%",
+                      marginBottom: "1rem",
+                      borderRadius: "8px",
+                      boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                    }}
+                  />
+                );
+              })}
+            </div>
+          )} */}
 
-{downloadUrlArray?.length>=1 &&<div style={{width:"100%",display:"flex",flexDirection:"column",alignItems:"center",marginTop:"1rem"}}>
-{
-  downloadUrlArray?.map((item,index)=>{
-return (
-  <img src={item} key={index} style={{width:"100%",
-  marginBottom:"1rem",borderRadius:"8px",
-  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-}}/>
-)
-  })
-}
-</div>}
-
-
-
-<div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"1rem"}}>
-<button  className="q-submit-btn" onClick={handleCancel}>Submit</button>
-<button className="q-cancel-btn" onClick={handleCancel} style={{marginLeft:"1rem"}}>Cancel </button>
-</div>
-     
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              marginTop: "1rem",
+            }}
+          >
+            <button className="q-submit-btn" onClick={submitComplain}>
+              Submit
+            </button>
+            <button
+              className="q-cancel-btn"
+              onClick={handleCancel}
+              style={{ marginLeft: "1rem" }}
+            >
+              Cancel{" "}
+            </button>
+          </div>
         </div>
       </Modal>
 
-
-      <Backdrop
-        sx={{ color: 'gold', zIndex: 1500 }}
-        open={imageLoading}
-
-      >
+      <Backdrop sx={{ color: "gold", zIndex: 1500 }} open={userLoading}>
         <CircularProgress color="inherit" size={50} />
       </Backdrop>
-     
 
-      <Modal title={<h2 style={{color:"#00425A",
-        fontSize:"1.5rem",marginBottom:"1rem"}}>Appeal</h2>}
-       open={isModalOpena} onOk={handleOka} onCancel={handleCancela}
-       footer={null}
-       >
+      <Modal
+        title={
+          <h2
+            style={{
+              color: "#00425A",
+              fontSize: "1.5rem",
+              marginBottom: "1rem",
+            }}
+          >
+            Appeal
+          </h2>
+        }
+        open={isModalOpena}
+        onOk={handleOka}
+        onCancel={handleCancela}
+        footer={null}
+      >
+        <div style={{ width: "100%" }}>
+          <p style={pStyles}>
+            Item Id : <span>{appealData?.itemId}</span>
+          </p>
+          <p style={pStyles}>
+            Item Name : <span>{appealData?.itemName}</span>
+          </p>
+          <br />
+          <p style={pStyles}>Reason for appeal</p>
+          <Input
+            placeholder="Reason for appeal"
+            style={{ width: "100%", marginTop: "0.3rem" }}
+          />
 
-       <div style={{width:"100%",}}>
-        
-        <p style={pStyles}>Item Id : <span>{appealData?.itemId}</span></p>
-        <p style={pStyles}>Item Name : <span>{appealData?.itemName}</span></p>
-<br/>
-        <p style={pStyles} >Reason for appeal</p>
-        <Input placeholder="Reason for appeal" style={{width:"100%",marginTop:"0.3rem"}}/>
+          <p style={pStyles}>Describe Objection</p>
+          <TextArea rows={4} style={{ marginTop: "0.3rem", width: "100%" }} />
 
-        <p style={pStyles}>Describe Objection</p>
-        <TextArea rows={4} style={{marginTop:"0.3rem",width:"100%",}} />
-
-        <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"1rem"}}>
-        <button className="q-submit-btn" onClick={handleCancela}>Submit</button>
-        <button className="q-cancel-btn" style={{marginLeft:"1rem"}} onClick={handleCancela}>Cancel</button>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              marginTop: "1rem",
+            }}
+          >
+            <button className="q-submit-btn" onClick={handleCancela}>
+              Submit
+            </button>
+            <button
+              className="q-cancel-btn"
+              style={{ marginLeft: "1rem" }}
+              onClick={handleCancela}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
-
-       </div>
-
-
       </Modal>
-
-
     </>
   );
 };

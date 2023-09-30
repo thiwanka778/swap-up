@@ -192,7 +192,7 @@ const data = [
 const ViewProfile = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { screen } = useSelector((state) => state.user);
+  const { screen ,openRedux,user} = useSelector((state) => state.user);
   const [userDetails, setUserDetails] = React.useState({});
 const {userArrayByAdmin}=useSelector((state)=>state.admin);
 // console.log(userArrayByAdmin)
@@ -208,10 +208,10 @@ dispatch(fetchAllUsers());
   }, [id,userArrayByAdmin]);
 
 
-  console.log(userDetails);
+  // console.log(userDetails);
 
   return (
-    <div className="view-profile">
+    <div className="view-profile"     style={{ paddingLeft: openRedux && screen > 650 ? "270px" : "1rem" }}>
       <div
         style={{
           width: "100%",
@@ -366,13 +366,13 @@ dispatch(fetchAllUsers());
                 fontSize: "1.5rem",
                 fontWeight: "bold",
                 marginTop: screen < 660 ? "1.5rem" : "0rem",
-                fontFamily: " 'Poppins', sans-serif",
+                fontFamily: "'Inter', sans-serif",
                 letterSpacing: "0.1rem",
                 marginBottom: "1.5rem",
                 textAlign: "center",
               }}
             >
-              Personal Details
+              Profile Details
             </p>
 
             <div style={{ width: "100%" }}>

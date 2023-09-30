@@ -1,10 +1,6 @@
 .quality-checker-token-request{
   width:100%;
-  min-height: 95vh;
-  padding-top: 12vh;
-  padding-left:1rem;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
+ padding:1rem;
 }
 
 .appeal-button {
@@ -182,7 +178,7 @@ input[type="file"] {
 
 
 .donation-request-view-button-accept{
-  background-color: green; /* Green background color */
+  background-color: #1ac404; /* Green background color */
   color: white; /* White text color */
   padding: 5px 10px; /* Padding inside the button */
   border: none; /* No border */
@@ -195,6 +191,8 @@ input[type="file"] {
 .donation-request-view-button-accept:active{
   transform: scale(0.7);
 }
+
+
 
 
 

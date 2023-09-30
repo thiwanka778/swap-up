@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./NavBar.css";
 import swaplogo from "../../assets/swaplogo.png";
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import toast, { Toaster } from "react-hot-toast";
@@ -12,7 +12,13 @@ import Badge from "@mui/material/Badge";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import WarningToast from "../../components/warningToast/WarningToast";
-import { getUserEmail, openSideBarRedux, userLogout,closeSideBarRedux } from "../../redux/userSlice";
+import {
+  getUserEmail,
+  openSideBarRedux,
+  userLogout,
+  closeSideBarRedux,
+  getUserById,
+} from "../../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Input } from "antd";
 import { NavLink } from "react-router-dom";
@@ -32,8 +38,6 @@ import { useLocation } from "react-router-dom";
 import { fetchFavoriteItemsByUser } from "../../redux/inventorySlice";
 import { SubscriptionsOutlined } from "@mui/icons-material";
 
-
-
 const NavBar = () => {
   const location = useLocation();
   const {
@@ -48,7 +52,9 @@ const NavBar = () => {
     inventoryStatus,
   } = useSelector((state) => state.inventory);
   const currentPath = location.pathname;
-  const { userEmail, screen, user,openRedux } = useSelector((state) => state.user);
+  const { userEmail, screen, user, openRedux,profile } = useSelector(
+    (state) => state.user
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -62,18 +68,15 @@ const NavBar = () => {
   //   return localOpenSideBar ? JSON.parse(localOpenSideBar) : false;
   // });
 
-  const [openSideBar,setOpenSideBar]=React.useState(false);
+  const [openSideBar, setOpenSideBar] = React.useState(false);
   // const [isSideBarHovered, setIsSideBarHovered] = React.useState(false);
- 
-  const [state, setState] = React.useState({
 
+  const [state, setState] = React.useState({
     left: false,
-  
   });
 
-
   const menuClick = () => {
-    dispatch(openSideBarRedux())
+    dispatch(openSideBarRedux());
     setOpenSideBar((prevState) => {
       const newValue = !prevState;
       // console.log(newValue); // Check the value of openSideBar
@@ -128,46 +131,51 @@ const NavBar = () => {
     }
   }, [email]);
 
-  
-
   const toggleDrawer = (anchor, open) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
       return;
     }
     setState({ ...state, [anchor]: open });
   };
 
-React.useEffect(()=>{
-console.log("state",state)
-if(state.left===false){
-  dispatch(closeSideBarRedux())
-  setOpenSideBar((prevState) => {
-    const newValue = false;
-    // console.log(newValue); // Check the value of openSideBar
-    return newValue;
-  });
-}else if(state.left===true){
-  dispatch(openSideBarRedux());
-  setOpenSideBar((prevState) => {
-    const newValue = true;
-    // console.log(newValue); // Check the value of openSideBar
-    return newValue;
-  });
-}
-},[state])
+  React.useEffect(() => {
+    // console.log("state",state)
+    if (state.left === false) {
+      dispatch(closeSideBarRedux());
+      setOpenSideBar((prevState) => {
+        const newValue = false;
+        // console.log(newValue); // Check the value of openSideBar
+        return newValue;
+      });
+    } else if (state.left === true) {
+      dispatch(openSideBarRedux());
+      setOpenSideBar((prevState) => {
+        const newValue = true;
+        // console.log(newValue); // Check the value of openSideBar
+        return newValue;
+      });
+    }
+  }, [state]);
 
-React.useEffect(()=>{
-if(openRedux===false){
-  setState((prevState)=>{
-     return {left:false}
-  });
-  setOpenSideBar((prevState) => {
-    const newValue = false;
-    // console.log(newValue); // Check the value of openSideBar
-    return newValue;
-  });
-}
-},[openRedux])
+  React.useEffect(() => {
+    if (openRedux === false) {
+      setState((prevState) => {
+        return { left: false };
+      });
+      setOpenSideBar((prevState) => {
+        const newValue = false;
+        // console.log(newValue); // Check the value of openSideBar
+        return newValue;
+      });
+    }
+  }, [openRedux]);
+
+  React.useEffect(() => {
+    dispatch(getUserById(user?.userId));
+  }, [user]);
 
   return (
     <>
@@ -185,10 +193,13 @@ if(openRedux===false){
         {user && (
           <div
             style={{ marginRight: "auto", cursor: "pointer" }}
-       
+
             // onClick={menuClick}
           >
-            <MenuIcon style={{ color: "white" }}  onClick={toggleDrawer("left", true)} />
+            <MenuIcon
+              style={{ color: "white" }}
+              onClick={toggleDrawer("left", true)}
+            />
           </div>
         )}
 
@@ -200,21 +211,16 @@ if(openRedux===false){
         {screen >= 670 && <p className="nav-text">About Us</p>}
         {screen >= 670 && <p className="nav-text">Contact Us</p>}
 
-        {user &&  user?.role==="CUSTOMER" &&<div
-        className="nav-text"
-      >
-        <Badge
-          badgeContent={favoriteList?.length}
-          color="primary"
-          
-        >
-          <TryIcon
-            style={{ fontSize: "3rem", cursor: "pointer" }}
-            onClick={() => navigate("/favorite-items-page")}
-          />
-        </Badge>
-      </div>}
-
+        {user && user?.role === "CUSTOMER" && (
+          <div className="nav-text">
+            <Badge badgeContent={favoriteList?.length} color="primary">
+              <TryIcon
+                style={{ fontSize: "3rem", cursor: "pointer" }}
+                onClick={() => navigate("/favorite-items-page")}
+              />
+            </Badge>
+          </div>
+        )}
 
         {!user && (
           <button
@@ -248,12 +254,10 @@ if(openRedux===false){
             aria-expanded={openUser ? "true" : undefined}
             onClick={handleClickUser}
           >
-            <Avatar alt="" src="#" />
+            <Avatar alt="" src={profile.profilePicture} />
           </div>
         )}
       </div>
-
-     
 
       <Toaster
         position="top-center"
@@ -289,7 +293,7 @@ if(openRedux===false){
       />
 
       <Menu
-      style={{zIndex:"50000"}}
+        style={{ zIndex: "50000" }}
         id="basic-menu"
         anchorEl={anchorEl}
         open={openUser}
@@ -300,12 +304,8 @@ if(openRedux===false){
       >
         <MenuItem onClick={handleCloseUser}>
           <PersonIcon />
-          &nbsp;&nbsp;{user?.firstName} {user?.lastName}
+          &nbsp;&nbsp;{profile?.firstName} {profile?.lastName}
         </MenuItem>
-
-
-       
-
 
         <Divider />
         {!user && (
@@ -330,41 +330,34 @@ if(openRedux===false){
         </MenuItem>
       </Menu>
 
-      
-
-
-
-{user &&<div key={"left"} >
-         
+      {user && (
+        <div key={"left"}>
           <Drawer
-          style={{zIndex:"20000"}}
+            style={{ zIndex: "20000" }}
             anchor={"left"}
             open={state["left"]}
             onClose={toggleDrawer("left", false)}
           >
- <Box
-      sx={{ width: "left" === 'top' || "left"=== 'bottom' ? 'auto' : 260,
-      height:"100vh",zIndex:"20000",}}
-      role="presentation"
-      onClick={toggleDrawer("letf", false)}
-      onKeyDown={toggleDrawer("left", false)}
-    >
-    
-   
-        <div style={{ width: "100%" }}>
-          <SideBar openSideBar={openSideBar} setOpenSideBar={setOpenSideBar} />
-        </div>
-      
-    </Box>
+            <Box
+              sx={{
+                width: "left" === "top" || "left" === "bottom" ? "auto" : 260,
+                height: "100vh",
+                zIndex: "20000",
+              }}
+              role="presentation"
+              onClick={toggleDrawer("letf", false)}
+              onKeyDown={toggleDrawer("left", false)}
+            >
+              <div style={{ width: "100%" }}>
+                <SideBar
+                  openSideBar={openSideBar}
+                  setOpenSideBar={setOpenSideBar}
+                />
+              </div>
+            </Box>
           </Drawer>
-        </div>}
-
-
-
-
-
-
-
+        </div>
+      )}
     </>
   );
 };

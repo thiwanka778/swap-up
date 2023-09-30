@@ -63,9 +63,29 @@
   font-size: 1rem; /* Font size */
   cursor: pointer; /* Pointer cursor on hover */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for a raised effect */
-  transition: background-color 0.3s, color 0.3s;
+  transition: transform 0.6s;
   }
   .apply-changes-button:hover {
     background-color: #0056b3; /* Darker blue on hover */
+  }
+  .apply-changes-button:active{
+    transform: scale(-0.7);
+  }
+  .reset-changes-button{
+    background-color: #eb6a1a; 
+    color: #fff; /* White text color */
+    padding: 6px 12px; /* Padding around the text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for a raised effect */
+    transition: transform 0.6s;
+  }
+  .reset-changes-button:hover{
+    background-color: #d15406; 
+  }
+  .reset-changes-button:active{
+    transform: scale(-0.7);
   }
  

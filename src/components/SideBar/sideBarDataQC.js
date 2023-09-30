@@ -1,25 +1,30 @@
 const sideBarDataQC = [
-    {
-      title: "Home",
-      icon: "bi-house-door-fill",
-      path: "/",
-    },
+    // {
+    //   title: "Home",
+    //   icon: "bi-house-door-fill",
+    //   path: "/",
+    // },
     {
       title: "Token Request",
       icon:"bi-card-checklist",
-      path:"/quality-checker-quality-check-page",
+      path:"/",
     },
-    {
-      title:"Complaints",
-      icon:"bi-arrow-left-right",
-      path:"/quality-checker-complaints-page",
-    },
+    // {
+    //   title:"Complaints",
+    //   icon:"bi-arrow-left-right",
+    //   path:"/quality-checker-complaints-page",
+    // },
   
+    // {
+    //  title:"Profile",
+    //  icon:"bi-person-lines-fill",
+    //  path:"/quality-checker-profile-page"
+    // },
     {
-     title:"Profile",
-     icon:"bi-person-lines-fill",
-     path:"/quality-checker-profile-page"
-    },
+      title:"Profile",
+      icon:"bi-person-lines-fill",
+      path:"/profile"
+     },
    
     
   

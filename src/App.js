@@ -7,7 +7,7 @@ import { Routes, Route } from "react-router-dom";
 import SignUp from "./pages/SignUp/SignUp";
 import Login from "./pages/Login/Login";
 import { useDispatch, useSelector } from "react-redux";
-import { getScreenWidth } from "./redux/userSlice";
+import { fetchAllRequestTokens, getScreenWidth } from "./redux/userSlice";
 import SignupAuth from "./protectedRoutes/SignupAuth";
 import SignUp2 from "./pages/SignUp2/SignUp2";
 import AuthenticatedHome from "./pages/AuthenticatedHome/AuthenticatedHome";
@@ -40,6 +40,7 @@ import TokenRequest from "./pages/inventoryManager/TokenRequest/TokenRequest";
 import HelpAssistantAuth from "./protectedRoutes/HelpAssistantAuth";
 import HelpRequest from "./pages/helpAssistant/HelpRequest/HelpRequest";
 import Membership from "./pages/user/Membership/Membership";
+import ProfileAuth from "./protectedRoutes/ProfileAuth";
 
 
 
@@ -48,6 +49,15 @@ import Membership from "./pages/user/Membership/Membership";
 function App() {
   const dispatch = useDispatch();
   const {user,screen}=useSelector((state)=>state.user);
+
+//   React.useEffect(()=>{
+    
+//     const userId = user?.userId;
+//     const email = user.email;
+//     dispatch(fetchAllRequestTokens({userId,email}))
+  
+
+// },[])
   // const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
   React.useEffect(() => {
     const handleResize = () => {
@@ -84,6 +94,10 @@ function App() {
               <Route path="signup" element={<SignUp2/>}/>
             </Route>
 
+            <Route element={<ProfileAuth/>}>
+            <Route path="profile" element={<Profile/>}/>
+            </Route>
+
 
       {/* user routes start */}
         <Route element={<UserPagesAuthenticated/>}>
@@ -92,7 +106,7 @@ function App() {
             <Route path="donate" element={<Donate/>}/>
             <Route path="complaints" element={<Complaints/>}/>
             <Route path="user-membership" element={<Membership/>}/>
-            <Route path="profile" element={<Profile/>}/>
+         
             <Route path="favorite-items-page" element={<FavoriteItemPage/>}/>
         </Route>
          {/* user routes end */}
@@ -128,7 +142,8 @@ function App() {
         <Route path="swap-request" element={<SwapRequest/>}/>
              <Route path="donation-request" element={<DonationRequest/>}/>
              <Route path="token-request" element={<TokenRequest/>}/>
-       <Route path="inventory-manager-profile" element={<InventoryManagerProfile/>}/>
+       {/* <Route path="inventory-manager-profile" element={<InventoryManagerProfile/>}/> */}
+      
        <Route path="inventory-manager-complaint" element={<InventoryManagerComplaint/>}/>
              </Route>
 

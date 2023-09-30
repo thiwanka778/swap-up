@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 const InventoryManagerAuth=()=>{
     const location = useLocation();
-    const {userEmail,user}=useSelector((state)=>state.user);
+    const {user}=useSelector((state)=>state.user);
    
 
     return (

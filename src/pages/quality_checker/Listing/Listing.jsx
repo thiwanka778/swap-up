@@ -1,11 +1,12 @@
-import React from "react";
+import React,{useState} from "react";
 import "./Listing.css";
 import { Table, Tag } from "antd";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Button, Modal, Select } from "antd";
 import toast, { Toaster } from "react-hot-toast";
-import { Checkbox } from "antd";
+import { Checkbox,Upload } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { Radio, Space } from "antd";
 import { AutoComplete } from "antd";
 import { NoEncryption } from "@mui/icons-material";
@@ -33,8 +34,17 @@ import {
   getItemsOnListing,
 } from "../../../redux/inventorySlice";
 import ListingCard from "./ListingCard";
+import { acceptQualityCheckerRequest, resetQualityChecker } from "../../../redux/qualityCheckerSlice";
 const { Option } = Select;
 const { TextArea } = Input;
+
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
 const pStyles = {
   fontSize: "1rem",
@@ -123,7 +133,8 @@ const sizeOptions = [
 
 const Listing = () => {
   const dispatch = useDispatch();
-  const { screen } = useSelector((state) => state.user);
+  const { screen ,user} = useSelector((state) => state.user);
+  const {acceptRequestStatus,qLoading}=useSelector((state)=>state.qualityChecker)
   const {
     inventoryLoading,
     inventoryErrorMessage,
@@ -139,9 +150,7 @@ const Listing = () => {
   const [pageNumber, setPageNumber] = React.useState(1);
   const [displayItems, setDisplayItems] = React.useState([]);
   const [isActive, setIsActive] = React.useState(true);
-
   const [to, setTo] = React.useState(0);
-
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [fileArray, setFileArray] = React.useState([]);
   const [uploadFile, setUploadFile] = React.useState(null);
@@ -149,7 +158,6 @@ const Listing = () => {
   const [validImages, setValidImages] = React.useState("");
   const [downloadUrlArray, setDownloadUrlArray] = React.useState([]);
   const [imageLoading, setImageLoading] = React.useState(false);
-
   const [isModalOpena, setIsModalOpena] = React.useState(false);
   const [appealData, setAppealData] = React.useState({});
   const [gender, setGender] = React.useState("unisex");
@@ -157,13 +165,38 @@ const Listing = () => {
   const [options, setOptions] = React.useState([]);
   const [dressType, setDressType] = React.useState("");
   const [dressSize, setDressSize] = React.useState("");
+  const [localData,setLocalData]=React.useState(null);
+  const [fileList, setFileList] = useState([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
   const [from, setFrom] = React.useState(0);
   const [form, setForm] = React.useState({
     itemTitle: "",
     priceRange: "",
     color: "",
+    des:"",
   });
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+  const handleCancelImage = () => setPreviewOpen(false);
 
+   React.useEffect(()=>{
+      const storedData=window.localStorage.getItem("localData");
+      if(storedData && storedData!=="undefined" && storedData!==null && storedData!==undefined){
+        setLocalData(JSON.parse(storedData))
+      }  
+   },[])
+
+// console.log("listing local storage data ", localData);
   const displayItemsStyles =
     screen <= 694
       ? {
@@ -225,68 +258,7 @@ dispatch(getItemsOnListing())
     setDownloadUrlArray([]);
   };
 
-  const handleFileSelect = (event) => {
-    setDownloadUrlArray([]);
-    const selectedFiles = event.target.files;
-    const fileNamesArray = [];
-    setUploadFile(selectedFiles);
-    let count = 0;
-    // Iterate through the FileList and extract the names of each file
-    for (let i = 0; i < selectedFiles.length; i++) {
-      count = count + 1;
-      const fileName = selectedFiles[i].name;
-      fileNamesArray.push(fileName);
-    }
 
-    if (count >= 5) {
-      setValidImages("Please select at least 5 images !");
-    } else {
-      setValidImages("");
-    }
-
-    setFileArray((prevState) => {
-      return fileNamesArray;
-    });
-  };
-
-  const handleUpload = async () => {
-    // console.log('bulla', uploadFile);
-    if (!uploadFile || uploadFile.length < 1) {
-      return;
-    }
-
-    try {
-      setImageLoading(true);
-      const downloadUrls = []; // Array to store the download URLs of the uploaded images
-
-      // Upload each file to Firebase Storage
-      for (let i = 0; i < uploadFile.length; i++) {
-        const file = uploadFile[i];
-        const fileId = nanoid(); // Generate a unique ID for the file using nanoid
-        const storageRef = ref(getStorage(), `images/${fileId}_${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        // Wait for the file to be uploaded before moving to the next one
-        await uploadTask;
-
-        // Get the download URL of the uploaded file
-        const downloadUrl = await getDownloadURL(storageRef);
-
-        // Add the download URL to the array
-        downloadUrls.push(downloadUrl);
-      }
-
-      // All files have been uploaded
-      // console.log('Files uploaded successfully!');
-      // console.log('Download URLs:', downloadUrls);
-      setImageLoading(false);
-      // Array of download URLs
-      setDownloadUrlArray(downloadUrls);
-    } catch (error) {
-      console.log(error);
-      setImageLoading(false);
-    }
-  };
 
   const appealClick = (data) => {
     // console.log(data)
@@ -336,59 +308,74 @@ dispatch(getItemsOnListing())
   });
 
   const onClickSave = () => {
-    if (
-      dressSize == "" ||
-      dressType == "" ||
-      form.priceRange == "" ||
-      form.color == "" ||
-      downloadUrlArray.length < 1
-    ) {
-      toast.custom(<WarningToast message={"All fields are required !"} />);
-    } else {
-      const activeState = isActive;
-      const color = form.color;
-      const gender2 = gender;
-      const imageURL = downloadUrlArray[0];
-      const priceRange = form.priceRange;
-      const qualityStatus = quality;
-      const type = dressType;
-      const sizeObject = sizeOptions2.find(
-        (item) => item?.label.toLowerCase() == dressSize?.toLowerCase()
-      );
-      const size = sizeObject?.value;
-
-      dispatch(
-        createItemOnListing({
-          activeState,
-          color,
-          gender2,
-          imageURL,
-          priceRange,
-          qualityStatus,
-          size,
-          type,
-        })
-      );
-    }
+    // toast.success("Created successfully!")
+    uploadImagesToFirebase();
   };
 
-  React.useEffect(() => {
-    if (inventoryLoading == false && inventoryCreateItemStatus == true) {
-      dispatch(inventoryReset());
-      dispatch(getItemsOnListing());
-      setGender("unisex");
-      setDownloadUrlArray([]);
-      setQuality("good");
-      setFileArray([]);
-      setUploadFile(null);
-      setForm({
-        itemTitle: "",
-        color: "",
-        priceRange: "",
-      });
-      setIsActive(true);
+  React.useEffect(()=>{
+    if(downloadUrlArray.length>=1){
+      if (
+        dressSize == "" ||
+        dressType == "" ||
+        form.priceRange == "" ||
+        form.color == "" ||
+        form.des=="" ||
+        downloadUrlArray.length < 1
+      ) {
+        toast.custom(<WarningToast message={"All fields are required !"} />);
+      } else {
+        const activeState = isActive;
+        const color = form.color;
+        const gender2 = gender;
+        const imageURL = downloadUrlArray[0];
+        const priceRange = form.priceRange;
+        const description=form.des;
+        const qualityStatus = quality;
+        const type = dressType;
+        const sizeObject = sizeOptions2.find(
+          (item) => item?.label.toLowerCase() == dressSize?.toLowerCase()
+        );
+        const size = sizeObject?.value;
+  
+        dispatch(
+          acceptQualityCheckerRequest({
+            requestTokenId:localData?.requestTokenId,
+                  qualityCheckerId:user?.userId,
+                  color:color,
+                  imageURL:downloadUrlArray[0],
+                  gender:gender2,
+                  type:type,
+                  price:priceRange,
+                  size:size,
+                  description:description,
+          })
+        );
+      }
     }
-  }, [inventoryLoading]);
+    
+  },[downloadUrlArray]);
+
+  React.useEffect(()=>{
+        if(qLoading===false && acceptRequestStatus===true){
+          toast.success("Created successfully!")
+          dispatch(resetQualityChecker())
+          dispatch(getItemsOnListing());
+          setGender("unisex");
+          setDownloadUrlArray([]);
+          setQuality("good");
+          setFileArray([]);
+          setUploadFile(null);
+          setForm({
+            itemTitle: "",
+            color: "",
+            priceRange: "",
+            des:"",
+          });
+          setIsActive(true);
+        }
+  },[qLoading])
+
+ 
 
   const itemDisplay = listingItems?.map((item, index) => {
     if (item?.activeState == true) {
@@ -404,6 +391,60 @@ dispatch(getItemsOnListing())
     }
   });
 
+  const handleChangeImages = ({ fileList: newFileList }) => {
+    // Update the status for each file in the fileList to prevent the "upload error" tooltip.
+    const updatedFileList = newFileList.map((file) => {
+      if (file) {
+        file.status = "done"; // Set status to 'done' for successfully uploaded files.
+      }
+      return file;
+    });
+
+    setFileList(updatedFileList);
+  };
+
+  const uploadButtonComponent = (
+    <div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
+
+  const uploadImagesToFirebase = async () => {
+    const urls = []; // Create an array to store download URLs
+    if(fileList.length===0){
+      return;
+    }
+    setImageLoading(true);
+    await Promise.all(
+      fileList.map(async (file) => {
+        if (file.status === "done") {
+          const uniqueFilename = nanoid();
+          const storageRef = ref(getStorage(), `images/${uniqueFilename}`);
+
+          // Upload the file
+          await uploadBytes(storageRef, file.originFileObj);
+
+          // Get the download URL for the uploaded file
+          const downloadURL = await getDownloadURL(storageRef);
+          urls.push(downloadURL); // Add the URL to the array
+
+          console.log(`File uploaded to Firebase Storage: ${downloadURL}`);
+        }
+      })
+    );
+
+    // Set the download URLs in the state
+    setDownloadUrlArray(urls);
+    setImageLoading(false);
+  };
+
   return (
     <>
       <div className="swap">
@@ -412,40 +453,20 @@ dispatch(getItemsOnListing())
             width: "100%",
             alignItems: "center",
             display: "flex",
-            justifyContent: "center",
+            paddingLeft:"1rem",
+            // justifyContent: "center",
           }}
         >
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
-              color: "#00425A",
-              fontSize: "1.5rem",
-              fontWeight: "bold",
-              marginTop: "2rem",
-            }}
-          >
-            List Items to be seen
-          </p>
-        </div>
-
-        <div
-          style={{
-            width: "100%",
-            alignItems: "center",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              color: "#00425A",
-              fontSize: "1.2rem",
               fontWeight: "bold",
               marginTop: "1rem",
+              color: "#00425A",
+              fontSize: "1.5rem",
             }}
           >
-            Add Items
+            Accept Item
           </p>
         </div>
 
@@ -453,27 +474,32 @@ dispatch(getItemsOnListing())
           style={{
             width: "100%",
             display: "flex",
-            marginTop: "1.5rem",
+            marginTop: "1rem",
             padding: "1rem",
-            flexDirection: screen < 700 ? "column" : "row",
+            flexDirection: screen < 914 ? "column" : "row",
           }}
         >
           <section
             className="custom-scrollbar-inventory-listing"
             style={{
-              width: screen < 700 ? "100%" : "50%",
+              background:"#f7f7fa",
+              width: screen < 914 ? "100%" : "50%",
               display: "flex",
               alignItems: "center",
-              overflowY: "auto",
+              borderRadius:"20px",
+              boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px" ,
+              // overflowY: "auto",
               flexDirection: "column",
-              paddingRight: screen < 401 ? "0rem" : "1.5rem",
-              paddingLeft: screen < 401 ? "0rem" : "1.5rem",
+              paddingTop:"1.5rem",
+              paddingBottom:"1.5rem",
+              paddingRight: screen < 401 ? "1rem" : "1.5rem",
+              paddingLeft: screen < 401 ? "1rem" : "1.5rem",
             }}
           >
             <div style={{ width: "100%" }}>
-              <div style={{ marginTop: "1rem" }}>
+              <div style={{ marginTop: "0rem" }}>
                 <Checkbox onChange={onChangeActiveStatus} checked={isActive}>
-                  Active Status
+                  Use existing image
                 </Checkbox>
               </div>
 
@@ -547,13 +573,19 @@ dispatch(getItemsOnListing())
                 />
               </div>
 
-              {/* <p style={pStyles}>Price Range</p>
-                    <Input size="large" 
-                      onChange={onChangeHandleInput}
-                      value={form.priceRange}
-                      name="priceRange"
-                     style={{marginTop:"0.5rem",width:"100%"}} 
-                     placeholder="Price Range"/> */}
+
+              <div style={{ width: "100%", marginTop: "1.5rem" }}>
+                <TextField
+                  id="outlined-basic"
+                  label="Description"
+                  onChange={onChangeHandleInput}
+                  value={form.des}
+                  name="des"
+                  variant="outlined"
+                  size="small"
+                  style={{ width: "100%" }}
+                />
+              </div>
 
               <p style={pStyles}>Gender</p>
               <div style={{ marginTop: "0.5rem" }}>
@@ -566,8 +598,8 @@ dispatch(getItemsOnListing())
                 </Radio.Group>
               </div>
 
-              <p style={pStyles}>Quality Status</p>
-              <div style={{ marginTop: "0.5rem" }}>
+              {/* <p style={pStyles}>Quality Status</p> */}
+              {/* <div style={{ marginTop: "0.5rem" }}>
                 <Radio.Group onChange={onChangeQuality} value={quality}>
                   <Space direction="vertical">
                     <Radio value={"high"}>High Quality</Radio>
@@ -577,106 +609,56 @@ dispatch(getItemsOnListing())
                     <Radio value={"poor"}>Poor Quality</Radio>
                   </Space>
                 </Radio.Group>
-              </div>
+              </div> */}
+              <div style={{ marginTop: "1rem", }}>
+            <Upload
+              listType="picture-card"
+              fileList={fileList}
+              onPreview={handlePreview}
+              onChange={handleChangeImages}
+            >
+              {fileList.length >= 10 ? null : uploadButtonComponent}
+            </Upload>
+          </div>
 
-              <p style={pStyles}>Choose Images</p>
-
-              <label className="custom-file-upload" onChange={handleFileSelect}>
-                <input type="file" multiple />
-                Choose images
-              </label>
-
-              <div style={{ width: "100%", marginTop: "1rem" }}>
-                {fileArray?.map((item, index) => {
-                  return (
-                    <p
-                      key={index}
-                      className="custom-scrollbar-filename"
-                      style={{ overflowX: "auto", marginBottom: "1.5rem" }}
-                    >
-                      {item}
-                    </p>
-                  );
-                })}
-              </div>
-
-              {fileArray?.length >= 1 && (
                 <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    marginTop: "1rem",
-                  }}
-                >
-                  <button
-                    className="q-upload-btn"
-                    onClick={handleUpload}
-                    disabled={downloadUrlArray?.length >= 1 ? true : false}
-                  >
-                    Upload
-                  </button>
-                </div>
-              )}
-
-              <div
                 style={{
                   width: "100%",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "flex-end",
+                   justifyContent: "flex-end",
                   marginTop: "1rem",
                 }}
               >
-                <button className="q-submit-btn" onClick={onClickSave}>
+                <button className="n-button" onClick={onClickSave}>
                   Save
                 </button>
               </div>
+
             </div>
           </section>
 
           <section
             className="custom-scrollbar-inventory-listing"
             style={{
-              width: screen < 700 ? "100%" : "50%",
-              marginTop: screen < 700 ? "3rem" : "0rem",
+              width: screen < 914 ? "100%" : "50%",
+              marginTop: screen < 914 ? "1rem" : "0rem",
               display: "flex",
-              alignItems: "center",
+              // alignItems: "center",
               flexDirection: "column",
-              overflawY: "auto",
-              paddingLeft: screen < 700 ? "0rem" : "1rem",
+              // overflawY: "auto",
+              paddingLeft: screen < 914 ? "0rem" : "1rem",
             }}
           >
-            {downloadUrlArray?.length >= 1 ? (
-              <div>
-                {downloadUrlArray?.map((item, index) => {
-                  return (
-                    <img
-                      src={item}
-                      key={index}
-                      style={{
-                        width: "100%",
-                        marginBottom: "1rem",
-                        borderRadius: "8px",
-                        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-                      }}
-                    />
-                  );
-                })}
-              </div>
-            ) : (
-              <div>
-                <img
-                  src="https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg"
-                  style={{
-                    width: "100%",
-                    marginBottom: "1rem",
-                    borderRadius: "8px",
-                    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-                  }}
-                />
-              </div>
-            )}
+            <div style={{width:"100%",display:"flex",alignItems:"center",
+            padding:screen<466?"0rem":"0rem",justifyContent:"center"}}>
+               <img src={localData?.itemImage} 
+               style={{width:screen<466?"100%":"400px",borderRadius:"10px",
+               boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+               }}/>
+            </div>
+           
+         
           </section>
         </div>
 
@@ -687,11 +669,12 @@ dispatch(getItemsOnListing())
         <CircularProgress color="inherit" size={50} />
       </Backdrop>
 
-      <Backdrop sx={{ color: "blue", zIndex: 1500 }} open={inventoryLoading}>
+      <Backdrop sx={{ color: "blue", zIndex: 1500 }} open={qLoading}>
         <CircularProgress color="inherit" size={50} />
       </Backdrop>
 
       <Toaster
+      
         position="top-center"
         reverseOrder={false}
         gutter={8}
@@ -704,6 +687,8 @@ dispatch(getItemsOnListing())
           style: {
             background: "#363636",
             color: "#fff",
+            marginTop:"80px",
+            fontFamily:"'Ubuntu', sans-serif",
           },
 
           // Default options for specific types
@@ -723,6 +708,21 @@ dispatch(getItemsOnListing())
           },
         }}
       />
+
+<Modal
+        open={previewOpen}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleCancelImage}
+      >
+        <img
+          alt="example"
+          style={{
+            width: "100%",
+          }}
+          src={previewImage}
+        />
+      </Modal>
     </>
   );
 };

@@ -33,11 +33,16 @@ const sideBarDataInventoryManager = [
       path:"/inventory-manager-complaint",
     },
   
+    // {
+    //  title:"Profile",
+    //  icon:"bi-person-lines-fill",
+    //  path:"/inventory-manager-profile",
+    // },
     {
-     title:"Profile",
-     icon:"bi-person-lines-fill",
-     path:"/inventory-manager-profile",
-    },
+      title:"Profile",
+      icon:"bi-person-lines-fill",
+      path:"/profile"
+     },
    
     
   

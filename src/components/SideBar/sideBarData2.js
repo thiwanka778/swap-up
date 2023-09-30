@@ -19,11 +19,11 @@ const sideBarData2 = [
       icon:"bi-arrow-left-right",
       path:"/swap",
     },
-    {
-title:"Donate",
-icon:"bi-balloon-heart-fill",
-path:"/donate",
-    },
+//     {
+// title:"Donate",
+// icon:"bi-balloon-heart-fill",
+// path:"/donate",
+//     },
     {
       title:"Complaints",
       icon:"bi-shield-fill-exclamation",

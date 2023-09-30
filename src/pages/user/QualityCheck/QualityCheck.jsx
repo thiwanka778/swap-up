@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./QualityCheck.css";
 import { Space, Table, Tag } from "antd";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
@@ -6,22 +6,54 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Button, Modal } from "antd";
 import { AutoComplete } from "antd";
 import { NoEncryption } from "@mui/icons-material";
-import { getStorage, ref, uploadBytes, getDownloadURL,uploadBytesResumable } from 'firebase/storage';
-import { nanoid } from 'nanoid';
+import {
+  fetchAllRequestTokens,
+  requestTokenFromCustomer,
+  resetUser,
+} from "../../../redux/userSlice";
+import { useDispatch } from "react-redux";
+// import { format } from 'date-fns';
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { nanoid } from "nanoid";
 import { auth } from "../../../firebase";
-import { Input } from 'antd';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-import Pagination from '@mui/material/Pagination';
+import { Input } from "antd";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Pagination from "@mui/material/Pagination";
+import { PlusOutlined } from "@ant-design/icons";
+import { Upload } from "antd";
 import { useSelector } from "react-redux";
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { DatePicker } from "antd";
+dayjs.extend(customParseFormat);
+const { RangePicker } = DatePicker;
+const dateFormat = "YYYY/MM/DD";
 const { TextArea } = Input;
+
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
 const pStyles = {
   fontSize: "1rem",
   fontFamily: "'Inter', sans-serif",
   fontWeight: "600",
   letterSpacing: "0.1rem",
-  marginTop:"0.5rem",
+  marginTop: "0.5rem",
 };
 
 const options = [
@@ -36,242 +68,25 @@ const options = [
   },
 ];
 
-const data = [
-  {
-    key: "1",
-    itemId: "501",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-  // {
-  //   key: "14566",
-  //   itemId: "501",
-  //   dateSubmitted: "02/06/2023",
-  //   itemName: "T-shirt",
-  //   status: "Bulla",
-  // },
-
-  {
-    key: "2",
-    itemId: "502",
-    dateSubmitted: "03/06/2023",
-    itemName: "Jeans",
-    status: "Rejected",
-  },
-  {
-    key: "3",
-    itemId: "503",
-    dateSubmitted: "04/06/2023",
-    itemName: "Sweater",
-    status: "In progress",
-  },
-  {
-    key: "4",
-    itemId: "504",
-    dateSubmitted: "05/06/2023",
-    itemName: "Jacket",
-    status: "Approved",
-  },
-  {
-    key: "5",
-    itemId: "505",
-    dateSubmitted: "06/06/2023",
-    itemName: "Shoes",
-    status: "Rejected",
-  },
-  // More objects...
-  {
-    key: "26",
-    itemId: "526",
-    dateSubmitted: "27/06/2023",
-    itemName: "Shorts",
-    status: "In progress",
-  },
-  {
-    key: "27",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "28",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "29",
-    itemId: "529",
-    dateSubmitted: "30/06/2023",
-    itemName: "Hat",
-    status: "In progress",
-  },
-  {
-    key: "30",
-    itemId: "530",
-    dateSubmitted: "01/07/2023",
-    itemName: "Socks",
-    status: "Approved",
-  },
-  {
-    key: "31",
-    itemId: "501",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-  {
-    key: "32",
-    itemId: "502",
-    dateSubmitted: "03/06/2023",
-    itemName: "Jeans",
-    status: "Rejected",
-  },
-  {
-    key: "33",
-    itemId: "503",
-    dateSubmitted: "04/06/2023",
-    itemName: "Sweater",
-    status: "In progress",
-  },
-  {
-    key: "34",
-    itemId: "504",
-    dateSubmitted: "05/06/2023",
-    itemName: "Jacket",
-    status: "Approved",
-  },
-  {
-    key: "35",
-    itemId: "505",
-    dateSubmitted: "06/06/2023",
-    itemName: "Shoes",
-    status: "Rejected",
-  },
-  // More objects...
-  {
-    key: "36",
-    itemId: "526",
-    dateSubmitted: "27/06/2023",
-    itemName: "Shorts",
-    status: "In progress",
-  },
-  {
-    key: "37",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "38",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "45",
-    itemId: "527",
-    dateSubmitted: "28/06/2023",
-    itemName: "Skirt",
-    status: "Approved",
-  },
-  {
-    key: "46",
-    itemId: "528",
-    dateSubmitted: "29/06/2023",
-    itemName: "Dress",
-    status: "Rejected",
-  },
-  {
-    key: "47",
-    itemId: "529",
-    dateSubmitted: "30/06/2023",
-    itemName: "Hat",
-    status: "In progress",
-  },
-  {
-    key: "48",
-    itemId: "530",
-    dateSubmitted: "01/07/2023",
-    itemName: "Socks",
-    status: "Approved",
-  },
-  {
-    key: "49",
-    itemId: "531",
-    dateSubmitted: "02/06/2023",
-    itemName: "T-shirt",
-    status: "Approved",
-  },
-];
-
-
-
 const QualityCheck = () => {
-
-  const {openRedux,screen}=useSelector((state)=>state.user)
-
-  const columns = [
-    {
-      title: "Item Id",
-      dataIndex: "itemId",
-      key: "itemId",
-    },
-    {
-      title: "Date Submitted",
-      dataIndex: "dateSubmitted",
-      key: "dateSubmitted",
-    },
-    {
-      title: "Item Name",
-      dataIndex: "itemName",
-      key: "itemName",
-    },
-    {
-      title: "Status",
-      key: "status",
-   
-      render: (_, record) => {
-        let color;
-        switch (record.status) {
-          case "Approved":
-            color = "#04ba25";
-            break;
-          case "Rejected":
-            color = "#fc1303";
-            break;
-          case "In progress":
-            color = "blue";
-            break;
-          default:
-            color = "black"; // Fallback color for any other status
-            break;
-        }
-  
-        return <span style={{ color,fontWeight:"bold",fontSize:"1rem" }}>{record.status}</span>;
-      },
-    },
-  
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <button
-        onClick={()=>appealClick(record)}
-          className="appeal-button"
-          disabled={record.status == "Rejected" ? false : true}
-        >
-          Appeal
-        </button>
-      ),
-    },
-  ];
-
+  const dispatch = useDispatch();
+  const {
+    openRedux,
+    screen,
+    requestTokenStatus,
+    userLoading,
+    user,
+    requestTokenData,
+  } = useSelector((state) => state.user);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+  const [selectedDates, setSelectedDates] = React.useState([null, null]);
+  const [fileList, setFileList] = useState([]);
+  const [fromDate, setFromDate] = React.useState(null);
+  const [toDate, setToDate] = React.useState(null);
+  const [des, setDes] = useState("");
+  const [data, setData] = React.useState([...requestTokenData]);
   const storage = getStorage();
   const itemsPerPage = 10;
   const [totalPages, setTotalPages] = React.useState(0);
@@ -281,42 +96,124 @@ const QualityCheck = () => {
   const [to, setTo] = React.useState(0);
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [fileArray,setFileArray]=React.useState([]);
-  const [uploadFile,setUploadFile]=React.useState(null);
+  const [fileArray, setFileArray] = React.useState([]);
+  const [uploadFile, setUploadFile] = React.useState(null);
   const [progress, setProgress] = React.useState(0);
-  const [validImages,setValidImages]=React.useState("");
-  const [downloadUrlArray,setDownloadUrlArray]=React.useState([]);
-  const [imageLoading,setImageLoading]=React.useState(false);
+  const [validImages, setValidImages] = React.useState("");
+  const [downloadUrlArray, setDownloadUrlArray] = React.useState([]);
+  const [imageLoading, setImageLoading] = React.useState(false);
   const [isModalOpena, setIsModalOpena] = React.useState(false);
-  const [appealData,setAppealData]=React.useState({});
-  const [statusOptions,setStatusOptions]=React.useState([]);
-  const [selectedValue, setSelectedValue] = React.useState('');
-  const [filteredData, setFilteredData] = React.useState(data); 
+  const [appealData, setAppealData] = React.useState({});
+  const [viewData, setViewData] = React.useState({});
+  const [statusOptions, setStatusOptions] = React.useState([]);
+  const [selectedValue, setSelectedValue] = React.useState("");
+  const [filteredData, setFilteredData] = React.useState(data);
   const [paginationKey, setPaginationKey] = React.useState(0);
+  const [filteredArrayByDate, setFilteredArrayByDate] = React.useState([]);
 
   const [pagination, setPagination] = React.useState({
     current: 1,
     pageSize: 10,
   });
 
+  React.useEffect(() => {
+    const getData = requestTokenData?.map((item, index) => {
+      return { ...item, key: index + 1 };
+    });
+    if (getData) {
+      setData(getData);
+      setFilteredData(getData);
+    }
+  }, [requestTokenData]);
+
+  // console.log("data", data);
+
+  const columns = [
+    {
+      title: "Request Token Id",
+      dataIndex: "requestTokenId",
+      key: "RequestTokenId",
+    },
+    {
+      title: "Request Date Time",
+      key: "requestDateTime",
+      render: (_, record) => {
+        const date = record?.requestDateTime;
+        const formattedDate = new Date(date).toLocaleString();
+
+        return <span>{formattedDate}</span>;
+      },
+    },
+
+    {
+      title: "Status",
+      key: "status",
+
+      render: (_, record) => {
+        let color;
+        switch (record.status) {
+          case 1:
+            color = "#04ba25";
+            break;
+          case -1:
+            color = "#fc1303";
+            break;
+          case 0:
+            color = "blue";
+            break;
+          default:
+            color = "blue"; // Fallback color for any other status
+            break;
+        }
+        let btnLabel=""
+        if(record.status===0){
+            btnLabel="Pending"
+        }else if(record.status===1){
+          btnLabel="Completed"
+        }else{
+          btnLabel="Rejected"
+        }
+
+        return (
+          <span style={{ color, fontWeight: "bold", fontSize: "1rem" }}>
+            {btnLabel}
+          </span>
+        );
+      },
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <button
+          onClick={() => viewClick(record)}
+          className="view-requested-token-details-btn"
+        >
+          View
+        </button>
+      ),
+    },
+  ];
+
+ 
+
   const handleAutoCompleteChange = (value) => {
     setSelectedValue(value);
   };
 
+  React.useEffect(() => {
+    const statusArray = data?.map((item) => {
+      return item?.status;
+    });
+    const statusSet = new Set(statusArray);
+    const newArray = Array.from(statusSet);
+    const tempArray = newArray?.map((item) => {
+      return { value: item };
+    });
 
-  React.useEffect(()=>{
-     const statusArray=data?.map((item)=>{
-              return item?.status;
-     });
-     const statusSet = new Set(statusArray);
-     const newArray = Array.from(statusSet);
-     const   tempArray=newArray?.map((item)=>{
-        return {value:item}
-      })
-
-      setStatusOptions(tempArray);
-  },[data]);
-
+    setStatusOptions(tempArray);
+  }, [data]);
 
   const handleTableChange = (pagination) => {
     setPagination(pagination);
@@ -325,146 +222,207 @@ const QualityCheck = () => {
   const showModal = () => {
     setIsModalOpen(true);
     setFileArray([]);
-    setValidImages("")
-    setUploadFile(null)
-    setDownloadUrlArray([])
+    setValidImages("");
+    setUploadFile(null);
+    setDownloadUrlArray([]);
   };
   const handleOk = () => {
     setIsModalOpen(false);
     setFileArray([]);
-    setValidImages("")
-    setUploadFile(null)
-    setDownloadUrlArray([])
+    setValidImages("");
+    setUploadFile(null);
+    setDownloadUrlArray([]);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
-    setFileArray([]);
-    setValidImages("")
-    setUploadFile(null)
-    setDownloadUrlArray([])
+    // setFileArray([]);
+    // setValidImages("");
+    // setUploadFile(null);
+    // setDownloadUrlArray([]);
   };
 
-  // React.useEffect(() => {
-  //   
-  //   setTotalPages(Math.ceil(data.length / itemsPerPage));
-  // }, []);
+  React.useEffect(() => {
+    if (des !== "") {
+      const payload = {
+        customerId: user?.userId,
+        itemDescription: des,
+        itemImage: downloadUrlArray[0],
+      };
+      dispatch(requestTokenFromCustomer({ ...payload }));
+    }
+  }, [downloadUrlArray]);
 
   React.useEffect(() => {
-  if(selectedValue!==""){
-    setPageNumber(1);
-    const filtered = data.filter((item) => item.status === selectedValue);
-    setFilteredData(filtered); 
-    setTotalPages(Math.ceil(filtered.length / itemsPerPage));
-    setPaginationKey((prevKey) => prevKey + 1);
-  }else{
-    setFilteredData(data); 
-    setTotalPages(Math.ceil(data.length / itemsPerPage));
-  }
-  
+    if (userLoading === false) {
+      if (requestTokenStatus === true) {
+        setDes("");
+        setDownloadUrlArray([]);
+        setIsModalOpen(false);
+        dispatch(resetUser());
+        setFileList([]);
+        const userId = user?.userId;
+        const email = user.email;
+        dispatch(fetchAllRequestTokens({ userId, email }));
+      } else {
+        console.log("request token error");
+      }
+    }
+  }, [userLoading]);
 
-  }, [selectedValue]);
+  React.useEffect(() => {
+    const userId = user?.userId;
+    const email = user.email;
+    dispatch(fetchAllRequestTokens({ userId, email }));
+  }, [user]);
+
+  const requestTokenSubmitClick = () => {
+    // console.log("requestTokenSubmitClick");
+    if(setFileList?.length>=1){
+      uploadImagesToFirebase();
+    }
+
+  };
+
+  React.useEffect(() => {
+    if (selectedValue !== "") {
+      setPageNumber(1);
+      const filtered = data.filter((item)=>{
+          if(selectedValue==="Pending"){
+            if(item.status===0){
+              return item;
+            }
+          }else if(selectedValue==="Completed"){
+            if(item.status===1){
+              return item;
+            }
+          }else{
+            if(item.status!==1 && item.status!==0){
+              return item;
+            }
+          }
+      });
+
+      setFilteredData(filtered);
+      setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+      setPaginationKey((prevKey) => prevKey + 1);
+    } else {
+      setFilteredData(data);
+      setTotalPages(Math.ceil(data.length / itemsPerPage));
+    }
+  }, [selectedValue, data]);
+
+  React.useEffect(() => {
+    if (
+      selectedDates[0] !== null &&
+      selectedDates[1] !== null &&
+      selectedDates[0] !== "" &&
+      selectedDates[1] !== ""
+    ) {
+      // Convert selected dates to Date objects
+      const startDate = new Date(selectedDates[0]);
+      const endDate = new Date(selectedDates[1]);
+
+      // Filter the data based on the selected date range
+      const filteredDataByDateRange = filteredData.filter((item) => {
+        const requestDate = new Date(item.requestDateTime);
+
+        return requestDate >= startDate && requestDate <= endDate;
+      });
+      setPageNumber(1);
+      // console.log("filteredDataByDateRange",filteredDataByDateRange)
+      setFilteredArrayByDate(filteredDataByDateRange);
+      setTotalPages(Math.ceil(filteredDataByDateRange.length / itemsPerPage));
+      setPaginationKey((prevKey) => prevKey + 1);
+    } else {
+      setFilteredArrayByDate(filteredData);
+      setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+    }
+  }, [selectedDates, data, filteredData]);
 
   React.useEffect(() => {
     setDisplayItems((prevState) => {
       const startIndex = pageNumber * itemsPerPage - itemsPerPage;
       const endIndex = pageNumber * itemsPerPage - 1;
       setFrom(startIndex + 1);
-      const slicedData = filteredData?.slice(startIndex, endIndex + 1);
+      const slicedData = filteredArrayByDate?.slice(startIndex, endIndex + 1);
       const actualItemsPerPage = slicedData.length;
       const toValue = startIndex + actualItemsPerPage;
       setTo(toValue);
       return slicedData;
     });
-  }, [pageNumber,filteredData]);
+  }, [pageNumber, filteredData, filteredArrayByDate, data]);
 
   const handlePageChange = (event, page) => {
-    setPageNumber(page)
+    setPageNumber(page);
   };
-  // const prevClick = () => {
-  //   setPageNumber((prevState) => {
-  //     return prevState > 1 ? prevState - 1 : prevState;
-  //   });
-  // };
-
-  // const nextClick = () => {
-  //   setPageNumber((prevState) => {
-  //     return prevState < totalPages ? prevState + 1 : prevState;
-  //   });
-  // };
-
-
 
   const handleFileSelect = (event) => {
-   
-  setDownloadUrlArray([])
+    setDownloadUrlArray([]);
     const selectedFiles = event.target.files;
     const fileNamesArray = [];
     setUploadFile(selectedFiles);
-    let count=0;
+    let count = 0;
     // Iterate through the FileList and extract the names of each file
     for (let i = 0; i < selectedFiles.length; i++) {
-      count=count+1;
+      count = count + 1;
       const fileName = selectedFiles[i].name;
       fileNamesArray.push(fileName);
     }
 
-    if(count>=5){
-      setValidImages("Please select at least 5 images !")
-    }else{
+    if (count >= 5) {
+      setValidImages("Please select at least 5 images !");
+    } else {
       setValidImages("");
     }
 
-    setFileArray((prevState)=>{
+    setFileArray((prevState) => {
       return fileNamesArray;
-    })
-
-   
+    });
   };
-
-   
 
   const handleUpload = async () => {
     // console.log('bulla', uploadFile);
     if (!uploadFile || uploadFile.length < 1) {
       return;
     }
-  
+
     try {
       setImageLoading(true);
       const downloadUrls = []; // Array to store the download URLs of the uploaded images
-  
+
       // Upload each file to Firebase Storage
       for (let i = 0; i < uploadFile.length; i++) {
         const file = uploadFile[i];
         const fileId = nanoid(); // Generate a unique ID for the file using nanoid
         const storageRef = ref(getStorage(), `images/${fileId}_${file.name}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
-  
+
         // Wait for the file to be uploaded before moving to the next one
         await uploadTask;
-  
+
         // Get the download URL of the uploaded file
         const downloadUrl = await getDownloadURL(storageRef);
-  
+
         // Add the download URL to the array
         downloadUrls.push(downloadUrl);
       }
-  
+
       // All files have been uploaded
       // console.log('Files uploaded successfully!');
       // console.log('Download URLs:', downloadUrls);
       setImageLoading(false);
-       // Array of download URLs
-       setDownloadUrlArray(downloadUrls)
+      // Array of download URLs
+      setDownloadUrlArray(downloadUrls);
     } catch (error) {
       console.log(error);
       setImageLoading(false);
     }
   };
-  
-  const appealClick=(data)=>{
-    console.log(data)
-    setAppealData(data);
+
+  const viewClick = (data) => {
+    console.log(data);
+    setViewData({});
+    setViewData(data);
     setIsModalOpena(true);
   };
 
@@ -473,45 +431,200 @@ const QualityCheck = () => {
   };
   const handleOka = () => {
     setIsModalOpena(false);
+    setViewData({});
   };
   const handleCancela = () => {
     setIsModalOpena(false);
+    setViewData({});
   };
+
+  const handleCancelImage = () => setPreviewOpen(false);
   
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+  const handleChangeImages = ({ fileList: newFileList }) => {
+    // Update the status for each file in the fileList to prevent the "upload error" tooltip.
+    const updatedFileList = newFileList.map((file) => {
+      if (file) {
+        file.status = "done"; // Set status to 'done' for successfully uploaded files.
+      }
+      return file;
+    });
 
- 
+    setFileList(updatedFileList);
+  };
 
+  const uploadButtonComponent = (
+    <div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
+
+
+  const uploadImagesToFirebase = async () => {
+    const urls = []; // Create an array to store download URLs
+    setImageLoading(true);
+    await Promise.all(
+      fileList.map(async (file) => {
+        if (file.status === "done") {
+          const uniqueFilename = nanoid();
+          const storageRef = ref(getStorage(), `images/${uniqueFilename}`);
+
+          // Upload the file
+          await uploadBytes(storageRef, file.originFileObj);
+
+          // Get the download URL for the uploaded file
+          const downloadURL = await getDownloadURL(storageRef);
+          urls.push(downloadURL); // Add the URL to the array
+
+          console.log(`File uploaded to Firebase Storage: ${downloadURL}`);
+        }
+      })
+    );
+
+    // Set the download URLs in the state
+    setDownloadUrlArray(urls);
+    setImageLoading(false);
+  };
+
+  const handleFromDateChange = (newValue) => {
+    if (newValue) {
+      setFromDate(newValue);
+    } else {
+      setFromDate(null);
+    }
+  };
+
+  const handleToDateChange = (newValue) => {
+    if (newValue) {
+      // Format the date using date-fns and store it in the desired format
+      // setToDate(format(new Date(newValue), 'yyyy-MM-dd'));
+      setToDate(newValue);
+    } else {
+      setToDate(null);
+    }
+  };
+
+  // console.log(fromDate)
+  // console.log(toDate)
+
+  const handleDateChange = (dates, dateStrings) => {
+    setSelectedDates(dateStrings);
+  };
+  console.log(selectedDates);
+  const thirtyDaysAgo = dayjs().subtract(30, "days").format(dateFormat);
+  const currentDate = dayjs().format(dateFormat);
+
+  const handleTextAreaChange = (e) => {
+    setDes(e.target.value);
+  };
+  // console.log(selectedValue)
   return (
     <>
-      <div className="q-check"  style={{paddingLeft:(openRedux&&screen>650)?"270px":"1rem"}} >
-        <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center",marginTop:"2rem"  }}>
+      <div
+        className="q-check"
+        style={{ paddingLeft: openRedux && screen > 650 ? "270px" : "1rem" }}
+      >
+        <div
+          style={{
+            width: "100%",
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "1rem",
+            marginBottom: "1rem",
+          }}
+        >
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
               color: "#00425A",
+              textAlign: "center",
               fontSize: "1.5rem",
               fontWeight: "bold",
-              marginTop: "1rem",
+              position: screen < 465 ? "" : "absolute",
             }}
           >
             Token Requests
           </p>
+
+          <button
+            style={{
+              marginLeft: screen < 465 ? "1rem" : "auto",
+              whiteSpace: "nowrap",
+            }}
+            className="new-swap-button"
+            onClick={showModal}
+          >
+            New Token
+          </button>
         </div>
 
-      <div>
-      <AutoComplete
-    style={{
-      width: 200,
-    }}
-    onChange={handleAutoCompleteChange}
-    options={statusOptions}
-    allowClear={true}
-    placeholder="Filter by status"
-    filterOption={(inputValue, option) =>
-      option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-    }
-  />
-      </div>
+    
+
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: screen < 520 ? "column" : "row",
+          }}
+        >
+          <div
+            style={{
+              marginRight: screen < 520 ? "0rem" : "2rem",
+              marginBottom: screen < 520 ? "1rem" : "0rem",
+            }}
+          >
+            <AutoComplete
+              style={{
+                width: 200,
+              }}
+              onChange={handleAutoCompleteChange}
+              options={[
+                {
+                  value:"Completed"
+                },{
+                  value:"Pending"
+                },
+                {
+                  value:"Rejected"
+                }
+              ]}
+              allowClear={true}
+              placeholder="Filter by status"
+              filterOption={(inputValue, option) =>
+                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+                -1
+              }
+            />
+          </div>
+
+          <RangePicker
+            defaultValue={
+              [
+                // dayjs(thirtyDaysAgo, dateFormat),
+                // dayjs(currentDate, dateFormat),
+              ]
+            }
+            format={dateFormat}
+            onChange={handleDateChange}
+          />
+        </div>
 
         <div style={{ marginTop: "1rem", width: "100%", overflowX: "auto" }}>
           <Table
@@ -519,7 +632,6 @@ const QualityCheck = () => {
             dataSource={displayItems}
             pagination={false}
             // pagination={pagination}
-           
           />
         </div>
 
@@ -530,169 +642,203 @@ const QualityCheck = () => {
             alignItems: "center",
             justifyContent: "space-between",
             marginTop: "1rem",
-            overflowX:"auto",
-            
+            overflowX: "auto",
           }}
         >
-           {displayItems?.length>1 &&  <div>
-            {from} - {to} of {filteredData?.length} 
-          </div>}
+          {displayItems?.length > 1 && (
+            <div>
+              {from} - {to} of {filteredData?.length}
+            </div>
+          )}
 
-        {displayItems?.length==1 &&  <div>
-          {from} item out of {filteredData?.length}
-          </div>}
+          {displayItems?.length == 1 && (
+            <div>
+              {from} item out of {filteredData?.length}
+            </div>
+          )}
 
           <div style={{ display: "flex", alignItems: "center" }}>
-            {/* {pageNumber != 1 && (
-              <KeyboardArrowLeftIcon
-                style={{ cursor: "pointer" }}
-                onClick={prevClick}
-              />
-            )}
-
-            <div
-              style={{
-                padding: "0.5rem",
-                border: "2px solid black",
-                borderRadius: "4px",
-                marginLeft: "1rem",
-                marginRight: "1rem",
-              }}
-            >
-              {pageNumber}
-            </div>
-
-            {totalPages !== pageNumber && (
-              <KeyboardArrowRightIcon
-                style={{ cursor: "pointer" }}
-                onClick={nextClick}
-              />
-            )} */}
-              <Pagination count={totalPages}  onChange={handlePageChange}     key={paginationKey} color="primary" />
+            <Pagination
+              count={totalPages}
+              onChange={handlePageChange}
+              key={paginationKey}
+              color="primary"
+            />
           </div>
         </div>
-
       </div>
 
       <Modal
-        title={<h2 style={{color:"#00425A",
-        fontSize:"1.5rem",marginBottom:"1rem"}}>Submit the item you want to check quality</h2>}
+        title={
+          <h2
+            style={{
+              color: "#00425A",
+              fontSize: "1.5rem",
+              marginBottom: "1rem",
+            }}
+          >
+            Request a new token
+          </h2>
+        }
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
       >
         <div style={{ width: "100%" }}>
+         
+          <p style={pStyles}>Description</p>
 
-          <p style={pStyles}>Item type</p>
-          <AutoComplete
-    style={{
-     width:"100%",
-marginTop:"0.3rem",
+          <TextArea
+            value={des}
+            onChange={handleTextAreaChange}
+            rows={4}
+            style={{ marginTop: "0.3rem", width: "100%" }}
+          />
 
-    }}
-    options={options}
-    placeholder="Item type"
-    filterOption={(inputValue, option) =>
-      option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-    }
-  />
-  <p style={pStyles}>Item description</p>
+          {/* <p style={pStyles}>Desired outcome</p>
+  <TextArea rows={3} style={{marginTop:"0.3rem",width:"100%",}} /> */}
 
-  <TextArea rows={4} style={{marginTop:"0.3rem",width:"100%",}} />
+          <div className="notice" style={{ marginTop: "1rem" }}>
+            <p style={pStyles}>
+              Please provide three high-quality photos of the dress:
+            </p>
+            <ol>
+              <li>Front view of the dress.</li>
+              <li>Back view of the dress.</li>
+              <li>
+                An additional photo showcasing any specific details or angles
+                you'd like to highlight.
+              </li>
+            </ol>
+            <p
+              style={{
+                marginTop: "0.5rem",
+                fontWeight: "bold",
+                fontSize: "0.9rem",
+                color: "#757478",
+              }}
+            >
+              <span style={{ color: "#f21202", fontWeight: "bold" }}>
+                *&nbsp;
+              </span>
+              These photos will help ensure an accurate representation of the
+              dress for potential swappers. Thank you for your cooperation.
+            </p>
+          </div>
 
-  <p style={pStyles}>Desired outcome</p>
-  <TextArea rows={3} style={{marginTop:"0.3rem",width:"100%",}} />
+         
 
-  <p style={pStyles}>Choose Item (Upload atleast 5 pictures)</p>
+          <div style={{ marginTop: "1rem" }}>
+            <Upload
+              listType="picture-card"
+              fileList={fileList}
+              onPreview={handlePreview}
+              onChange={handleChangeImages}
+            >
+              {fileList.length >= 3 ? null : uploadButtonComponent}
+            </Upload>
+          </div>
 
-  <label className="custom-file-upload" onChange={handleFileSelect} >
-    <input type="file" multiple />
-    Choose images
-</label>
-
-<div style={{width:"100%",marginTop:"1rem"}}>
-
-  {
-    fileArray?.map((item,index)=>{
-      return (
-        <p key={index} style={{overflowX:"auto",marginBottom:"0.5rem"}}>{item}</p>
-      )
-    })
-  }
-</div>
-
-{fileArray?.length>=1 &&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
-{fileArray?.length<2?"Please select at least 5 images !":""}
-</div>}
-
-{fileArray?.length>=2 && <div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem"}}>
-<button className="q-upload-btn" onClick={handleUpload} disabled={downloadUrlArray?.length>=1?true:false}
->Upload</button>
-</div>}
-
-
-{downloadUrlArray?.length>=1 &&<div style={{width:"100%",display:"flex",flexDirection:"column",alignItems:"center",marginTop:"1rem"}}>
-{
-  downloadUrlArray?.map((item,index)=>{
-return (
-  <img src={item} key={index} style={{width:"100%",
-  marginBottom:"1rem",borderRadius:"8px",
-  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-}}/>
-)
-  })
-}
-</div>}
-
-
-
-<div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"1rem"}}>
-<button  className="q-submit-btn" onClick={handleCancel}>Submit</button>
-<button className="q-cancel-btn" onClick={handleCancel} style={{marginLeft:"1rem"}}>Cancel </button>
-</div>
-     
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              marginTop: "1rem",
+            }}
+          >
+            <button
+              className="q-submit-btn"
+              // disabled={fileList?.length===3?false:true}
+              onClick={requestTokenSubmitClick}
+            >
+              Submit
+            </button>
+            <button
+              className="q-cancel-btn"
+              onClick={handleCancel}
+              style={{ marginLeft: "1rem" }}
+            >
+              Cancel{" "}
+            </button>
+          </div>
         </div>
       </Modal>
 
-
-      <Backdrop
-        sx={{ color: 'gold', zIndex: 1500 }}
-        open={imageLoading}
-
-      >
+      <Backdrop sx={{ color: "gold", zIndex: 1500 }} open={imageLoading}>
         <CircularProgress color="inherit" size={50} />
       </Backdrop>
-     
 
-      <Modal title={<h2 style={{color:"#00425A",
-        fontSize:"1.5rem",marginBottom:"1rem"}}>Appeal</h2>}
-       open={isModalOpena} onOk={handleOka} onCancel={handleCancela}
-       footer={null}
-       >
+      {viewData?.itemImage && viewData?.itemImage !== "" && (
+        <Modal
+          title={
+            <h2
+              style={{
+                color: "#00425A",
+                fontSize: "1.5rem",
+                marginBottom: "1rem",
+              }}
+            >
+              Requested Item
+            </h2>
+          }
+          open={isModalOpena}
+          onOk={handleOka}
+          onCancel={handleCancela}
+          footer={null}
+        >
+          <div style={{ width: "100%" }}>
+            <p style={pStyles}>
+              Request Token Id : <span>{viewData?.requestTokenId}</span>
+            </p>
+            <p style={pStyles}>
+              <span>{viewData?.itemDescription}</span>
+            </p>
+            <br />
+            {/* images */}
+            <div style={{ width: "100%", padding: "1rem" }}>
+              <img
+                src={viewData?.itemImage}
+                style={{ width: "100%", borderRadius: "10px" }}
+              />
+            </div>
 
-       <div style={{width:"100%",}}>
-        
-        <p style={pStyles}>Item Id : <span>{appealData?.itemId}</span></p>
-        <p style={pStyles}>Item Name : <span>{appealData?.itemName}</span></p>
-<br/>
-        <p style={pStyles} >Reason for appeal</p>
-        <Input placeholder="Reason for appeal" style={{width:"100%",marginTop:"0.3rem"}}/>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                marginTop: "1rem",
+              }}
+            >
+              <button className="q-submit-btn" onClick={handleCancela}>
+                OKAY
+              </button>
+              
+            </div>
+          </div>
+        </Modal>
+      )}
 
-        <p style={pStyles}>Describe Objection</p>
-        <TextArea rows={4} style={{marginTop:"0.3rem",width:"100%",}} />
+      {/* image preview */}
 
-        <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"1rem"}}>
-        <button className="q-submit-btn" onClick={handleCancela}>Submit</button>
-        <button className="q-cancel-btn" style={{marginLeft:"1rem"}} onClick={handleCancela}>Cancel</button>
-        </div>
-
-       </div>
-
-
+      <Modal
+        open={previewOpen}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleCancelImage}
+      >
+        <img
+          alt="example"
+          style={{
+            width: "100%",
+          }}
+          src={previewImage}
+        />
       </Modal>
-
-
     </>
   );
 };

@@ -6,7 +6,19 @@
     padding-right: 1rem;
     padding-bottom: 1rem;
 }
-
+.view-requested-token-details-btn{
+  background-color: #f5c402;
+  color: white; 
+  padding: 5px 10px;
+  border: none; 
+  border-radius: 4px; 
+  font-size:1rem;
+  cursor: pointer; 
+  transition: transform 0.9s ; 
+}
+.view-requested-token-details-btn:active{
+  transform: scale(-0.7);
+}
 .appeal-button {
     background-color: #4CAF50; /* Green background color */
     color: white; /* White text color */
@@ -124,6 +136,7 @@
     background-color: #7dfa7f; /* Very light green for disabled button */
     cursor: not-allowed; /* Cursor indicating that the button is not allowed */
   }
+  
 
 
 

@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from '../apiService';
 
-console.log(BASE_URL)
+// console.log(BASE_URL)
 
  const localUser=window.localStorage.getItem("user");
 
@@ -22,8 +22,14 @@ const initialState = {
   userLoginStatus:false,
   userLoginMessage:"",
   openRedux:false,
+  requestTokenStatus:false,
 
   staffRegisterStatus:false,
+  requestTokenData:[],
+  createHelpRequest:false,
+  complaintArray:[],
+  profile:{},
+  updateProfilePictureStatus:false,
 };
 
 // userRegister
@@ -116,8 +122,8 @@ export const staffRegister = createAsyncThunk(
   "user/staffRegister",
   async ({ email, firstName, lastName, telephone,address, role, password,profilePicture,nic }, thunkAPI) => {
     try {
-  
-      const response = await axios.post(`${BASE_URL}/api/v1/user/register-staff`, {
+      const response = await axios.post(`${BASE_URL}/api/v1/admin/register-staff`,
+       {
         email,
         firstName,
         lastName,
@@ -145,6 +151,124 @@ export const staffRegister = createAsyncThunk(
 );
 
 
+//  request token by customer 
+
+export const requestTokenFromCustomer = createAsyncThunk(
+  "customer/requestToken",
+  async ({ customerId, itemDescription, itemImage }, thunkAPI) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/v1/customer/RequestTokenFromCustomer`, {
+        customerId: customerId,
+        itemDescription: itemDescription,
+        itemImage: itemImage,
+      });
+
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// fetch request tokens
+
+export const fetchAllRequestTokens = createAsyncThunk(
+  'customer/fetchAllRequestTokens',
+  async ({userId,email}, thunkAPI) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/v1/customer/AllRequestToken`,{userId,email});
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+
+// help request
+
+export const helpRequest = createAsyncThunk(
+  'customer/helpRequest',
+  async ({ customerId, subject, message }, thunkAPI) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/v1/customer/help-request`, {
+        customerId: customerId,
+        subject: subject,
+        message: message,
+      });
+
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// get all help reqyest by user
+
+export const getHelpRequestById = createAsyncThunk(
+  'customer/getHelpRequestById',
+  async (id, thunkAPI) => {
+    try {
+      // Make a GET request to the specified API endpoint
+      const response = await axios.get(`${BASE_URL}/api/v1/customer/get-help-request/${id}`);
+
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      // Handle errors and reject the promise with an error message
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+// get user by ID
+
+export const getUserById = createAsyncThunk(
+  'user/getUserById',
+  async (userId, thunkAPI) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/v1/user/get-user/${userId}`);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// updateProfilePicture 
+
+export const updateProfilePicture = createAsyncThunk(
+  'user/updateProfilePicture',
+  async ({ id, profilePic }, thunkAPI) => {
+    try {
+   
+      const response = await axios.put(`${BASE_URL}/api/v1/user/update-profile-pic/${id}`, { profilePic });
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 
 const userSlice = createSlice({
   name: 'user',
@@ -160,6 +284,9 @@ const userSlice = createSlice({
       state.userLoginStatus=false;
       state.userLoginMessage="";
       state.staffRegisterStatus=false;
+      state.requestTokenStatus=false;
+      state.createHelpRequest=false;
+      state.updateProfilePictureStatus=false;
     },
     getScreenWidth: (state, action) => {
       state.screen = action.payload;
@@ -182,6 +309,7 @@ const userSlice = createSlice({
     },
     userLogout:(state,action)=>{
       state.user=null;
+      state.profile={};
       window.localStorage.setItem("user",JSON.stringify(state.user));
     },
     openSideBarRedux:(state)=>{
@@ -276,26 +404,116 @@ const userSlice = createSlice({
       .addCase(staffRegister.pending, (state) => {
         state.userLoading = true;
         state.userError="";
-        state.staffRegisterStatus=false;
-      
-       
-        
+        state.staffRegisterStatus=false; 
       })
       .addCase(staffRegister.fulfilled, (state, action) => {
         state.userLoading = false;
         state.userError="";
         state.staffRegisterStatus=true;
-   
-  
     
       })
       .addCase(staffRegister.rejected, (state, action) => {
         state.userLoading = false;
         state.userError=action.payload;
         state.staffRegisterStatus=false;
-       
-     
       })
+
+      //  request token requestTokenFromCustomer
+
+      .addCase(requestTokenFromCustomer.pending, (state) => {
+        state.userLoading = true;
+        state.requestTokenStatus=false;
+    
+      })
+      .addCase(requestTokenFromCustomer.fulfilled, (state, action) => {
+        state.userLoading = false;
+        state.requestTokenStatus=true;
+
+    
+      })
+      .addCase(requestTokenFromCustomer.rejected, (state, action) => {
+        state.userLoading = false;
+        state.requestTokenStatus=false;
+      
+      })
+      // fetchAllRequestTokens
+
+      .addCase(fetchAllRequestTokens.pending, (state) => {
+        state.userLoading = true;
+       
+    
+      })
+      .addCase(fetchAllRequestTokens.fulfilled, (state, action) => {
+        state.userLoading = false;
+        state.requestTokenData=action.payload.data;
+
+    
+      })
+      .addCase(fetchAllRequestTokens.rejected, (state, action) => {
+        state.userLoading = false;
+       
+      
+      })
+      // helpRequest
+
+      .addCase(helpRequest.pending, (state) => {
+        state.userLoading = true;
+        state.createHelpRequest=false;
+    
+      })
+      .addCase(helpRequest.fulfilled, (state, action) => {
+        state.userLoading = false;
+        state.createHelpRequest=true;
+
+    
+      })
+      .addCase(helpRequest.rejected, (state, action) => {
+        state.userLoading = false;
+        state.createHelpRequest=false;
+      
+      })
+      // getHelpRequestById
+
+      .addCase(getHelpRequestById.pending, (state) => {
+        state.userLoading = true;
+      })
+      .addCase(getHelpRequestById.fulfilled, (state, action) => {
+        state.userLoading = false;
+        state.complaintArray=action.payload.data;
+      })
+      .addCase(getHelpRequestById.rejected, (state, action) => {
+        state.userLoading = false;
+      })
+
+      //  get  profile details
+      
+      .addCase(getUserById.pending, (state) => {
+        state.userLoading = true;
+      })
+      .addCase(getUserById.fulfilled, (state, action) => {
+        state.userLoading = false;
+        state.profile=action.payload;
+      })
+      .addCase(getUserById.rejected, (state, action) => {
+        state.userLoading = false;
+      })
+
+      //updateProfilePicture
+      .addCase(updateProfilePicture.pending, (state) => {
+        state.userLoading = true;
+        state.updateProfilePictureStatus=false;
+      })
+      .addCase(updateProfilePicture.fulfilled, (state, action) => {
+        state.userLoading = false;
+        state.updateProfilePictureStatus=true;
+      })
+      .addCase(updateProfilePicture.rejected, (state, action) => {
+        state.userLoading = false;
+        state.updateProfilePictureStatus=false;
+      })
+
+
+
 
 
 

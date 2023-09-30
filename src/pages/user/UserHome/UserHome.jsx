@@ -172,7 +172,7 @@ const UserHome = () => {
   const [max, setMax] = React.useState(0);
   const filterBoxRef = React.useRef(null);
   const [fromPrice, setFromPrice] = React.useState("");
-  const [toPrice, setToPrice] = useState("");
+  const [toPrice, setToPrice] = React.useState("");
   const [sliderValue, setSliderValue] = React.useState(5000);
   const [isFilterVisible, setIsFilterVisible] = React.useState(false);
   const [updatedListingItems, setUpdatedListingItems] =
@@ -316,6 +316,7 @@ const UserHome = () => {
         onClick={() => categoryClick(item)}
         key={index}
         style={{
+          color:item?.isActive===true?"white":"black",
           border: "2px solid orange",
           minWidth: "120px",
           marginBottom: "1rem",
@@ -476,6 +477,16 @@ const UserHome = () => {
   const handleClosef = () => {
     setAnchorElf(null);
   };
+
+  const resetButtonClick=()=>{
+    setAnchorElf(null);
+    setFromPrice("")
+    setToPrice("")
+    setSelectedColor(null);
+    setSelectedGender(null);
+    setSelectedSize(null);
+
+  }
 
 
   
@@ -856,11 +867,16 @@ marginRight:"1rem"}}>
   
 <div style={{width:"100%",display:"flex",justifyContent:"flex-end"}}> 
 
-<button  onClick={handleClosef}
-className="apply-changes-button" 
-style={{marginLeft:"1.5rem",marginTop:"1.5rem",marginRight:"1.5rem"}}>
-        Apply
-        </button>
+<button 
+onClick={resetButtonClick}
+className="reset-changes-button" 
+ style={{marginLeft:"1.5rem",marginTop:"1.5rem",marginRight:"0rem"}}>Reset</button>
+
+         <button  onClick={handleClosef}
+            className="apply-changes-button" 
+           style={{marginLeft:"1rem",marginTop:"1.5rem",marginRight:"1.5rem"}}>
+            Apply
+          </button>
 </div>
        
       

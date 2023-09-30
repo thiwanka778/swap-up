@@ -24,6 +24,14 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { useNavigate } from "react-router-dom";
+import { getRequestToken } from "../../../redux/qualityCheckerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { DatePicker } from "antd";
+dayjs.extend(customParseFormat);
+const { RangePicker } = DatePicker;
+const dateFormat = "YYYY/MM/DD";
 const { TextArea } = Input;
 
 const pStyles = {
@@ -44,267 +52,88 @@ const pStyles2 = {
   color: "#616263",
 };
 
-const options = [
-  {
-    value: "Burns Bay Road",
-  },
-  {
-    value: "Downing Street",
-  },
-  {
-    value: "Wall Street",
-  },
-];
-
-const data = [
-  {
-    key: "1",
-    swapId: "501",
-    itemName: "Shirt",
-    customerName: "Nimal Lansa",
-    status: "Pending",
-    customerId: "200",
-    itemId: "2",
-    customerAddress: "21, New Road, Kaluthara",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "2",
-    swapId: "502",
-    itemName: "Pants",
-    customerName: "John Doe",
-    status: "Accepted",
-    customerId: "201",
-    itemId: "3",
-    customerAddress: "123 Main Street, Cityville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "3",
-    swapId: "503",
-    itemName: "Shoes",
-    customerName: "Jane Smith",
-    status: "Rejected",
-    customerId: "202",
-    itemId: "4",
-    customerAddress: "45 Oak Avenue, Townsville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "4",
-    swapId: "504",
-    itemName: "Hat",
-    customerName: "Alice Johnson",
-    status: "Pending",
-    customerId: "203",
-    itemId: "5",
-    customerAddress: "67 Elm Street, Villagetown",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "5",
-    swapId: "505",
-    itemName: "Dress",
-    customerName: "Bob Anderson",
-    status: "Accepted",
-    customerId: "204",
-    itemId: "6",
-    customerAddress: "89 Maple Road, Hamletsville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "6",
-    swapId: "506",
-    itemName: "Socks",
-    customerName: "Eve Taylor",
-    status: "Rejected",
-    customerId: "205",
-    itemId: "7",
-    customerAddress: "34 Pine Lane, Woodsville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "7",
-    swapId: "507",
-    itemName: "T-shirt",
-    customerName: "David Wilson",
-    status: "Pending",
-    customerId: "206",
-    itemId: "8",
-    customerAddress: "56 Cedar Street, Riverside",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "8",
-    swapId: "508",
-    itemName: "Jeans",
-    customerName: "Grace Martinez",
-    status: "Accepted",
-    customerId: "207",
-    itemId: "9",
-    customerAddress: "78 Oakwood Drive, Hillside",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "9",
-    swapId: "509",
-    itemName: "Sweater",
-    customerName: "Frank Brown",
-    status: "Rejected",
-    customerId: "208",
-    itemId: "10",
-    customerAddress: "90 Elm Avenue, Lakeside",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "10",
-    swapId: "510",
-    itemName: "Jacket",
-    customerName: "Olivia White",
-    status: "Pending",
-    customerId: "209",
-    itemId: "11",
-    customerAddress: "12 Cedar Lane, Brookside",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "11",
-    swapId: "511",
-    itemName: "Scarf",
-    customerName: "Sophia Lee",
-    status: "Accepted",
-    customerId: "210",
-    itemId: "12",
-    customerAddress: "45 Oak Avenue, Townsville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "12",
-    swapId: "512",
-    itemName: "Gloves",
-    customerName: "James Green",
-    status: "Rejected",
-    customerId: "211",
-    itemId: "13",
-    customerAddress: "34 Pine Lane, Woodsville",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-  {
-    key: "13",
-    swapId: "513",
-    itemName: "Skirt",
-    customerName: "Liam Harris",
-    status: "Pending",
-    customerId: "212",
-    itemId: "14",
-    customerAddress: "56 Cedar Street, Riverside",
-    itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-  },
-];
-
-
-  
-  
-
-const QualityCheckAuth= () => {
-  const navigate=useNavigate();
+const QualityCheckAuth = () => {
+  const dispatch = useDispatch();
+  const { screen, user, openRedux } = useSelector((state) => state.user);
+  const { qLoading, requestTokenData } = useSelector(
+    (state) => state.qualityChecker
+  );
+  const navigate = useNavigate();
   const columns = [
     {
-      title: "Requested Id",
-      dataIndex: "swapId",
-      key: "swapId",
+      title: "Request Token Id",
+      dataIndex: "requestTokenId",
+      key: "RequestTokenId",
     },
     {
-      title: "Customer Name",
-      dataIndex: "customerName",
-      key: "customerName",
+      title: "Request Date Time",
+      key: "requestDateTime",
+      render: (_, record) => {
+        const date = record?.requestDateTime;
+        const formattedDate = new Date(date).toLocaleString();
+
+        return <span>{formattedDate}</span>;
+      },
     },
-    {
-      title: "Item Name",
-      dataIndex: "itemName",
-      key: "itemName",
-    },
+
     {
       title: "Status",
       key: "status",
+
       render: (_, record) => {
         let color;
-        switch (record.status?.toLowerCase().trim()) {
-          case "pending":
+        switch (record.status) {
+          case 1:
+            color = "#04ba25";
+            break;
+          case -1:
+            color = "#fc1303";
+            break;
+          case 0:
             color = "blue";
             break;
-          case "accepted":
-            color = "#13d609";
-            break;
-            case "rejected":
-                color="red";
-                break;
           default:
-            color = "black"; // Fallback color for any other status
+            color = "blue"; // Fallback color for any other status
             break;
+        }
+        let btnLabel = "";
+        if (record.status === 0) {
+          btnLabel = "Pending";
+        } else if (record.status === 1) {
+          btnLabel = "Completed";
+        } else {
+          btnLabel = "Rejected";
         }
 
         return (
-          <span
-            onClick={() => statusClick(record)}
-            style={{
-              color,
-              fontWeight: "bold",
-              fontSize: "1rem",
-              cursor: "pointer",
-            }}
-          >
-            {record.status}
+          <span style={{ color, fontWeight: "bold", fontSize: "1rem" }}>
+            {btnLabel}
           </span>
         );
       },
     },
 
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   render: (_, record) => (
-    //     <button
-    //       onClick={() => viewClick(record)}
-    //       className="donation-request-view-button"
-    //     >
-    //       View
-    //     </button>
-    //   ),
-    // },
-
     {
-        title: "Action",
-        key:"action",
-        render:(_,record)=>{
-            return (
-                <div>
-
-               {record?.status?.toLowerCase().trim()!=="rejected" && <button  className="donation-request-view-button-reject" style={{margin:"0.1rem"}}>
-                     Reject
-              </button>}
-
-             {record?.status?.toLowerCase().trim()!=="accepted" && <button  className="donation-request-view-button-accept" style={{margin:"0.1rem"}}>
-                Accept
-              </button>}
-
-              { record?.status?.toLowerCase().trim()!=="pending" && <button  className="donation-request-view-button-pending" style={{margin:"0.1rem"}}>
-                Pending
-              </button>}
-                    </div>
-            )
-        }
-    },
-      {
-      title: "View",
-      key: "view",
+      title: "Action",
+      key: "action",
       render: (_, record) => (
-        <button
-          onClick={() => viewClick(record)}
-          className="donation-request-view-button"
-        >
-          View
-        </button>
+        <>
+          <button
+            style={{margin:"0.2rem"}}
+            onClick={() => viewClick(record)}
+            className="view-requested-token-details-btn"
+          >
+            View
+          </button>
+
+          <button
+          style={{margin:"0.2rem"}}
+             onClick={() => acceptClick(record)}
+            className="donation-request-view-button-accept"
+          >
+            Accept
+          </button>
+        </>
       ),
     },
   ];
@@ -315,7 +144,7 @@ const QualityCheckAuth= () => {
   const [displayItems, setDisplayItems] = React.useState([]);
   const [from, setFrom] = React.useState(0);
   const [to, setTo] = React.useState(0);
-
+  const [data, setData] = React.useState([...requestTokenData]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [fileArray, setFileArray] = React.useState([]);
   const [uploadFile, setUploadFile] = React.useState(null);
@@ -328,7 +157,25 @@ const QualityCheckAuth= () => {
   const [filteredData, setFilteredData] = React.useState(data);
   const [statusData, setStatusData] = React.useState({});
   const [openu, setOpenu] = React.useState(false);
-  
+  const [filteredArrayByDate, setFilteredArrayByDate] = React.useState([]);
+  const [selectedDates, setSelectedDates] = React.useState([null, null]);
+  const [selectedValue, setSelectedValue] = React.useState("");
+  const [paginationKey, setPaginationKey] = React.useState(0);
+  const [viewData, setViewData] = React.useState({});
+  const [localData,setLocalData]=React.useState(()=>{
+    const loData=window.localStorage.getItem("localData");
+    return (loData && loData!=="undefined")?JSON.parse(loData):{};
+  });
+
+  React.useEffect(() => {
+    const getData = requestTokenData?.map((item, index) => {
+      return { ...item, key: index + 1 };
+    });
+    if (getData) {
+      setData(getData);
+      setFilteredData(getData);
+    }
+  }, [requestTokenData]);
 
   const statusClick = (data) => {
     console.log(data);
@@ -359,22 +206,76 @@ const QualityCheckAuth= () => {
   };
 
   React.useEffect(() => {
-    // console.log(data?.length);
-    setTotalPages(Math.ceil(data.length / itemsPerPage));
-  }, [data]);
+    dispatch(getRequestToken());
+  }, []);
+
+  React.useEffect(() => {
+    if (selectedValue !== "") {
+      setPageNumber(1);
+      const filtered = data.filter((item) => {
+        if (selectedValue === "Pending") {
+          if (item.status === 0) {
+            return item;
+          }
+        } else if (selectedValue === "Completed") {
+          if (item.status === 1) {
+            return item;
+          }
+        } else {
+          if (item.status !== 1 && item.status !== 0) {
+            return item;
+          }
+        }
+      });
+      setFilteredData(filtered);
+      setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+      setPaginationKey((prevKey) => prevKey + 1);
+    } else {
+      setFilteredData(data);
+      setTotalPages(Math.ceil(data.length / itemsPerPage));
+    }
+  }, [selectedValue, data]);
+
+  React.useEffect(() => {
+    if (
+      selectedDates[0] !== null &&
+      selectedDates[1] !== null &&
+      selectedDates[0] !== "" &&
+      selectedDates[1] !== ""
+    ) {
+      // Convert selected dates to Date objects
+      const startDate = new Date(selectedDates[0]);
+      const endDate = new Date(selectedDates[1]);
+
+      // Filter the data based on the selected date range
+      const filteredDataByDateRange = filteredData.filter((item) => {
+        const requestDate = new Date(item.requestDateTime);
+
+        return requestDate >= startDate && requestDate <= endDate;
+      });
+      setPageNumber(1);
+      // console.log("filteredDataByDateRange",filteredDataByDateRange)
+      setFilteredArrayByDate(filteredDataByDateRange);
+      setTotalPages(Math.ceil(filteredDataByDateRange.length / itemsPerPage));
+      setPaginationKey((prevKey) => prevKey + 1);
+    } else {
+      setFilteredArrayByDate(filteredData);
+      setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+    }
+  }, [selectedDates, data, filteredData]);
 
   React.useEffect(() => {
     setDisplayItems((prevState) => {
       const startIndex = pageNumber * itemsPerPage - itemsPerPage;
       const endIndex = pageNumber * itemsPerPage - 1;
       setFrom(startIndex + 1);
-      const slicedData = filteredData?.slice(startIndex, endIndex + 1);
+      const slicedData = filteredArrayByDate?.slice(startIndex, endIndex + 1);
       const actualItemsPerPage = slicedData.length;
       const toValue = startIndex + actualItemsPerPage;
       setTo(toValue);
       return slicedData;
     });
-  }, [pageNumber, filteredData, totalPages]);
+  }, [pageNumber, filteredData, filteredArrayByDate, data]);
 
   const handleFileSelect = (event) => {
     setDownloadUrlArray([]);
@@ -439,20 +340,40 @@ const QualityCheckAuth= () => {
     }
   };
 
+  // const viewClick = (data) => {
+  //   console.log(data);
+  //   setAppealData(data);
+  //   setIsModalOpena(true);
+  // };
+
   const viewClick = (data) => {
     console.log(data);
-    setAppealData(data);
+    setViewData({});
+    setViewData(data);
     setIsModalOpena(true);
   };
+
+  const acceptClick=(data)=>{
+  setLocalData(data);
+  // console.log("click data",data)
+  window.localStorage.setItem("localData",JSON.stringify(data))
+  navigate("/listing")
+  }
+  // React.useEffect(()=>{
+  //   console.log(localData,"QAUTH PAGE")
+  //    window.localStorage.setItem("localData",JSON.stringify(localData))
+  // },[localData])
 
   const showModala = () => {
     setIsModalOpena(true);
   };
   const handleOka = () => {
     setIsModalOpena(false);
+    setViewData({});
   };
   const handleCancela = () => {
     setIsModalOpena(false);
+    setViewData({});
   };
 
   const handlePageChange = (event, page) => {
@@ -474,16 +395,26 @@ const QualityCheckAuth= () => {
     // }
   };
 
+  const handleAutoCompleteChange = (value) => {
+    setSelectedValue(value);
+  };
+  const handleDateChange = (dates, dateStrings) => {
+    setSelectedDates(dateStrings);
+  };
+
   return (
     <>
-      <div className="quality-checker-token-request">
+      <div
+        className="quality-checker-token-request"
+        style={{ paddingLeft: openRedux && screen > 650 ? "270px" : "1rem" }}
+      >
         <div
           style={{
             width: "100%",
             alignItems: "center",
             display: "flex",
             justifyContent: "center",
-            marginTop: "2rem",
+            marginTop:"1rem",
           }}
         >
           <p
@@ -492,14 +423,13 @@ const QualityCheckAuth= () => {
               color: "#00425A",
               fontSize: "1.5rem",
               fontWeight: "bold",
-              marginTop: "1rem",
             }}
           >
             Token Requests
           </p>
         </div>
 
-        <div
+        {/* <div
           style={{
             width: "100%",
             display: "flex",
@@ -514,9 +444,59 @@ const QualityCheckAuth= () => {
           >
             Add New Item
           </button>
+        </div> */}
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: screen < 520 ? "column" : "row",
+            marginTop: "1rem",
+          }}
+        >
+          <div
+            style={{
+              marginRight: screen < 520 ? "0rem" : "2rem",
+              marginBottom: screen < 520 ? "1rem" : "0rem",
+            }}
+          >
+            <AutoComplete
+              style={{
+                width: 200,
+              }}
+              onChange={handleAutoCompleteChange}
+              options={[
+                {
+                  value: "Completed",
+                },
+                {
+                  value: "Pending",
+                },
+                {
+                  value: "Rejected",
+                },
+              ]}
+              allowClear={true}
+              placeholder="Filter by status"
+              filterOption={(inputValue, option) =>
+                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+                -1
+              }
+            />
+          </div>
+
+          <RangePicker
+            defaultValue={
+              [
+                // dayjs(thirtyDaysAgo, dateFormat),
+                // dayjs(currentDate, dateFormat),
+              ]
+            }
+            format={dateFormat}
+            onChange={handleDateChange}
+          />
         </div>
 
-        <div style={{ marginTop: "2rem", width: "100%", overflowX: "auto" }}>
+        <div style={{ marginTop: "1rem", width: "100%", overflowX: "auto" }}>
           <Table
             columns={columns}
             dataSource={displayItems}
@@ -550,7 +530,7 @@ const QualityCheckAuth= () => {
             <Pagination
               count={totalPages}
               onChange={handlePageChange}
-              // key={paginationKey}
+              key={paginationKey}
               color="primary"
             />
           </div>
@@ -667,9 +647,19 @@ marginTop:"0.3rem",
             })}
           </div>
 
-          {fileArray?.length>=1&&<div style={{width:"100%",display:"flex",alignItems:"center",marginTop:"1rem",color:"red",}}>
-{fileArray?.length<5?"Please select at least 5 images !":""}
-</div>}
+          {fileArray?.length >= 1 && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                marginTop: "1rem",
+                color: "red",
+              }}
+            >
+              {fileArray?.length < 5 ? "Please select at least 5 images !" : ""}
+            </div>
+          )}
 
           {fileArray?.length >= 5 && (
             <div
@@ -744,68 +734,56 @@ marginTop:"0.3rem",
         <CircularProgress color="inherit" size={50} />
       </Backdrop>
 
-      <Modal
-        title={
-          <h2
-            style={{
-              color: "#00425A",
-              fontSize: "1.5rem",
-              marginBottom: "1rem",
-            }}
-          >
-            Token Request Details
-          </h2>
-        }
-        open={isModalOpena}
-        onOk={handleOka}
-        onCancel={handleCancela}
-        footer={null}
-      >
-        <div style={{ width: "100%" }}>
-          <p style={pStyles2}>
-            Requested Id : <span style={pStyles}>{appealData?.swapId}</span>
-          </p>
-          <p style={pStyles2}>
-            Customer Name :{" "}
-            <span style={pStyles}>{appealData?.customerName}</span>
-          </p>
-          <p style={pStyles2}>
-            Customer Address :{" "}
-            <span style={pStyles}>{appealData?.customerAddress}</span>
-          </p>
-          <p style={pStyles2}>
-            Customer Id : <span style={pStyles}>{appealData?.customerId}</span>
-          </p>
-          <p style={pStyles2}>
-            Item Name : <span style={pStyles}>{appealData?.itemName}</span>
-          </p>
-          <p style={pStyles2}>
-            Item Id : <span style={pStyles}>{appealData?.itemId}</span>
-          </p>
+      {viewData?.itemImage && viewData?.itemImage !== "" && (
+        <Modal
+          title={
+            <h2
+              style={{
+                color: "#00425A",
+                fontSize: "1.5rem",
+                marginBottom: "1rem",
+              }}
+            >
+              Requested Item
+            </h2>
+          }
+          open={isModalOpena}
+          onOk={handleOka}
+          onCancel={handleCancela}
+          footer={null}
+        >
+          <div style={{ width: "100%" }}>
+            <p style={pStyles}>
+              Request Token Id : <span>{viewData?.requestTokenId}</span>
+            </p>
+            <p style={pStyles}>
+              <span>{viewData?.itemDescription}</span>
+            </p>
+            <br />
+            {/* images */}
+            <div style={{ width: "100%", padding: "1rem" }}>
+              <img
+                src={viewData?.itemImage}
+                style={{ width: "100%", borderRadius: "10px" }}
+              />
+            </div>
 
-          <div style={{width:"100%", marginTop: "1rem",}}>
-           <img src={appealData?.itemPicture}  style={{width:"100%",borderRadius:"10px",}}/>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                marginTop: "1rem",
+              }}
+            >
+              <button className="q-submit-btn" onClick={handleCancela}>
+                OKAY
+              </button>
+            </div>
           </div>
-
-          <br />
-        
-
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              marginTop: "1rem",
-            }}
-          >
-            <button className="q-submit-btn" onClick={handleCancela}>
-              Okay
-            </button>
-            {/* <button className="q-cancel-btn" style={{marginLeft:"1rem"}} onClick={handleCancela}>Cancel</button> */}
-          </div>
-        </div>
-      </Modal>
+        </Modal>
+      )}
 
       <Dialog open={openu} onClose={handleCloseu}>
         <DialogContent>

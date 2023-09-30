@@ -9,7 +9,7 @@ const AdminPagesAuth=()=>{
     //duhfvhufv
 
     return (
-        user?.role==="admin"
+        user?.role.toLowerCase().trim()==="admin"
         ?<Outlet/>
         :<Navigate to="/" state={{from:location}} replace />
 

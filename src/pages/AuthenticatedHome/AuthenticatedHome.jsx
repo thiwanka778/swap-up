@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import Home from "../Home/Home";
 import HelpAssistantHome from '../helpAssistant/HelpAssistantHome/HelpAssistantHome';
 import InventoryManagerHome from '../inventoryManager/InventoryManagerHome/InventoryManagerHome';
+import QualityCheckAuth from '../quality_checker/QualityCheckAuth/QualityCheckAuth';
 
 const AuthenticatedHome = () => {
 
@@ -20,7 +21,7 @@ switch (user?.role?.toLowerCase().trim()) {
     break;
 
     case "quality_checker":
-    componentToRender = <QualityCheckerHome />;
+    componentToRender = <QualityCheckAuth/>;
     break;
 
     case "admin":

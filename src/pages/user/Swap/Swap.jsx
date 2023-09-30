@@ -388,19 +388,18 @@ const Swap = () => {
           },
         },
       
-        // {
-        //   title: "Action",
-        //   key: "action",
-        //   render: (_, record) => (
-        //     <button
-        //     onClick={()=>appealClick(record)}
-        //       className="appeal-button"
-        //       disabled={record.status == "Rejected" ? false : true}
-        //     >
-        //       Appeal
-        //     </button>
-        //   ),
-        // },
+        {
+          title: "Action",
+          key: "action",
+          render: (_, record) => (
+            <button
+            className="view-button"
+            // onClick={()=>appealClick(record)}
+            >
+             View
+            </button>
+          ),
+        },
       ];
   const storage = getStorage();
   const itemsPerPage = 10;
@@ -409,7 +408,7 @@ const Swap = () => {
   const [displayItems, setDisplayItems] = React.useState([]);
   const [from, setFrom] = React.useState(0);
   const [to, setTo] = React.useState(0);
-
+  const [paginationKey, setPaginationKey] = React.useState(0);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [fileArray,setFileArray]=React.useState([]);
   const [uploadFile,setUploadFile]=React.useState(null);
@@ -448,7 +447,9 @@ const Swap = () => {
     setTotalPages(Math.ceil(data.length / itemsPerPage));
   }, []);
 
- 
+  const handlePageChange = (event, page) => {
+    setPageNumber(page);
+  };
 
   React.useEffect(() => {
     setDisplayItems((prevState) => {
@@ -463,17 +464,7 @@ const Swap = () => {
     });
   }, [pageNumber]);
 
-  const prevClick = () => {
-    setPageNumber((prevState) => {
-      return prevState > 1 ? prevState - 1 : prevState;
-    });
-  };
 
-  const nextClick = () => {
-    setPageNumber((prevState) => {
-      return prevState < totalPages ? prevState + 1 : prevState;
-    });
-  };
 
 
 
@@ -595,7 +586,7 @@ const Swap = () => {
           </p>
         </div>
 
-        <div
+        {/* <div
           style={{
             width: "100%",
             display: "flex",
@@ -607,7 +598,7 @@ const Swap = () => {
           <button className="new-swap-button" onClick={showModal}>
             New Swap
           </button>
-        </div>
+        </div> */}
 
         <div style={{ marginTop: "2rem", width: "100%", overflowX: "auto" }}>
           <Table
@@ -636,14 +627,14 @@ const Swap = () => {
 
           <div style={{ display: "flex", alignItems: "center" }}>
             
-            {pageNumber != 1 && (
+            {/* {pageNumber != 1 && (
               <KeyboardArrowLeftIcon
                 style={{ cursor: "pointer" }}
                 onClick={prevClick}
               />
-            )}
+            )} */}
 
-            <div
+            {/* <div
               style={{
                 padding: "0.5rem",
                 border: "2px solid black",
@@ -660,7 +651,13 @@ const Swap = () => {
                 style={{ cursor: "pointer" }}
                 onClick={nextClick}
               />
-            )}
+            )} */}
+             <Pagination
+              count={totalPages}
+              onChange={handlePageChange}
+              key={paginationKey}
+              color="primary"
+            />
           </div>
 
 

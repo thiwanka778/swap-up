@@ -20,16 +20,22 @@ const sideBarDataAdmin = [
     //     icon:"bi-card-checklist",
     //     path:"/admin-quality-check",
     //   },
-    {
-      title:"User Complaints",
-      icon:"bi-shield-fill-exclamation",
-      path:"/user-complaints",
-    },
+    // {
+    //   title:"User Complaints",
+    //   icon:"bi-shield-fill-exclamation",
+    //   path:"/user-complaints",
+    // },
   
-    {
+    // {
+    //  title:"Profile",
+    //  icon:"bi-person-lines-fill",
+    //  path:"/admin-profile"
+    // },
+
+     {
      title:"Profile",
      icon:"bi-person-lines-fill",
-     path:"/admin-profile"
+     path:"/profile"
     },
    
     

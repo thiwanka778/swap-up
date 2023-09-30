@@ -33,9 +33,19 @@ export const fetchAllUsers = createAsyncThunk(
 // hold account
 export const putUserOnHold = createAsyncThunk(
   "admin/putUserOnHold",
-  async ({ userId }, thunkAPI) => {
+  async ({ 
+     adminId,
+    customerId,
+     action,
+    reason,
+  }, thunkAPI) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/v1/admin/${userId}/on-hold`);
+      const response = await axios.post(`${BASE_URL}/api/v1/admin/hold-user`,{
+        adminId,
+        customerId,
+         action,
+        reason,
+      });
       return response.data;
     } catch (error) {
       const message =
