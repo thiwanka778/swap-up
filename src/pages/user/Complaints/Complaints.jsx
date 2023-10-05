@@ -510,6 +510,7 @@ console.log(selectedValue)
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        zIndex={50000}
       >
         <div style={{ width: "100%" }}>
           <p style={pStyles}>Subject</p>
@@ -642,6 +643,7 @@ console.log(selectedValue)
         onOk={handleOka}
         onCancel={handleCancela}
         footer={null}
+        zIndex={50000}
       >
         <div style={{ width: "100%" }}>
           <p style={pStyles}>

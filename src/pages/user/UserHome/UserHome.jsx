@@ -213,28 +213,9 @@ const UserHome = () => {
   const handleColorChange = (event, newValue) => {
     setSelectedColor(newValue); // Set the selected color when it changes
   };
-  const handleSliderChange = (event, newValue) => {
-    setSliderValue(newValue);
-  };
 
-  useEffect(() => {
-    // Extract an array of all prices from the listing items
-    const prices = listingItems.map((item) => parseInt(item.priceRange));
 
-    // Calculate the minimum and maximum prices
-    const minPrice = Math.min(...prices);
-    const maxPrice = Math.max(...prices);
 
-    setMin(minPrice);
-    setMax(maxPrice);
-    setSliderValue(maxPrice);
-
-    setPriceRange([minPrice, maxPrice]);
-
-    // Log the results
-    console.log("Minimum Price:", minPrice);
-    console.log("Maximum Price:", maxPrice);
-  }, [listingItems]);
 
   React.useEffect(() => {
     setSliderValue(max);
@@ -259,7 +240,7 @@ const UserHome = () => {
 
   // console.log(uniqueColors)
 
-  console.log(listingItems);
+  // console.log(listingItems);
   const displayItemsStyles =
     screen <= 694
       ? {
@@ -407,23 +388,10 @@ const UserHome = () => {
       )
     : filteredItemsByGender;
 
-  // const filteredItemsBySizeAndQuality = selectedQuality
-  // ? filteredItemsBySize.filter(
-  //     (item) =>
-  //       item.qualityStatus.toLowerCase().trim() ===
-  //       selectedQuality.toLowerCase().trim()
-  //   )
-  // : filteredItemsBySize;
 
-  // Assuming priceRange is an array [minPrice, maxPrice]
-  // const filteredItemsByPriceRange = sliderValue
-  //   ? filteredItemsBySize.filter(
-  //       (item) => parseInt(item.priceRange) <= sliderValue
-  //     )
-  //   : filteredItemsBySize;
 
     const filteredItemsByPrice = filteredItemsBySize.filter((item) => {
-      const price = parseInt(item.priceRange); 
+      const price = parseInt(item.price); 
       if(fromPrice==="" && toPrice===""){
         return filteredItemsBySize;
       }else if(fromPrice>=0 && toPrice===""){

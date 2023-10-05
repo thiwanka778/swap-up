@@ -9,6 +9,11 @@ const sideBarDataHelp = [
       icon:"bi-chat-left-text-fill",
       path:"/help-request",
     },
+    {
+      title:"Profile",
+      icon:"bi-person-lines-fill",
+      path:"/profile"
+     },
     
    
     

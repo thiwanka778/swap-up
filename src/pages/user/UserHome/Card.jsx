@@ -53,7 +53,7 @@ const oneFavoriteObject=favoriteList?.find((item)=>item.itemId==props.item.itemI
          <div style={{width:"100%",display:"flex",
          alignItems:"center",
          justifyContent:"flex-start",}}>
-          <p style={{fontSize:"1.5rem"}}>Rs. {props.item.priceRange}</p>
+          <p style={{fontSize:"1.5rem"}}>Rs. {props.item.price}</p>
          </div>
 
         {props.noHeart==false && <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",}}>

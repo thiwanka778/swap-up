@@ -684,6 +684,7 @@ const QualityCheck = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        zIndex={50000}
       >
         <div style={{ width: "100%" }}>
          
@@ -788,6 +789,7 @@ const QualityCheck = () => {
           onOk={handleOka}
           onCancel={handleCancela}
           footer={null}
+          zIndex={50000}
         >
           <div style={{ width: "100%" }}>
             <p style={pStyles}>
@@ -830,6 +832,7 @@ const QualityCheck = () => {
         title={previewTitle}
         footer={null}
         onCancel={handleCancelImage}
+        zIndex={50000}
       >
         <img
           alt="example"

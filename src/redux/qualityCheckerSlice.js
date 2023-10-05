@@ -8,6 +8,7 @@ const initialState = {
     qLoading:false,
     requestTokenData:[],
     acceptRequestStatus:false,
+    rejectRequestStatus:false,
 };
 
 //  get all token by quality checker
@@ -19,6 +20,7 @@ export const getRequestToken = createAsyncThunk(
   
         return response.data;
       } catch (error) {
+        console.log(error)
         const message =
           (error.response && error.response.data && error.response.data.message) ||
           error.message ||
@@ -63,6 +65,32 @@ export const getRequestToken = createAsyncThunk(
     }
 );
 
+// reject
+
+export const rejectRequestToken = createAsyncThunk(
+  'qualityChecker/rejectRequestToken',
+  async ({ requestTokenId, qualityCheckerId }, thunkAPI) => {
+    try {
+      // Make a POST request to the specified API endpoint with the provided data
+      const response = await axios.post(`${BASE_URL}/api/v1/quality-checker/reject-request-token`, {
+        requestTokenId,
+        qualityCheckerId,
+      });
+
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      // Handle errors and reject the promise with an error message
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 
 
 const qualityCheckerSlice = createSlice({
@@ -72,6 +100,7 @@ const qualityCheckerSlice = createSlice({
         resetQualityChecker:(state, action)=>{
         //    write variables you want to clear after APIs are triggered successfully!
         state.acceptRequestStatus=false;
+        state.rejectRequestStatus=false;
           },
     },
     extraReducers: (builder) => {
@@ -103,6 +132,23 @@ const qualityCheckerSlice = createSlice({
             state.acceptRequestStatus=false;
           
           })
+          //rejectRequestToken
+
+          .addCase(rejectRequestToken.pending, (state) => {
+            state.qLoading = true;
+            state.rejectRequestStatus=false;
+            
+          })
+          .addCase(rejectRequestToken.fulfilled, (state, action) => {
+            state.qLoading = false;
+            state.rejectRequestStatus=true;
+          })
+          .addCase(rejectRequestToken.rejected, (state, action) => {
+            state.qLoading = false;
+            state.rejectRequestStatus=false;
+          
+          })
+
     },
 });
 

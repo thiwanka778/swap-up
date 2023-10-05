@@ -74,7 +74,7 @@ const {
       },[inventoryLoading])
 
   const itemDisplay = favoriteList?.map((item, index) => {
-    if (item?.activeState == true) {
+    if (item?.activeState == false || item?.activeState==true) {
       return (
         <FavoriteItemCard
           key={index}

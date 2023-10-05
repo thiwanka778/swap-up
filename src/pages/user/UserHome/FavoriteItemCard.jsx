@@ -2,7 +2,7 @@ import React from 'react';
 import "./UserHome.css";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useSelector,useDispatch } from 'react-redux';
-import { fetchFavoriteItemsByUser } from '../../../redux/inventorySlice';
+import { fetchFavoriteItemsByUser, getItemsOnListing } from '../../../redux/inventorySlice';
 
 
 const sizeOptions2 = [
@@ -23,16 +23,15 @@ const sizeOptions2 = [
 const FavoriteItemCard = (props) => {
   const dispatch=useDispatch();
   const {screen,user}=useSelector((state)=>state.user);
-  const {favoriteList}=useSelector((state)=>state.inventory);
+  const {favoriteList,listingItems}=useSelector((state)=>state.inventory);
 
-
-
+  React.useEffect(() => {
+    
+    dispatch(getItemsOnListing());
+  }, []);
+const itemPriceObject=listingItems?.find((item)=>item?.itemId==props.item?.itemId)
 const requiredObject=sizeOptions2.find((item)=>item?.value?.toLowerCase()==props.item.size.toLowerCase());
-console.log(favoriteList,"CARD PAGE");
 
-// const addFavoriteLocalClick=(data)=>{
-//   props.addFavoriteClick(data)
-// }
 
 
 
@@ -51,12 +50,12 @@ console.log(favoriteList,"CARD PAGE");
          </div>
 
          <div style={{width:"100%",display:"flex",
-         alignItems:"center",marginTop:"0.2rem",
+         alignItems:"center",marginTop:"auto",
          justifyContent:"flex-start",}}>
-          <p style={{fontSize:"1.5rem"}}>Rs. {props.item.priceRange}</p>
+          <p style={{fontSize:"1.5rem"}}>Rs. {itemPriceObject?.price}</p>
          </div>
 
-         <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"auto"}}>
+         <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",}}>
                <FavoriteIcon
                onClick={()=>props.deleteFavoriteItemClick(props.item)}
                 style={{color:"red",fontSize:"2rem",cursor:"pointer"}} 

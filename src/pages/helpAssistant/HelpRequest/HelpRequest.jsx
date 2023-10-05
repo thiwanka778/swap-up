@@ -1,9 +1,10 @@
-import React from "react";
+import React,{useState} from "react";
 import "./HelpRequest.css";
 import { Space, Table, Tag } from "antd";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Modal } from "antd";
+import toast, { Toaster } from "react-hot-toast";
 import { AutoComplete } from "antd";
 import { NoEncryption } from "@mui/icons-material";
 import { getStorage, ref, uploadBytes, getDownloadURL,uploadBytesResumable } from 'firebase/storage';
@@ -17,6 +18,16 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import { useDispatch, useSelector } from "react-redux";
+import { checkHelpRequestFromHelpAssistant, getHelpRequests, resetHelp } from "../../../redux/helpSlice";
+import { getUserById } from "../../../redux/userSlice";
+import { fetchAllUsers } from "../../../redux/adminSlice";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { DatePicker } from "antd";
+dayjs.extend(customParseFormat);
+const { RangePicker } = DatePicker;
+const dateFormat = "YYYY/MM/DD";
 const { TextArea } = Input;
 
 const pStyles = {
@@ -28,6 +39,15 @@ const pStyles = {
   color:"black",
 };
 
+const pStylesReply={
+  fontSize: "1rem",
+  fontFamily: "'Inter', sans-serif",
+  fontWeight: "600",
+  letterSpacing: "0.1rem",
+  marginTop:"0.5rem",
+  color:"#28bf06",
+}
+
 const pStyles2 = {
     fontSize: "1rem",
     fontFamily: "'Inter', sans-serif",
@@ -36,6 +56,14 @@ const pStyles2 = {
     marginTop:"0.5rem",
     color:"#616263"
   };
+  const pStyles2Message={
+    fontSize: "1rem",
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: "600",
+    letterSpacing: "0.1rem",
+    marginTop:"0.5rem",
+    color:"#6487fa"
+  }
 
 const options = [
   {
@@ -49,123 +77,17 @@ const options = [
   },
 ];
 
-const data = [
-  {
-    key: "1",
-    helpRequestId: "501",
-    customerName: "Nimal Lansa",
-    status: "Resolved",
-    customerId: "200",
-  },
-  {
-    key: "2",
-    helpRequestId: "502",
-    customerName: "Sara Johnson",
-    status: "Unresolved",
-    customerId: "201",
-  },
-  {
-    key: "3",
-    helpRequestId: "503",
-    customerName: "John Doe",
-    status: "Resolved",
-    customerId: "202",
-  },
-  {
-    key: "4",
-    helpRequestId: "504",
-    customerName: "Alice Smith",
-    status: "Unresolved",
-    customerId: "203",
-  },
-  {
-    key: "5",
-    helpRequestId: "505",
-    customerName: "Robert Brown",
-    status: "Resolved",
-    customerId: "204",
-  },
-  {
-    key: "6",
-    helpRequestId: "506",
-    customerName: "Emily Davis",
-    status: "Unresolved",
-    customerId: "205",
-  },
-  {
-    key: "7",
-    helpRequestId: "507",
-    customerName: "Michael Wilson",
-    status: "Resolved",
-    customerId: "206",
-  },
-  {
-    key: "8",
-    helpRequestId: "508",
-    customerName: "Jessica Lee",
-    status: "Unresolved",
-    customerId: "207",
-  },
-  {
-    key: "9",
-    helpRequestId: "509",
-    customerName: "David Brown",
-    status: "Resolved",
-    customerId: "208",
-  },
-  {
-    key: "10",
-    helpRequestId: "510",
-    customerName: "Mary Johnson",
-    status: "Unresolved",
-    customerId: "209",
-  },
-  {
-    key: "11",
-    helpRequestId: "511",
-    customerName: "William Smith",
-    status: "Resolved",
-    customerId: "210",
-  },
-  {
-    key: "12",
-    helpRequestId: "512",
-    customerName: "Olivia Anderson",
-    status: "Unresolved",
-    customerId: "211",
-  },
-  {
-    key: "13",
-    helpRequestId: "513",
-    customerName: "James Wilson",
-    status: "Resolved",
-    customerId: "212",
-  },
-  {
-    key: "14",
-    helpRequestId: "514",
-    customerName: "Sophia Taylor",
-    status: "Unresolved",
-    customerId: "213",
-  },
-  {
-    key: "15",
-    helpRequestId: "515",
-    customerName: "Daniel Johnson",
-    status: "Resolved",
-    customerId: "214",
-  },
-  {
-    key: "16",
-    helpRequestId: "516",
-    customerName: "Emma Davis",
-    status: "Unresolved",
-    customerId: "215",
-  },
-];
+
 
 
 const HelpRequest = () => {
+  const dispatch=useDispatch();
+  const {helpLoading,helpArray,sendReplyStatus}=useSelector((state)=>state.help);
+  const {userArrayByAdmin}=useSelector((state)=>state.admin);
+  const {screen,user}=useSelector((state)=>state.user);
+  const [selectedValue, setSelectedValue] = React.useState("");
+  const [paginationKey, setPaginationKey] = React.useState(0);
+  const [reply, setReply] = useState('');
 
   const columns = [
     {
@@ -174,9 +96,26 @@ const HelpRequest = () => {
       key: "helpRequestId",
     },
     {
-      title: "Customer Name",
-      dataIndex: "customerName",
-      key: "customerName",
+      title: "Subject",
+      dataIndex: "subject",
+      key: "subject",
+    },
+    // {
+    //   title: "Message",
+    //   dataIndex: "message",
+    //   key: "message",
+    // },
+    {
+      title: "Received Date and Time",
+      key: "receivedTime",
+      render:(_,record)=>{
+        const receivedTime = new Date(record.receivedTime);
+        const localReceivedTime = receivedTime.toLocaleString();
+        return (
+          <span>{localReceivedTime}</span>
+        )
+
+      }
     },
 
     {
@@ -184,11 +123,11 @@ const HelpRequest = () => {
       key: "status",
       render: (_, record) => {
         let color;
-        switch (record.status?.toLowerCase().trim()) {
-          case "resolved":
+        switch (record?.status) {
+          case true:
             color = "#13d609";
             break;
-          case "unresolved":
+          case false:
             color = "blue";
             break;
           default:
@@ -196,8 +135,9 @@ const HelpRequest = () => {
             break;
         }
   
-        return <span  onClick={()=>statusClick(record)}
-        style={{ color,fontWeight:"bold",fontSize:"1rem",cursor:"pointer" }}>{record.status}</span>;
+        return <span  
+        // onClick={()=>statusClick(record)}
+        style={{ color,fontWeight:"bold",fontSize:"1rem",cursor:"pointer" }}>{record.status?"Resolved":"Unresolved"}</span>;
       },
     },
   
@@ -209,7 +149,7 @@ const HelpRequest = () => {
         onClick={()=>viewClick(record)}
           className="donation-request-view-button"
         >
-          View
+          Reply
         </button>
       ),
     },
@@ -231,9 +171,28 @@ const HelpRequest = () => {
   const [imageLoading,setImageLoading]=React.useState(false);
   const [isModalOpena, setIsModalOpena] = React.useState(false);
   const [appealData,setAppealData]=React.useState({});
+  const [data,setData]=React.useState(helpArray);
   const [filteredData, setFilteredData] = React.useState(data); 
   const [statusData,setStatusData]=React.useState({});
+  const [selectedDates, setSelectedDates] = React.useState([null, null]);
   const [openu, setOpenu] = React.useState(false);
+  const [filteredArrayByDate, setFilteredArrayByDate] = React.useState([]);
+
+  React.useEffect(()=>{
+       dispatch(getHelpRequests())
+  },[]);
+
+  React.useEffect(()=>{
+     const arrangedArray=helpArray?.map((item,index)=>{
+         return {...item,key:index+1}
+     })
+     setData(arrangedArray)
+     setFilteredData(arrangedArray)
+  },[helpArray]);
+
+ 
+
+
 
 
   const statusClick=(data)=>{
@@ -270,22 +229,72 @@ const HelpRequest = () => {
     setTotalPages(Math.ceil(data.length / itemsPerPage));
   }, [data]);
 
-
+console.log(filteredData)
  
+React.useEffect(() => {
+  if (selectedValue !== "") {
+    setPageNumber(1);
+    const filtered = data.filter((item)=>{
+        if(selectedValue?.toLowerCase().trim()==="unresolved"){
+          if(item.status===false){
+            return item;
+          }
+        }else if(selectedValue?.toLowerCase().trim()==="resolved"){
+          if(item.status===true){
+            return item;
+          }
+        }
+    });
 
+    setFilteredData(filtered);
+    setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+    setPaginationKey((prevKey) => prevKey + 1);
+  } else {
+    setFilteredData(data);
+    setTotalPages(Math.ceil(data.length / itemsPerPage));
+  }
+}, [selectedValue, data]);
+
+React.useEffect(() => {
+  if (
+    selectedDates[0] !== null &&
+    selectedDates[1] !== null &&
+    selectedDates[0] !== "" &&
+    selectedDates[1] !== ""
+  ) {
+    // Convert selected dates to Date objects
+    const startDate = new Date(selectedDates[0]);
+    const endDate = new Date(selectedDates[1]);
+
+    // Filter the data based on the selected date range
+    const filteredDataByDateRange = filteredData.filter((item) => {
+      const requestDate = new Date(item?.receivedTime);
+
+      return requestDate >= startDate && requestDate <= endDate;
+    });
+    setPageNumber(1);
+    // console.log("filteredDataByDateRange",filteredDataByDateRange)
+    setFilteredArrayByDate(filteredDataByDateRange);
+    setTotalPages(Math.ceil(filteredDataByDateRange.length / itemsPerPage));
+    setPaginationKey((prevKey) => prevKey + 1);
+  } else {
+    setFilteredArrayByDate(filteredData);
+    setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+  }
+}, [selectedDates, data, filteredData]);
   
   React.useEffect(() => {
     setDisplayItems((prevState) => {
       const startIndex = pageNumber * itemsPerPage - itemsPerPage;
       const endIndex = pageNumber * itemsPerPage - 1;
       setFrom(startIndex + 1);
-      const slicedData = filteredData?.slice(startIndex, endIndex + 1);
+      const slicedData = filteredArrayByDate?.slice(startIndex, endIndex + 1);
       const actualItemsPerPage = slicedData.length;
       const toValue = startIndex + actualItemsPerPage;
       setTo(toValue);
       return slicedData;
     });
-  }, [pageNumber,filteredData,totalPages]);
+  }, [pageNumber, filteredData, filteredArrayByDate, data]);
 
  
 
@@ -361,9 +370,14 @@ const HelpRequest = () => {
   
   const viewClick=(data)=>{
     console.log(data)
+    dispatch(fetchAllUsers())
     setAppealData(data);
     setIsModalOpena(true);
   };
+
+ console.log(userArrayByAdmin,"po")
+
+
 
   const showModala = () => {
     setIsModalOpena(true);
@@ -374,6 +388,31 @@ const HelpRequest = () => {
   const handleCancela = () => {
     setIsModalOpena(false);
   };
+
+  const sendReplyClick=()=>{
+    if(reply!==""){
+      const payload={
+        "helpRequestId":appealData?.helpRequestId,
+         "helpAssistantId":user?.userId, 
+         "reply":reply,
+      }
+
+      dispatch(checkHelpRequestFromHelpAssistant({...payload}))
+    }
+
+
+   
+  }
+
+  React.useEffect(()=>{
+     if(helpLoading===false && sendReplyStatus===true){
+      setReply("");
+      dispatch(resetHelp());
+      setIsModalOpena(false);
+      dispatch(getHelpRequests())
+      toast.success("Replied successfully..!")
+     }
+  },[helpLoading])
 
   const handlePageChange = (event, page) => {
     setPageNumber(page)
@@ -394,19 +433,34 @@ const HelpRequest = () => {
     // }
     
   }
+  const handleAutoCompleteChange = (value) => {
+    setSelectedValue(value);
+  };
+
+  const handleDateChange = (dates, dateStrings) => {
+    setSelectedDates(dateStrings);
+  };
+
+  const handleReplyChange = (event) => {
+    const { value } = event.target;
+    setReply(value);
+  };
  
 
   return (
     <>
       <div className="help-request">
-        <div style={{ width: "100%", alignItems: "center",display:"flex",justifyContent:"center",marginTop:"2rem" }}>
+
+        <div style={{ width: "100%", alignItems: "center",
+        display:"flex",
+        justifyContent:"center",marginTop:"1rem" }}>
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
               color: "#00425A",
               fontSize: "1.5rem",
               fontWeight: "bold",
-              marginTop: "1rem",
+              marginTop: "0rem",
             }}
           >
             Help Requests
@@ -427,7 +481,55 @@ const HelpRequest = () => {
           </button>
         </div> */}
 
-        <div style={{ marginTop: "2rem", width: "100%", overflowX: "auto" }}>
+          <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: screen < 520 ? "column" : "row",
+            marginTop:"1rem",
+          }}
+        >
+          <div
+            style={{
+              marginRight: screen < 520 ? "0rem" : "2rem",
+              marginBottom: screen < 520 ? "1rem" : "0rem",
+            }}
+          >
+            <AutoComplete
+              style={{
+                width: 200,
+              }}
+              onChange={handleAutoCompleteChange}
+              options={[
+                {
+                  value:"Unresolved"
+                },{
+                  value:"Resolved"
+                },
+               
+              ]}
+              allowClear={true}
+              placeholder="Filter by status"
+              filterOption={(inputValue, option) =>
+                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+                -1
+              }
+            />
+          </div>
+
+          <RangePicker
+            defaultValue={
+              [
+                // dayjs(thirtyDaysAgo, dateFormat),
+                // dayjs(currentDate, dateFormat),
+              ]
+            }
+            format={dateFormat}
+            onChange={handleDateChange}
+          />
+        </div>
+
+        <div style={{ marginTop: "1rem", width: "100%", overflowX: "auto" }}>
           <Table
             columns={columns}
             dataSource={displayItems}
@@ -517,6 +619,7 @@ const HelpRequest = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        zIndex={50000}
       >
         <div style={{ width: "100%" }}>
 
@@ -595,7 +698,7 @@ return (
 
       <Backdrop
         sx={{ color: 'gold', zIndex: 1500 }}
-        open={imageLoading}
+        open={helpLoading}
 
       >
         <CircularProgress color="inherit" size={50} />
@@ -606,23 +709,33 @@ return (
         fontSize:"1.5rem",marginBottom:"1rem"}}>Help Request Details</h2>}
        open={isModalOpena} onOk={handleOka} onCancel={handleCancela}
        footer={null}
+         zIndex={50000}
        >
 
        <div style={{width:"100%",}}>
-       <p style={pStyles2}>Help Request Id : <span style={pStyles}>{appealData?.helpRequestId}</span></p>
-        <p style={pStyles2}>Customer Name : <span style={pStyles}>{appealData?.customerName}</span></p>
-        <p style={pStyles2}>Customer Id : <span style={pStyles}>{appealData?.customerId}</span></p>
+       <p style={pStyles2}>Customer Name : &nbsp;
+       <span style={pStyles}>{userArrayByAdmin?.find((item)=>item?.userId==appealData?.customerId)?.firstName}</span>&nbsp;
+       <span style={pStyles}>{userArrayByAdmin?.find((item)=>item?.userId==appealData?.customerId)?.lastName}</span>
+       </p>
+        <p style={pStyles2}>Subject : <span style={pStyles}>{appealData?.subject}</span></p>
+        <p style={pStyles2Message}>{appealData.message}</p>
       
 
-<br/>
-        {/* <p style={pStyles} >Reason for appeal</p>
-        <Input placeholder="Reason for appeal" style={{width:"100%",marginTop:"0.3rem"}}/> */}
+        {/* <p style={pStylesReply} >Reply</p> */}
+        <TextArea
+        rows={4}
+        style={{ marginTop: "1rem", width: "100%" }}
+        placeholder="Reply..."
+        value={reply}
+        onChange={handleReplyChange}
+      />
+        {/* <Input placeholder="Reason for appeal" style={{width:"100%",marginTop:"0.3rem"}}/> */}
 
         {/* <p style={pStyles}>Describe Objection</p>
         <TextArea rows={4} style={{marginTop:"0.3rem",width:"100%",}} /> */}
 
         <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"1rem"}}>
-        <button className="q-submit-btn" onClick={handleCancela}>Okay</button>
+        <button className="q-submit-btn" onClick={sendReplyClick}>Submit</button>
         {/* <button className="q-cancel-btn" style={{marginLeft:"1rem"}} onClick={handleCancela}>Cancel</button> */}
         </div>
 
@@ -671,6 +784,42 @@ return (
           </Button>
         </DialogActions>
       </Dialog>
+
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          // Define default options
+          className: "",
+          duration: 2000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+            marginTop:"13vh",
+            fontFamily:"'Ubuntu', sans-serif",
+          },
+
+          // Default options for specific types
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+          custom: {
+            duration: 2000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
 
 
     </>

@@ -512,6 +512,7 @@ const InventoryManagerComplaint = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        zIndex={50000}
       >
         <div style={{ width: "100%" }}>
 
@@ -601,6 +602,7 @@ return (
         fontSize:"1.5rem",marginBottom:"1rem"}}>Appeal</h2>}
        open={isModalOpena} onOk={handleOka} onCancel={handleCancela}
        footer={null}
+       zIndex={50000}
        >
 
        <div style={{width:"100%",}}>

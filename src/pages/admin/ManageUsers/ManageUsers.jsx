@@ -421,6 +421,7 @@ const ManageUsers = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        zIndex={50000}
       >
         <div style={{ width: "100%" }}>
           <p style={pStyles}>Reason</p>

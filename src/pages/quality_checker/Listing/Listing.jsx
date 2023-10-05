@@ -312,6 +312,8 @@ dispatch(getItemsOnListing())
     uploadImagesToFirebase();
   };
 
+  console.log("localData",localData)
+
   React.useEffect(()=>{
     if(downloadUrlArray.length>=1){
       if (
@@ -494,6 +496,7 @@ dispatch(getItemsOnListing())
               paddingBottom:"1.5rem",
               paddingRight: screen < 401 ? "1rem" : "1.5rem",
               paddingLeft: screen < 401 ? "1rem" : "1.5rem",
+              position:"relative",
             }}
           >
             <div style={{ width: "100%" }}>
@@ -610,7 +613,7 @@ dispatch(getItemsOnListing())
                   </Space>
                 </Radio.Group>
               </div> */}
-              <div style={{ marginTop: "1rem", }}>
+              <div style={{ marginTop: "1rem", marginBottom:"2rem"}}>
             <Upload
               listType="picture-card"
               fileList={fileList}
@@ -619,21 +622,30 @@ dispatch(getItemsOnListing())
             >
               {fileList.length >= 10 ? null : uploadButtonComponent}
             </Upload>
-          </div>
 
-                <div
+
+            <div
                 style={{
                   width: "100%",
                   display: "flex",
                   alignItems: "center",
                    justifyContent: "flex-end",
-                  marginTop: "1rem",
+                   position:"absolute",
+                  bottom:"1rem",
+                  right:"1rem",
+                  marginTop:"1rem",
                 }}
               >
-                <button className="n-button" onClick={onClickSave}>
-                  Save
+                <button 
+                disabled={localData?.status===1?true:false}
+                className={localData?.status!==1?"n-button":"n-button-d"} 
+                onClick={onClickSave}>
+                  {localData?.status===1?"ACCEPTED":"ACCEPT"}
                 </button>
               </div>
+          </div>
+
+                
 
             </div>
           </section>
@@ -662,7 +674,7 @@ dispatch(getItemsOnListing())
           </section>
         </div>
 
-        <div style={displayItemsStyles}>{itemDisplay}</div>
+        {/* <div style={displayItemsStyles}>{itemDisplay}</div> */}
       </div>
 
       <Backdrop sx={{ color: "gold", zIndex: 1500 }} open={imageLoading}>
@@ -687,7 +699,7 @@ dispatch(getItemsOnListing())
           style: {
             background: "#363636",
             color: "#fff",
-            marginTop:"80px",
+            marginTop:"13vh",
             fontFamily:"'Ubuntu', sans-serif",
           },
 
@@ -714,6 +726,7 @@ dispatch(getItemsOnListing())
         title={previewTitle}
         footer={null}
         onCancel={handleCancelImage}
+        zIndex={50000}
       >
         <img
           alt="example"

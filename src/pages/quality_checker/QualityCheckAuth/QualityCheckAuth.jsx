@@ -3,6 +3,7 @@ import "./QualityCheckAuth.css";
 import { Space, Table, Tag } from "antd";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import toast, { Toaster } from "react-hot-toast";
 import { Modal } from "antd";
 import { AutoComplete } from "antd";
 import { NoEncryption } from "@mui/icons-material";
@@ -24,7 +25,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { useNavigate } from "react-router-dom";
-import { getRequestToken } from "../../../redux/qualityCheckerSlice";
+import { getRequestToken, rejectRequestToken, resetQualityChecker } from "../../../redux/qualityCheckerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -55,7 +56,7 @@ const pStyles2 = {
 const QualityCheckAuth = () => {
   const dispatch = useDispatch();
   const { screen, user, openRedux } = useSelector((state) => state.user);
-  const { qLoading, requestTokenData } = useSelector(
+  const { qLoading, requestTokenData,rejectRequestStatus } = useSelector(
     (state) => state.qualityChecker
   );
   const navigate = useNavigate();
@@ -100,7 +101,7 @@ const QualityCheckAuth = () => {
         if (record.status === 0) {
           btnLabel = "Pending";
         } else if (record.status === 1) {
-          btnLabel = "Completed";
+          btnLabel = "Accepted";
         } else {
           btnLabel = "Rejected";
         }
@@ -118,21 +119,26 @@ const QualityCheckAuth = () => {
       key: "action",
       render: (_, record) => (
         <>
+          
+
           <button
-            style={{margin:"0.2rem"}}
-            onClick={() => viewClick(record)}
+          style={{margin:"0.1rem"}}
+             onClick={() => acceptClick(record)}
             className="view-requested-token-details-btn"
           >
             View
           </button>
 
           <button
-          style={{margin:"0.2rem"}}
-             onClick={() => acceptClick(record)}
-            className="donation-request-view-button-accept"
+           disabled={record?.status===-1?true:false}
+            style={{margin:"0.1rem",background:record?.status===-1?"#d1d1eb":"#f75467"}}
+            onClick={() => viewClick(record)}
+            className={record?.status!==-1?"view-requested-token-details-btn":"rejected-button"}
           >
-            Accept
+            {record?.status===-1?"Rejected":"Reject"}
           </button>
+
+
         </>
       ),
     },
@@ -217,7 +223,7 @@ const QualityCheckAuth = () => {
           if (item.status === 0) {
             return item;
           }
-        } else if (selectedValue === "Completed") {
+        } else if (selectedValue === "Accepted") {
           if (item.status === 1) {
             return item;
           }
@@ -375,6 +381,24 @@ const QualityCheckAuth = () => {
     setIsModalOpena(false);
     setViewData({});
   };
+  const rejectRequestConfirmClick=()=>{
+    // console.log(viewData,"vhbk")
+  
+    dispatch(rejectRequestToken({
+      requestTokenId:viewData?.requestTokenId,
+        qualityCheckerId:user?.userId,
+    }))
+    
+  }
+
+  React.useEffect(()=>{
+   if(qLoading===false && rejectRequestStatus===true){
+    setIsModalOpena(false);
+    toast.success("Rejected successfully!");
+    dispatch(resetQualityChecker());
+    dispatch(getRequestToken())
+   }
+  },[qLoading])
 
   const handlePageChange = (event, page) => {
     setPageNumber(page);
@@ -466,7 +490,7 @@ const QualityCheckAuth = () => {
               onChange={handleAutoCompleteChange}
               options={[
                 {
-                  value: "Completed",
+                  value: "Accepted",
                 },
                 {
                   value: "Pending",
@@ -599,6 +623,7 @@ const QualityCheckAuth = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        zIndex={50000}
       >
         <div style={{ width: "100%" }}>
           <p style={pStyles}>Complaint Subject</p>
@@ -751,6 +776,7 @@ marginTop:"0.3rem",
           onOk={handleOka}
           onCancel={handleCancela}
           footer={null}
+          zIndex={50000}
         >
           <div style={{ width: "100%" }}>
             <p style={pStyles}>
@@ -761,7 +787,7 @@ marginTop:"0.3rem",
             </p>
             <br />
             {/* images */}
-            <div style={{ width: "100%", padding: "1rem" }}>
+            <div style={{ width: "100%", padding: "0.2rem" }}>
               <img
                 src={viewData?.itemImage}
                 style={{ width: "100%", borderRadius: "10px" }}
@@ -777,73 +803,57 @@ marginTop:"0.3rem",
                 marginTop: "1rem",
               }}
             >
-              <button className="q-submit-btn" onClick={handleCancela}>
-                OKAY
+
+              <button className="q-submit-btn" 
+              style={{background:"red"}}
+              onClick={rejectRequestConfirmClick}>
+                Reject Confirm
+              </button>
+              <button 
+              style={{marginLeft:"1rem"}}
+              className="q-submit-btn" onClick={handleCancela}>
+                Cancel
               </button>
             </div>
           </div>
         </Modal>
       )}
 
-      <Dialog open={openu} onClose={handleCloseu}>
-        <DialogContent>
-          <div
-            style={{ width: "100%", display: "flex", flexDirection: "column" }}
-          >
-            <p
-              style={{
-                fontSize: "1.2rem",
-                fontFamily: " 'Poppins', sans-serif",
-                fontWeight: "bold",
-              }}
-            >
-              {/* Are you sure you want to {enableData?.activeStatus?"disable":"enable"}  this account ? */}
-              Change status to{" "}
-              {statusData?.status?.toLowerCase().trim() === "processed"
-                ? "Shipped"
-                : "Processed"}
-            </p>
+<Toaster
+      
+      position="top-center"
+      reverseOrder={false}
+      gutter={8}
+      containerClassName=""
+      containerStyle={{}}
+      toastOptions={{
+        // Define default options
+        className: "",
+        duration: 2000,
+        style: {
+          background: "#363636",
+          color: "#fff",
+          marginTop:"13vh",
+          fontFamily:"'Ubuntu', sans-serif",
+        },
 
-            {/* <p style={{fontSize:"1rem",fontFamily:" 'Poppins', sans-serif",}}>
-            <span style={{fontSize:"1rem",fontFamily:" 'Poppins', sans-serif",}}>{statusData?.customerName}</span> &nbsp;
-             <span style={{fontSize:"1rem",fontFamily:" 'Poppins', sans-serif",}}>{statusData?.itemName}</span>
-
-             </p> */}
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseDisableClick}
-            className={
-              statusData?.status?.toLowerCase().trim() === "processed"
-                ? "custom-mui-button-d"
-                : "custome-mui-button3-d"
-            }
-            variant="contained"
-            sx={{
-              background:
-                statusData?.status?.toLowerCase().trim() === "processed"
-                  ? "blue"
-                  : "green",
-            }}
-            size="small"
-          >
-            {statusData?.status?.toLowerCase().trim() === "processed"
-              ? "Shipped"
-              : "Processed"}
-          </Button>
-
-          <Button
-            onClick={handleCloseu}
-            className="custom-mui-button2"
-            variant="contained"
-            size="small"
-            sx={{ background: "orange" }}
-          >
-            CANCEL
-          </Button>
-        </DialogActions>
-      </Dialog>
+        // Default options for specific types
+        success: {
+          duration: 3000,
+          theme: {
+            primary: "green",
+            secondary: "black",
+          },
+        },
+        custom: {
+          duration: 2000,
+          theme: {
+            primary: "green",
+            secondary: "black",
+          },
+        },
+      }}
+    />
     </>
   );
 };

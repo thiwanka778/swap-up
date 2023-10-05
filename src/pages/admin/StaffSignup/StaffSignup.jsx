@@ -657,6 +657,7 @@ const handleCancel = () => {
        onOk={handleOk} 
        centered={true}
        closable={false}
+       zIndex={50000}
       
        >
          <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",

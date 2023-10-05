@@ -41,6 +41,7 @@ import HelpAssistantAuth from "./protectedRoutes/HelpAssistantAuth";
 import HelpRequest from "./pages/helpAssistant/HelpRequest/HelpRequest";
 import Membership from "./pages/user/Membership/Membership";
 import ProfileAuth from "./protectedRoutes/ProfileAuth";
+import FileSystem from "./FileSystem";
 
 
 
@@ -78,6 +79,8 @@ function App() {
       <NavBar />
       
           <Routes>
+
+            <Route  path="file-system" element={<FileSystem/>}/>
 
           {!user ?   <Route path="/" element={<Home />} />:
             <Route path="/" element={<AuthenticatedHome/>}/>}

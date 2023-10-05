@@ -721,6 +721,7 @@ const TokenRequest= () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        zIndex={50000}
       >
         <div style={{ width: "100%" }}>
           <p style={pStyles}>Complaint Subject</p>
@@ -862,6 +863,7 @@ marginTop:"0.3rem",
         onOk={handleOka}
         onCancel={handleCancela}
         footer={null}
+        zIndex={50000}
       >
         <div style={{ width: "100%" }}>
           <p style={pStyles2}>

@@ -1,6 +1,7 @@
 import React from "react";
 import "./ViewProfile.css";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import Rating from "@mui/material/Rating";
 import { Input } from "antd";
 import { useSelector, useDispatch } from "react-redux";
@@ -290,12 +291,15 @@ dispatch(fetchAllUsers());
               alignItems: "center",
               justifyContent: "center",
               padding: "8px 16px",
-              background: "#04bf1d",
+              background:userDetails?.verified===true? "#04bf1d":"gray",
               borderRadius: "8px",
               marginTop: "1.5rem",
             }}
           >
-            <VerifiedIcon sx={{ color: "white", fontSize: "1.5rem" }} />
+          
+           {userDetails?.verified && <VerifiedIcon sx={{ color: "white", fontSize: "1.5rem" }} />}
+           {!userDetails?.verified && <GppMaybeIcon sx={{ color: "white", fontSize: "1.5rem" }}/>}
+          
             <p
               style={{
                 color: "white",
@@ -306,7 +310,7 @@ dispatch(fetchAllUsers());
                 marginLeft: "0.5rem",
               }}
             >
-              Verified
+              {userDetails?.verified===true?"Verified":"Not verified"}
             </p>
           </div>
           <p

@@ -204,7 +204,7 @@ const initialState = {
             state.inventoryError = false;
             state.inventoryErrorMessage = "";
             state.inventoryStatus=true;
-            state.listingItems=action.payload;
+            state.listingItems=action.payload.data;
           
           })
           builder.addCase(getItemsOnListing.rejected, (state, action) => {

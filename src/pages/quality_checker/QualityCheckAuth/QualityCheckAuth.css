@@ -191,6 +191,16 @@ input[type="file"] {
 .donation-request-view-button-accept:active{
   transform: scale(0.7);
 }
+.rejected-button{
+  background-color:#d1d1eb; /* Green background color */
+  color: white; /* White text color */
+  padding: 5px 10px; /* Padding inside the button */
+  border: none; /* No border */
+  cursor:not-allowed;
+  border-radius: 4px; /* Rounded corners */
+  font-size:1rem; /* Font size */
+  transition: transform 0.3s ease;
+}
 
 
 

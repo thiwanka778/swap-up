@@ -4,49 +4,106 @@ import axios from "axios";
 import { BASE_URL } from '../apiService';
 
 const initialState = {
-    // Define your initial state here
+    helpLoading:false,
+    helpArray:[],
+    sendReplyStatus:false,
 };
 
-export const getHelpRequestById = createAsyncThunk(
-    "help/getHelpRequestById",
-    async (id, thunkAPI) => {
-        try {
-            // Make a GET request to the specified API endpoint
-            const response = await axios.get(`${BASE_URL}/api/v1/customer/get-help-request/${id}`);
-
-            // Return the response data
-            return response.data;
-        } catch (error) {
-            // Handle errors and reject the promise with an error message
-            const message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
-
-            return thunkAPI.rejectWithValue(message);
-        }
+export const getHelpRequests = createAsyncThunk(
+    'helpAssistant/getHelpRequests',
+    async (_, thunkAPI) => {
+      try {
+        // Make a GET request to the specified API endpoint
+        const response = await axios.get(`${BASE_URL}/api/v1/help-assistant/GetHelpRequests`);
+  
+        // Return the response data
+        return response.data;
+      } catch (error) {
+        // Handle errors and reject the promise with an error message
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+  
+        return thunkAPI.rejectWithValue(message);
+      }
     }
-);
+  );
+  export const checkHelpRequestFromHelpAssistant = createAsyncThunk(
+    'helpAssistant/checkHelpRequest',
+    async ({ helpRequestId, helpAssistantId, reply }, thunkAPI) => {
+      try {
+        const response = await axios.put(
+          `${BASE_URL}/api/v1/help-assistant/CheckHelpRequestFromHelpAssistant`,
+          {
+            helpRequestId,
+            helpAssistantId,
+            reply,
+          }
+        );
+  
+        return response.data;
+      } catch (error) {
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+  
+        return thunkAPI.rejectWithValue(message);
+      }
+    }
+  );
+
 
 const helpSlice = createSlice({
     name: 'help',
     initialState,
     reducers: {
         // Define your additional reducers here if needed
+        resetHelp:(state,action)=>{
+          state.sendReplyStatus=false;
+        }
     },
     extraReducers: (builder) => {
-        // Define how your state should be updated based on the async thunk actions
-        builder.addCase(getHelpRequestById.pending, (state) => {
-            // Handle the pending action, if necessary
-        });
-        builder.addCase(getHelpRequestById.fulfilled, (state, action) => {
-            // Handle the fulfilled action, update the state with the data from the action
-        });
-        builder.addCase(getHelpRequestById.rejected, (state, action) => {
-            // Handle the rejected action, update the state with the error message
-        });
+        builder
+        .addCase(getHelpRequests.pending, (state) => {
+            state.helpLoading = true;
+            
+            
+          })
+          .addCase(getHelpRequests.fulfilled, (state, action) => {
+            state.helpLoading = false;
+            state.helpArray=action.payload.data;
+           
+        
+          })
+          .addCase(getHelpRequests.rejected, (state, action) => {
+            state.helpLoading = false;
+         
+         
+          })
+          //checkHelpRequestFromHelpAssistant
+          .addCase(checkHelpRequestFromHelpAssistant.pending, (state) => {
+            state.helpLoading = true;
+            state.sendReplyStatus=false;
+            
+          })
+          .addCase(checkHelpRequestFromHelpAssistant.fulfilled, (state, action) => {
+            state.helpLoading = false;
+             state.sendReplyStatus=true;
+           
+        
+          })
+          .addCase(checkHelpRequestFromHelpAssistant.rejected, (state, action) => {
+            state.helpLoading = false;
+            state.sendReplyStatus=false;
+         
+         
+          })
+
+     
     },
 });
 
-export const { /* Define any additional actions here */ } = helpSlice.actions;
+export const { resetHelp } = helpSlice.actions;
 export default helpSlice.reducer;
