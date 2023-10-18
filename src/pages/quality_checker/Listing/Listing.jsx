@@ -34,7 +34,7 @@ import {
   getItemsOnListing,
 } from "../../../redux/inventorySlice";
 import ListingCard from "./ListingCard";
-import { acceptQualityCheckerRequest, resetQualityChecker } from "../../../redux/qualityCheckerSlice";
+import { acceptQualityCheckerRequest, getRequestToken, resetQualityChecker } from "../../../redux/qualityCheckerSlice";
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -134,7 +134,7 @@ const sizeOptions = [
 const Listing = () => {
   const dispatch = useDispatch();
   const { screen ,user} = useSelector((state) => state.user);
-  const {acceptRequestStatus,qLoading}=useSelector((state)=>state.qualityChecker)
+  const {acceptRequestStatus,qLoading,requestTokenData}=useSelector((state)=>state.qualityChecker)
   const {
     inventoryLoading,
     inventoryErrorMessage,
@@ -143,6 +143,8 @@ const Listing = () => {
     inventoryCreateItemStatus,
     inventoryStatus,
   } = useSelector((state) => state.inventory);
+
+ 
 
   const storage = getStorage();
   const itemsPerPage = 10;
@@ -188,6 +190,10 @@ const Listing = () => {
     );
   };
   const handleCancelImage = () => setPreviewOpen(false);
+
+  React.useEffect(() => {
+    dispatch(getRequestToken());
+  }, []);
 
    React.useEffect(()=>{
       const storedData=window.localStorage.getItem("localData");
@@ -359,9 +365,10 @@ dispatch(getItemsOnListing())
 
   React.useEffect(()=>{
         if(qLoading===false && acceptRequestStatus===true){
-          toast.success("Created successfully!")
+          toast.success("Accepted successfully!")
           dispatch(resetQualityChecker())
           dispatch(getItemsOnListing());
+          dispatch(getRequestToken())
           setGender("unisex");
           setDownloadUrlArray([]);
           setQuality("good");
@@ -377,7 +384,7 @@ dispatch(getItemsOnListing())
         }
   },[qLoading])
 
- 
+ console.log(requestTokenData)
 
   const itemDisplay = listingItems?.map((item, index) => {
     if (item?.activeState == true) {
@@ -500,11 +507,11 @@ dispatch(getItemsOnListing())
             }}
           >
             <div style={{ width: "100%" }}>
-              <div style={{ marginTop: "0rem" }}>
+              {/* <div style={{ marginTop: "0rem" }}>
                 <Checkbox onChange={onChangeActiveStatus} checked={isActive}>
                   Use existing image
                 </Checkbox>
-              </div>
+              </div> */}
 
               {/* <p style={pStyles}>Item Title</p>
                     <Input size="large" 
@@ -637,10 +644,11 @@ dispatch(getItemsOnListing())
                 }}
               >
                 <button 
-                disabled={localData?.status===1?true:false}
-                className={localData?.status!==1?"n-button":"n-button-d"} 
+                disabled={requestTokenData?.find((item)=>item?.requestTokenId==localData?.requestTokenId)?.status==1?true:false}
+                className={requestTokenData?.find((item)=>item?.requestTokenId==localData?.requestTokenId)?.status!=1?"n-button":"n-button-d"} 
                 onClick={onClickSave}>
-                  {localData?.status===1?"ACCEPTED":"ACCEPT"}
+                  {/* {localData?.status===1?"ACCEPTED":"ACCEPT"} */}
+                  {requestTokenData?.find((item)=>item?.requestTokenId==localData?.requestTokenId)?.status==1?"ACCEPTED":"ACCEPT"}
                 </button>
               </div>
           </div>

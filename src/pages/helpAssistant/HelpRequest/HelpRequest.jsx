@@ -84,7 +84,7 @@ const HelpRequest = () => {
   const dispatch=useDispatch();
   const {helpLoading,helpArray,sendReplyStatus}=useSelector((state)=>state.help);
   const {userArrayByAdmin}=useSelector((state)=>state.admin);
-  const {screen,user}=useSelector((state)=>state.user);
+  const {screen,user,openRedux}=useSelector((state)=>state.user);
   const [selectedValue, setSelectedValue] = React.useState("");
   const [paginationKey, setPaginationKey] = React.useState(0);
   const [reply, setReply] = useState('');
@@ -146,10 +146,11 @@ const HelpRequest = () => {
       key: "action",
       render: (_, record) => (
         <button
+        disabled={record?.status?true:false}
         onClick={()=>viewClick(record)}
-          className="donation-request-view-button"
+          className={!record?.status?"donation-request-view-button":"donation-request-view-button-replied"}
         >
-          Reply
+          {!record?.status?"Reply":"Replied"}
         </button>
       ),
     },
@@ -449,7 +450,9 @@ React.useEffect(() => {
 
   return (
     <>
-      <div className="help-request">
+      <div className="help-request"
+       style={{ paddingLeft: openRedux && screen > 650 ? "270px" : "1rem" }}
+       >
 
         <div style={{ width: "100%", alignItems: "center",
         display:"flex",

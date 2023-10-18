@@ -42,6 +42,7 @@ import HelpRequest from "./pages/helpAssistant/HelpRequest/HelpRequest";
 import Membership from "./pages/user/Membership/Membership";
 import ProfileAuth from "./protectedRoutes/ProfileAuth";
 import FileSystem from "./FileSystem";
+import ItemViewPage from "./pages/user/ItemViewPage/ItemViewPage";
 
 
 
@@ -90,7 +91,7 @@ function App() {
             <Route path="login" element={<Login />} />
             </Route>
 
-            
+            <Route path="item-view-page/:id" element={<ItemViewPage/>}/>
 
             <Route element={<SignupAuth />}>
               {/* <Route path="signup" element={<SignUp />} /> */}
@@ -159,7 +160,7 @@ function App() {
              {/* help assistant auth start */}
 
              <Route element={<HelpAssistantAuth/>}>
-              <Route path="help-request" element={<HelpRequest/>}/>
+              {/* <Route path="help-request" element={<HelpRequest/>}/> */}
              </Route>
 
              

@@ -175,8 +175,7 @@ const UserHome = () => {
   const [toPrice, setToPrice] = React.useState("");
   const [sliderValue, setSliderValue] = React.useState(5000);
   const [isFilterVisible, setIsFilterVisible] = React.useState(false);
-  const [updatedListingItems, setUpdatedListingItems] =
-    React.useState(listingItems);
+  const [updatedListingItems, setUpdatedListingItems] =React.useState(listingItems);
     const [anchorElf, setAnchorElf] = React.useState(null);
   const openf = Boolean(anchorElf);
 
@@ -213,9 +212,6 @@ const UserHome = () => {
   const handleColorChange = (event, newValue) => {
     setSelectedColor(newValue); // Set the selected color when it changes
   };
-
-
-
 
   React.useEffect(() => {
     setSliderValue(max);

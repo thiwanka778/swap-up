@@ -8,6 +8,7 @@ import Home from "../Home/Home";
 import HelpAssistantHome from '../helpAssistant/HelpAssistantHome/HelpAssistantHome';
 import InventoryManagerHome from '../inventoryManager/InventoryManagerHome/InventoryManagerHome';
 import QualityCheckAuth from '../quality_checker/QualityCheckAuth/QualityCheckAuth';
+import HelpRequest from '../helpAssistant/HelpRequest/HelpRequest';
 
 const AuthenticatedHome = () => {
 
@@ -33,7 +34,7 @@ switch (user?.role?.toLowerCase().trim()) {
         break;
 
         case "help_assistant":
-          componentToRender=<HelpAssistantHome/>;
+          componentToRender=<HelpRequest/>;
           break;
 
     default:

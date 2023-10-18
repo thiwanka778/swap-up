@@ -1,13 +1,13 @@
 const sideBarDataHelp = [
-    {
-      title: "Home",
-      icon: "bi-house-door-fill",
-      path: "/",
-    },
+    // {
+    //   title: "Home",
+    //   icon: "bi-house-door-fill",
+    //   path: "/",
+    // },
     {
       title: "Help Request",
       icon:"bi-chat-left-text-fill",
-      path:"/help-request",
+      path:"/",
     },
     {
       title:"Profile",

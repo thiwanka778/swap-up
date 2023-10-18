@@ -1,7 +1,7 @@
 .help-request{
     width:100%;
-    min-height: 95vh;
-    padding-top: 12vh;
+    /* min-height: 95vh;
+    padding-top: 12vh; */
     padding-left:1rem;
     padding-right: 1rem;
     padding-bottom: 1rem;
@@ -145,6 +145,17 @@
   .custome-mui-button3-d:hover{
     background-color: green !important; /* Set the desired background color */
     color: #fff !important;
+  }
+
+  .donation-request-view-button-replied{
+    background-color: #909496; /* Green background color */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    font-size:1rem; /* Font size */
+    cursor:not-allowed; /* Cursor on hover */
+    /* transition: transform 0.3s ease; */
   }
  
 
