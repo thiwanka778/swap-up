@@ -354,15 +354,22 @@ const QualityCheckAuth = () => {
 
   const viewClick = (data) => {
     console.log(data);
-    setViewData({});
-    setViewData(data);
-    setIsModalOpena(true);
+    if(data?.itemImage){
+      const imageArray=JSON.parse(data?.itemImage);
+      const requiredObject={...data,itemImage:imageArray}
+      setViewData({});
+      setViewData(requiredObject);
+      setIsModalOpena(true);
+    }
+    
   };
 
   const acceptClick=(data)=>{
-  setLocalData(data);
-  // console.log("click data",data)
-  window.localStorage.setItem("localData",JSON.stringify(data))
+    const imageArray=JSON.parse(data?.itemImage)
+    const requiredObject={...data,itemImage:imageArray}
+  setLocalData(requiredObject);
+   console.log("click data",requiredObject)
+  window.localStorage.setItem("localData",JSON.stringify(requiredObject))
   navigate("/listing")
   }
   // React.useEffect(()=>{
@@ -789,7 +796,7 @@ marginTop:"0.3rem",
             {/* images */}
             <div style={{ width: "100%", padding: "0.2rem" }}>
               <img
-                src={viewData?.itemImage}
+                src={viewData?.itemImage[0]}
                 style={{ width: "100%", borderRadius: "10px" }}
               />
             </div>

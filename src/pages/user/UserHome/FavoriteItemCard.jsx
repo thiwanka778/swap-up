@@ -3,6 +3,7 @@ import "./UserHome.css";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useSelector,useDispatch } from 'react-redux';
 import { fetchFavoriteItemsByUser, getItemsOnListing } from '../../../redux/inventorySlice';
+import { useNavigate } from 'react-router-dom';
 
 
 const sizeOptions2 = [
@@ -21,6 +22,7 @@ const sizeOptions2 = [
 ];
 
 const FavoriteItemCard = (props) => {
+  const navigate=useNavigate();
   const dispatch=useDispatch();
   const {screen,user}=useSelector((state)=>state.user);
   const {favoriteList,listingItems}=useSelector((state)=>state.inventory);
@@ -37,13 +39,16 @@ const requiredObject=sizeOptions2.find((item)=>item?.value?.toLowerCase()==props
 
 
   return (
-    <div style={{width:screen<=694?"100%":"320px",padding:"1.5rem", margin: "1rem",
+    <div   
+    style={{width:screen<=694?"100%":"320px",padding:"1.5rem", margin: "1rem",cursor:"pointer",
     display:"flex",flexDirection:"column",
     borderRadius:"10px",
     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px ",
     alignItems:'center'}}>
-        <img src={props.item.imageURL}
-         style={{width:"100%",borderRadius:"10px",}}/>
+        <img src={JSON.parse(props.item.imageURL)[0]}
+         style={{width:"100%",borderRadius:"10px",}}
+         onClick={()=>navigate(`/item-view-page/${props.item?.itemId}`)}
+         />
 
          <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end"}}>
           <p>{requiredObject?.label}</p>

@@ -41,13 +41,18 @@ const oneFavoriteObject=favoriteList?.find((item)=>item.itemId==props.item.itemI
 
   return (
     <div 
-     style={{width:screen<=694?"100%":"320px",padding:"1.5rem", margin: screen<=694? "0.5rem":"0rem",
+     style={{width:screen<=694?"100%":"320px",
+           
+     padding:"1.5rem", 
+     margin: screen<=694? "0.5rem":"0rem",
     display:"flex",flexDirection:"column",cursor:"pointer",
     borderRadius:"10px",
     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px ",
     alignItems:'center'}}>
-        <img src={props.item.imageURL} onClick={()=>navigate(`/item-view-page/${props.item?.itemId}`)}
-         style={{width:"100%",borderRadius:"10px",}}/>
+        <img src={JSON.parse(props.item.imageURL)[0]} 
+        onClick={()=>navigate(`/item-view-page/${props.item?.itemId}`)}
+         style={{width:"100%", height:screen<=694?"auto":"360px",
+         borderRadius:"10px",}}/>
 
          <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginBottom:"auto"}}>
           <p>{requiredObject?.label}</p>

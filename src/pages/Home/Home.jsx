@@ -128,11 +128,11 @@ dispatch(getItemsOnListing())
         {itemDisplay}
         </div>
 
-        <div
+        {/* <div
           style={cardDisplayStyles}
         >
           {cardDisplay}
-        </div>
+        </div> */}
 
 
 

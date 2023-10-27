@@ -24,34 +24,34 @@ const ItemViewPage = () => {
 
   React.useEffect(() => {
     const findObject = listingItems?.find((item) => item?.itemId == id);
-    setItem(findObject);
+    const imageArray=findObject?.imageURL?JSON.parse(findObject?.imageURL):[];
+    const requiredObject={...findObject,imageURL:imageArray}
+    setItem(requiredObject);
   }, [id, listingItems]);
 
   React.useEffect(() => {
-    const newArray = [
-      {
-        id: nanoid(),
-        image: item?.imageURL,
-      },
-      {
-        id: nanoid(),
-        image:
-          "https://www.have-clothes-will-travel.com/wp-content/uploads/2019/05/qtq80-7bsDUb.jpeg",
-      },
-      {
-        id: nanoid(),
-        image:
-          "https://media.istockphoto.com/id/1342188418/photo/blouses-on-hanger.webp?b=1&s=170667a&w=0&k=20&c=zaPmvIbLneXlokPeGHy_BF-4SCV6VYBFSHRKwCS3iDE=",
-      },
-    ];
+    // console.log(item?.imageURL,"BNULLA");
+    if(item?.imageURL?.length>0){
+      const newArray=item?.imageURL?.map((item,index)=>{
+        const requiredObject={
+          id:index+1,
+          image:item
+        }
+        return requiredObject;
+    })
+  
     setImagesArray(newArray);
+    }
+    
   }, [item]);
 
   React.useEffect(() => {
-    setPreviewImage(item?.imageURL);
+    if(item?.imageURL?.length>0){
+      setPreviewImage(item?.imageURL[0]);
+    }
   }, [item]);
 
-  console.log(item, "item balla", imagesArray);
+  // console.log(item, "item balla", imagesArray);
 
   const viewImageClick = (id) => {
     console.log(id);
@@ -93,11 +93,12 @@ const ItemViewPage = () => {
               style={{
                 width: screen < 750 ? "100%" : "50%",
                 padding: "0.2rem",
+                
               }}
             >
               <div
                 style={{
-                  width: "100%",
+                  width: "100%",   
                   display: "flex",
                   justifyContent: "center",
                   flexDirection: "column",
@@ -125,21 +126,23 @@ const ItemViewPage = () => {
                   mgHeight={150}
                 />
 
-                <div
+                {/* <div
                   style={{
                     marginTop: "1rem",
                     width: "100%",
                     display: "flex",
-                    alignItems: "center",
+                    
                   }}
                 >
                   {imagesArray?.map((item) => {
-                    const itemId = item?.image == previewImage ? item?.id : "";
+                    // const itemId = item?.image == previewImage ? item?.id : "";
+                    const itemId = item?.image === previewImage ? item?.id : "";
+               
                     return (
                       <img
-                        onClick={() => viewImageClick(item?.id)}
+                        onMouseOver={() => viewImageClick(item?.id)}
                         style={{
-                          width: screen < 366 ? "50px" : "100px",
+                          width:screen < 366 ? "50px" : "100px",
                           height: screen < 366 ? "50px" : "100px",
                           marginRight: "1rem",
                           borderRadius: "8px",
@@ -147,6 +150,7 @@ const ItemViewPage = () => {
                           border: "1px solid #e0895a",
                           cursor: "pointer",
                           boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                           padding:"0.3rem"
                         }}
                         key={item?.id}
                         src={item?.image}
@@ -154,7 +158,7 @@ const ItemViewPage = () => {
                       />
                     );
                   })}
-                </div>
+                </div> */}
               </div>
             </section>
 
@@ -166,6 +170,44 @@ const ItemViewPage = () => {
                 marginTop: screen < 750 ? "1rem" : "0rem",
               }}
             >
+                {screen<750 &&  <div
+                  style={{
+                    marginTop: "1rem",
+                    marginBottom:"1.5rem",
+                    width: "100%",
+                    display: "grid",
+                    gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",
+                    gridGap:"10px",
+                    
+                  }}
+                >
+                  {imagesArray?.map((item) => {
+                    // const itemId = item?.image == previewImage ? item?.id : "";
+                    const itemId = item?.image === previewImage ? item?.id : "";
+               
+                    return (
+                      <img
+                        onMouseOver={() => viewImageClick(item?.id)}
+                        style={{
+                          width : "150px",
+                          height:"160px",
+                          marginRight: "1rem",
+                          borderRadius: "8px",
+                          opacity: item?.id == itemId ? "1" : "0.5",
+                          border: "1px solid #e0895a",
+                          cursor: "pointer",
+                          boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                          //  padding:"0.3rem",
+                          padding:"5px",
+                           
+                        }}
+                        key={item?.id}
+                        src={item?.image}
+                        alt="item-preview-image"
+                      />
+                    );
+                  })}
+                </div>}
               <div
                 style={{
                   padding: "2rem",
@@ -176,6 +218,7 @@ const ItemViewPage = () => {
                     "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
                 }}
               >
+                
                 <p
                   style={{
                     fontSize: "3rem",
@@ -210,6 +253,44 @@ const ItemViewPage = () => {
               >
                 Swap
               </button>
+
+            {screen>=750 &&  <div
+                  style={{
+                    marginTop: "2rem",
+                    width: "100%",
+                    display: "grid",
+                    gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",
+                    gridGap:"10px",
+                    
+                  }}
+                >
+                  {imagesArray?.map((item) => {
+                    // const itemId = item?.image == previewImage ? item?.id : "";
+                    const itemId = item?.image === previewImage ? item?.id : "";
+               
+                    return (
+                      <img
+                        onMouseOver={() => viewImageClick(item?.id)}
+                        style={{
+                          width : "150px",
+                          height:"160px",
+                          marginRight: "1rem",
+                          borderRadius: "8px",
+                          opacity: item?.id == itemId ? "1" : "0.5",
+                          border: "1px solid #e0895a",
+                          cursor: "pointer",
+                          boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                          //  padding:"0.3rem",
+                          padding:"5px",
+                           
+                        }}
+                        key={item?.id}
+                        src={item?.image}
+                        alt="item-preview-image"
+                      />
+                    );
+                  })}
+                </div>}
             </section>
           </div>
         </div>

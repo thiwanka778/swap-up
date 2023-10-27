@@ -5,6 +5,7 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Button, Modal } from "antd";
 import { AutoComplete } from "antd";
+import { formatDistanceToNow } from 'date-fns';
 import { NoEncryption } from "@mui/icons-material";
 import {
   fetchAllRequestTokens,
@@ -139,11 +140,21 @@ const QualityCheck = () => {
       key: "requestDateTime",
       render: (_, record) => {
         const date = record?.requestDateTime;
-        const formattedDate = new Date(date).toLocaleString();
-
-        return <span>{formattedDate}</span>;
+        const parsedDate = new Date(date);
+        const year = parsedDate.getFullYear();
+        const month = String(parsedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed.
+        const day = String(parsedDate.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+        const formattedDate2 = formatDistanceToNow(parsedDate, { addSuffix: true });
+    
+        return (
+          <span>
+            {formattedDate} &nbsp;&nbsp;<span style={{ color: "blue" }}>({formattedDate2})</span>
+          </span>
+        );
       },
-    },
+    }
+,    
 
     {
       title: "Status",
@@ -185,6 +196,7 @@ const QualityCheck = () => {
     {
       title: "Action",
       key: "action",
+    
       render: (_, record) => (
         <button
           onClick={() => viewClick(record)}
@@ -242,11 +254,11 @@ const QualityCheck = () => {
   };
 
   React.useEffect(() => {
-    if (des !== "") {
+    if (des !== "" && downloadUrlArray?.length>=1) {
       const payload = {
         customerId: user?.userId,
         itemDescription: des,
-        itemImage: downloadUrlArray[0],
+        itemImage: JSON.stringify(downloadUrlArray),
       };
       dispatch(requestTokenFromCustomer({ ...payload }));
     }
@@ -356,73 +368,15 @@ const QualityCheck = () => {
     setPageNumber(page);
   };
 
-  const handleFileSelect = (event) => {
-    setDownloadUrlArray([]);
-    const selectedFiles = event.target.files;
-    const fileNamesArray = [];
-    setUploadFile(selectedFiles);
-    let count = 0;
-    // Iterate through the FileList and extract the names of each file
-    for (let i = 0; i < selectedFiles.length; i++) {
-      count = count + 1;
-      const fileName = selectedFiles[i].name;
-      fileNamesArray.push(fileName);
-    }
-
-    if (count >= 5) {
-      setValidImages("Please select at least 5 images !");
-    } else {
-      setValidImages("");
-    }
-
-    setFileArray((prevState) => {
-      return fileNamesArray;
-    });
-  };
-
-  const handleUpload = async () => {
-    // console.log('bulla', uploadFile);
-    if (!uploadFile || uploadFile.length < 1) {
-      return;
-    }
-
-    try {
-      setImageLoading(true);
-      const downloadUrls = []; // Array to store the download URLs of the uploaded images
-
-      // Upload each file to Firebase Storage
-      for (let i = 0; i < uploadFile.length; i++) {
-        const file = uploadFile[i];
-        const fileId = nanoid(); // Generate a unique ID for the file using nanoid
-        const storageRef = ref(getStorage(), `images/${fileId}_${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        // Wait for the file to be uploaded before moving to the next one
-        await uploadTask;
-
-        // Get the download URL of the uploaded file
-        const downloadUrl = await getDownloadURL(storageRef);
-
-        // Add the download URL to the array
-        downloadUrls.push(downloadUrl);
-      }
-
-      // All files have been uploaded
-      // console.log('Files uploaded successfully!');
-      // console.log('Download URLs:', downloadUrls);
-      setImageLoading(false);
-      // Array of download URLs
-      setDownloadUrlArray(downloadUrls);
-    } catch (error) {
-      console.log(error);
-      setImageLoading(false);
-    }
-  };
+ 
 
   const viewClick = (data) => {
+
     console.log(data);
+    const imageArray=JSON.parse(data?.itemImage)
+    const requiredObject={...data,itemImage:imageArray}
     setViewData({});
-    setViewData(data);
+    setViewData(requiredObject);
     setIsModalOpena(true);
   };
 
@@ -768,7 +722,7 @@ const QualityCheck = () => {
         </div>
       </Modal>
 
-      <Backdrop sx={{ color: "gold", zIndex: 1500 }} open={imageLoading}>
+      <Backdrop sx={{ color: "gold", zIndex: 60000000 }} open={imageLoading}>
         <CircularProgress color="inherit" size={50} />
       </Backdrop>
 
@@ -801,10 +755,17 @@ const QualityCheck = () => {
             <br />
             {/* images */}
             <div style={{ width: "100%", padding: "1rem" }}>
-              <img
-                src={viewData?.itemImage}
-                style={{ width: "100%", borderRadius: "10px" }}
-              />
+             {
+              viewData?.itemImage?.map((item,index)=>{
+                return (
+                  <img key={index}
+                  src={item}
+                  style={{ width: "100%", borderRadius: "10px",marginBottom:"1rem" }}
+                />
+                )
+              })
+             }
+             
             </div>
 
             <div

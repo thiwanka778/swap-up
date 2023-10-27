@@ -7,6 +7,9 @@ import { Button, Modal, Select } from "antd";
 import toast, { Toaster } from "react-hot-toast";
 import { Checkbox,Upload } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Radio, Space } from "antd";
 import { AutoComplete } from "antd";
 import { NoEncryption } from "@mui/icons-material";
@@ -168,10 +171,12 @@ const Listing = () => {
   const [dressType, setDressType] = React.useState("");
   const [dressSize, setDressSize] = React.useState("");
   const [localData,setLocalData]=React.useState(null);
+  const [showImage,setShowImage]=React.useState("");
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [imageNumber,setImageNumber]=React.useState(1);
   const [from, setFrom] = React.useState(0);
   const [form, setForm] = React.useState({
     itemTitle: "",
@@ -179,6 +184,35 @@ const Listing = () => {
     color: "",
     des:"",
   });
+  React.useEffect(()=>{
+     if(localData && localData!=null && localData!="undefined" && localData!=undefined){
+      setShowImage(localData?.itemImage[0])
+     }
+  },[localData]);
+
+  const nextClick=()=>{
+    const len=localData?.itemImage?.length;
+    setImageNumber((prevState)=>{
+      if(prevState<len){
+        return prevState+1;
+      }else{
+        return prevState
+      }
+    })
+  }
+
+  const prevClick=()=>{
+    setImageNumber((prevState)=>{
+        if(prevState>1){
+          return prevState-1;
+        }else{
+          return prevState;
+        }
+    })
+  };
+  React.useEffect(()=>{
+     setShowImage(localData?.itemImage[imageNumber-1])
+  },[imageNumber])
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -350,7 +384,7 @@ dispatch(getItemsOnListing())
             requestTokenId:localData?.requestTokenId,
                   qualityCheckerId:user?.userId,
                   color:color,
-                  imageURL:downloadUrlArray[0],
+                  imageURL:JSON.stringify(downloadUrlArray),
                   gender:gender2,
                   type:type,
                   price:priceRange,
@@ -670,13 +704,29 @@ dispatch(getItemsOnListing())
               paddingLeft: screen < 914 ? "0rem" : "1rem",
             }}
           >
-            <div style={{width:"100%",display:"flex",alignItems:"center",
+            <div style={{width:"100%",display:"flex",alignItems:"center",flexDirection:"column",
             padding:screen<466?"0rem":"0rem",justifyContent:"center"}}>
-               <img src={localData?.itemImage} 
+               <img src={showImage} 
                style={{width:screen<466?"100%":"400px",borderRadius:"10px",
                boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
                }}/>
+
+               <div style={{width:"100%",marginTop:"1rem",display:"flex",justifyContent:"center",alignItems:"center"}}>
+                
+                   <ArrowBackIosNewIcon style={{fontSize:"2rem",
+                   cursor:imageNumber>1?"pointer":"not-allowed",
+                   color:imageNumber>1?"black":"gray"}}
+                   onClick={prevClick}/>
+                   <span style={{fontSize:"1.5rem",fontFamily: "'Ubuntu', sans-serif",
+                   marginLeft:"1rem",marginRight:"1rem"}}>{imageNumber}</span>
+                   <ArrowForwardIosIcon style={{fontSize:"2rem",
+                   cursor:localData?.itemImage?.length===imageNumber?"not-allowed":"pointer",
+                   color:localData?.itemImage?.length===imageNumber?"gray":"black"}} 
+                   onClick={nextClick}/>
             </div>
+            </div>
+
+            
            
          
           </section>

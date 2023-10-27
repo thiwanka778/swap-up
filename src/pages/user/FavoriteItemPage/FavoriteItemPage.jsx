@@ -52,7 +52,10 @@ const {
   }, [user]);
 
   const deleteFavoriteItemClick=(data)=>{
-    setDeleteData(data);
+
+    const imageArray=JSON.parse(data?.imageURL)
+    const requiredObject={...data,imageURL:imageArray}
+    setDeleteData(requiredObject);
     // console.log(data);
     // const userId = user?.userId;
     // const itemId = data?.itemId;
@@ -149,7 +152,7 @@ style={{zIndex:"15000"}}
         <DialogContent>
 
             <div style={{width:screen<420?"100%":"300px",display:"flex",flexDirection:"column"}}>
-           <img src={deleteData?.imageURL} style={{width:"100%",borderRadius:"6px",}}/>
+          {deleteData?.imageURL?.length>0 && <img src={deleteData?.imageURL[0]} style={{width:"100%",borderRadius:"6px",}}/>}
 
            <div style={{marginTop:"0.5rem",display:"flex",
            alignItems:"center",justifyContent:"center",textAlign:"center"}}>

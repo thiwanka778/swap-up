@@ -3,6 +3,7 @@ import "./ManageUsers.css";
 import { Space, Table, Tag, Modal } from "antd";
 import Avatar from "@mui/material/Avatar";
 import { Outlet, useNavigate } from "react-router-dom";
+import { AutoComplete } from "antd";
 import {
   getStorage,
   ref,
@@ -21,7 +22,6 @@ import {
   adminReset,
   fetchAllUsers,
   putUserOnHold,
-
 } from "../../../redux/adminSlice";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -61,15 +61,26 @@ const ManageUsers = () => {
   const dispatch = useDispatch();
   const [openu, setOpenu] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const [paginationKey, setPaginationKey] = React.useState(0);
+  const [filteredDataByStatus, setFilteredDataByStatus]=React.useState([]);
+  const [status,setStatus]=React.useState("");
   const {
     userArrayByAdmin,
     putOnHoldStatus,
     adminLoading,
     removeUserHoldStatus,
   } = useSelector((state) => state.admin);
-  const {user,screen,openRedux}=useSelector((state)=>state.user);
+  const { user, screen, openRedux } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [enableData, setEnableData] = React.useState({});
+  const [selectedValue, setSelectedValue] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [userType, setUserType] = React.useState("");
+  const [filteredDataByEmail, setFilteredDataByEmail] = React.useState([]);
+  const [filteredDataByUserType, setFilteredDataByUserType] = React.useState(
+    []
+  );
 
   React.useEffect(() => {
     const transformedArray = userArrayByAdmin.map((user, index) => {
@@ -214,9 +225,9 @@ const ManageUsers = () => {
   const [filteredData, setFilteredData] = React.useState([]);
   const [reason, setReason] = React.useState("");
 
-  React.useEffect(() => {
-    setFilteredData(data);
-  }, [data, userArrayByAdmin]);
+  // React.useEffect(() => {
+  //   setFilteredData(data);
+  // }, [data, userArrayByAdmin]);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -243,19 +254,130 @@ const ManageUsers = () => {
   }, [data]);
 
   //  console.log("filtered data ",filteredData);
+  React.useEffect(() => {
+    if (name.trim() !== "") {
+      setPageNumber(1);
+      const filtered = data.filter((item) => {
+        const fullName = (item.firstName + " " + item.lastName).toLowerCase();
+        const fullNameR = (item.lastName + " " + item.firstName).toLowerCase();
+        const fullNameWithOutSpace = (
+          item.firstName +
+          "" +
+          item.lastName
+        ).toLowerCase();
+        const fullNameWithOutSpaceR = (
+          item.lastName +
+          "" +
+          item.firstName
+        ).toLowerCase();
+        return (
+          fullName.trim().includes(name.toLowerCase().trim()) ||
+          fullNameR.trim().includes(name.toLowerCase().trim()) ||
+          fullNameWithOutSpace.trim().includes(name.toLowerCase().trim()) ||
+          fullNameWithOutSpaceR.trim().includes(name.toLowerCase().trim()) ||
+          item.firstName
+            .toLowerCase()
+            .trim()
+            .includes(name.toLowerCase().trim()) ||
+          item.lastName.toLowerCase().trim().includes(name.toLowerCase().trim())
+        );
+      });
+
+      setFilteredData(filtered);
+      setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+      setPaginationKey((prevKey) => prevKey + 1);
+    } else if (name.trim() === "") {
+      setFilteredData(data);
+      setTotalPages(Math.ceil(data.length / itemsPerPage));
+    }
+  }, [name, data]);
+
+  React.useEffect(() => {
+    if (email.trim() !== "") {
+      setPageNumber(1);
+      const filtered = filteredData.filter((item) => {
+        return item.email
+          .toLowerCase()
+          .trim()
+          .includes(email.toLowerCase().trim());
+      });
+
+      setFilteredDataByEmail(filtered);
+      setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+      setPaginationKey((prevKey) => prevKey + 1);
+    } else if (email.trim() === "") {
+      setFilteredDataByEmail(filteredData);
+      setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+    }
+  }, [email, filteredData]);
+
+  React.useEffect(() => {
+    if (selectedValue.trim() !== "") {
+      setPageNumber(1);
+      const filtered = filteredDataByEmail.filter((item) => {
+        const wordsArray = item.role.split("_"); // Split the sentence by underscores
+
+        const concatenatedSentence = wordsArray.join(" ");
+        if (
+          concatenatedSentence
+            .toLowerCase()
+            .trim()
+            .includes(selectedValue.toLowerCase().trim())
+        ) {
+          return item;
+        }
+      });
+
+      setFilteredDataByUserType(filtered);
+      setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+      setPaginationKey((prevKey) => prevKey + 1);
+    } else if (selectedValue.trim() === "") {
+      setFilteredDataByUserType(filteredDataByEmail);
+      setTotalPages(Math.ceil(filteredDataByEmail.length / itemsPerPage));
+    }
+  }, [selectedValue, filteredDataByEmail]);
+
+
+  React.useEffect(()=>{
+    if(status.trim()!==""){
+      setPageNumber(1);
+      const filtered = filteredDataByUserType.filter((item) => {
+        if(status.toLowerCase()==="enabled"){
+           if(item?.activeStatus===true){
+             return item;
+           }
+        }else if(status.toLowerCase()==="disabled"){
+           if(item?.activeStatus===false){
+             return item;
+           }
+        }
+      });
+      setFilteredDataByStatus(filtered);
+      setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+      setPaginationKey((prevKey) => prevKey + 1);
+
+    }else{
+      setFilteredDataByStatus(filteredDataByUserType);
+      setTotalPages(Math.ceil(filteredDataByUserType.length / itemsPerPage));
+    }
+
+  },[status,filteredDataByUserType])
 
   React.useEffect(() => {
     setDisplayItems((prevState) => {
       const startIndex = pageNumber * itemsPerPage - itemsPerPage;
       const endIndex = pageNumber * itemsPerPage - 1;
       setFrom(startIndex + 1);
-      const slicedData = filteredData?.slice(startIndex, endIndex + 1);
+      const slicedData = filteredDataByStatus?.slice(
+        startIndex,
+        endIndex + 1
+      );
       const actualItemsPerPage = slicedData.length;
       const toValue = startIndex + actualItemsPerPage;
       setTo(toValue);
       return slicedData;
     });
-  }, [pageNumber, filteredData]);
+  }, [pageNumber, filteredDataByEmail, filteredData, filteredDataByUserType,filteredDataByStatus]);
 
   const handleFileSelect = (event) => {
     setDownloadUrlArray([]);
@@ -291,20 +413,14 @@ const ManageUsers = () => {
     setPageNumber(page);
   };
 
- 
-
-  const handleCloseDisableClick = () => {
-   
-  };
-
- 
+  const handleCloseDisableClick = () => {};
 
   React.useEffect(() => {
     if (adminLoading == false && putOnHoldStatus == true) {
       dispatch(fetchAllUsers());
       dispatch(adminReset());
       setIsModalOpen(false);
-      setReason("")
+      setReason("");
     }
   }, [adminLoading]);
 
@@ -318,31 +434,48 @@ const ManageUsers = () => {
     setReason(event.target.value); // Update the 'reason' state with the new input value
   };
 
-  const submitClick=()=>{
-   const payload={
-       "adminId":302,
-       "customerId":enableData?.userId,
-       "action":enableData?.activeStatus?false:true,
-       "reason":reason,
-   }
-   if(reason!==""){
-    dispatch(putUserOnHold(payload));
-   }
+  const submitClick = () => {
+    const payload = {
+      adminId: user?.userId,
+      customerId: enableData?.userId,
+      action: enableData?.activeStatus ? false : true,
+      reason: reason,
+    };
+    if (reason !== "") {
+      dispatch(putUserOnHold(payload));
+    }
+  };
+
+  const handelNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const handelEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleAutoCompleteChange = (value) => {
+    setSelectedValue(value);
+  };
+
+  const handleAutoCompleteChangeStatus=(value)=>{
+    setStatus(value);
   }
 
-
-
-
+  console.log(selectedValue);
   return (
     <>
-      <div className="manage-users" style={{ paddingLeft: openRedux && screen > 650 ? "270px" : "1rem" }}>
+      <div
+        className="manage-users"
+        style={{ paddingLeft: openRedux && screen > 650 ? "270px" : "1rem" }}
+      >
         <div
           style={{
             width: "100%",
             alignItems: "center",
             display: "flex",
             justifyContent: "center",
-            marginTop: "2rem",
+            marginTop: "1rem",
           }}
         >
           <p
@@ -351,14 +484,105 @@ const ManageUsers = () => {
               color: "#00425A",
               fontSize: "1.5rem",
               fontWeight: "bold",
-              marginTop: "1rem",
+              marginTop: "0rem",
             }}
           >
             Manage Users
           </p>
         </div>
 
-        <div style={{ marginTop: "2rem", width: "100%", overflowX: "auto" }}>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            // flexDirection: screen < 520 ? "column" : "row",
+            marginTop: "1rem",
+          }}
+        >
+          <Input
+            value={name}
+            style={{
+              width: 200,
+              marginRight: "0.5rem",
+            }}
+            onChange={handelNameChange}
+            allowClear={true}
+            placeholder="Filter by name"
+          />
+
+          <Input
+            value={email}
+            style={{
+              width: 200,
+              marginRight: "0.5rem",
+            }}
+            onChange={handelEmailChange}
+            allowClear={true}
+            placeholder="Filter by email"
+          />
+
+          <AutoComplete
+            style={{
+              width: 200,
+              marginRight: "0.5rem",
+            }}
+            onChange={handleAutoCompleteChange}
+            options={[
+              {
+                value: "ADMIN",
+              },
+              {
+                value: "HELP ASSISTANT",
+              },
+              {
+                value: "QUALITY CHECKER",
+              },
+              {
+                value: "CUSTOMER",
+              },
+              {
+                value: "INVENTORY MANAGER",
+              },
+            ]}
+            allowClear={true}
+            placeholder="Filter by user type"
+            filterOption={(inputValue, option) =>
+              option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+              -1
+            }
+          />
+
+
+            <AutoComplete
+            style={{
+              width: 200,
+              marginRight: "0.5rem",
+            }}
+            onChange={handleAutoCompleteChangeStatus}
+            options={[
+              {
+                value: "Enabled",
+              },
+              {
+                value: "Disabled",
+              },
+              
+            ]}
+            allowClear={true}
+            placeholder="Filter by status"
+            filterOption={(inputValue, option) =>
+              option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+              -1
+            }
+          />
+
+
+
+
+
+        </div>
+
+        <div style={{ marginTop: "1rem", width: "100%", overflowX: "auto" }}>
           <Table
             columns={columns}
             dataSource={displayItems}
@@ -392,7 +616,7 @@ const ManageUsers = () => {
             <Pagination
               count={totalPages}
               onChange={handlePageChange}
-              // key={paginationKey}
+              key={paginationKey}
               color="primary"
             />
           </div>
@@ -432,8 +656,6 @@ const ManageUsers = () => {
             onChange={handleReasonChange} // Set the onChange handler
           />
 
- 
-
           <div
             style={{
               width: "100%",
@@ -445,11 +667,13 @@ const ManageUsers = () => {
           >
             <button
               className="q-submit-btn"
-               style={{background:enableData?.activeStatus===true?"red":"green"}}
-               onClick={submitClick}
+              style={{
+                background: enableData?.activeStatus === true ? "red" : "green",
+              }}
+              onClick={submitClick}
               // onClick={requestTokenSubmitClick}
             >
-              {enableData?.activeStatus===true?"Disable":"Enable"}
+              {enableData?.activeStatus === true ? "Disable" : "Enable"}
             </button>
             {/* <button
               className="q-cancel-btn"
