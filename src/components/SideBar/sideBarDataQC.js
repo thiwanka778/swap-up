@@ -5,10 +5,17 @@ const sideBarDataQC = [
     //   path: "/",
     // },
     {
-      title: "Token Request",
-      icon:"bi-card-checklist",
+      title: "First Approval",
+      icon:"bi-card-image",
       path:"/",
+     
     },
+    {
+      title: "Second Approval",
+      icon:"bi-card-checklist",
+      path:"/final-request-token-accept",
+    },
+   
     // {
     //   title:"Complaints",
     //   icon:"bi-arrow-left-right",

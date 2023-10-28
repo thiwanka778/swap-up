@@ -53,7 +53,7 @@ const pStyles2 = {
   color: "#616263",
 };
 
-const QualityCheckAuth = () => {
+const QualityCheckFirst = () => {
   const dispatch = useDispatch();
   const { screen, user, openRedux } = useSelector((state) => state.user);
   const { qLoading, requestTokenData,rejectRequestStatus } = useSelector(
@@ -121,21 +121,21 @@ const QualityCheckAuth = () => {
         <>
           
 
-          <button
+          {/* <button
           style={{margin:"0.1rem"}}
              onClick={() => acceptClick(record)}
             className="view-requested-token-details-btn"
           >
             View
-          </button>
+          </button> */}
 
           <button
            disabled={record?.status===-1?true:false}
-            style={{margin:"0.1rem",background:record?.status===-1?"#d1d1eb":"#f75467"}}
             onClick={() => viewClick(record)}
-            className={record?.status!==-1?"view-requested-token-details-btn":"rejected-button"}
+             className="view-requested-token-details-btn"
           >
-            {record?.status===-1?"Rejected":"Reject"}
+            {/* {record?.status===-1?"Rejected":"Reject"} */}
+            View
           </button>
 
 
@@ -436,7 +436,7 @@ const QualityCheckAuth = () => {
   return (
     <>
       <div
-        className="quality-checker-token-request-second"
+        className="quality-checker-token-request"
         style={{ paddingLeft: openRedux && screen > 650 ? "270px" : "1rem" }}
       >
         <div
@@ -445,7 +445,7 @@ const QualityCheckAuth = () => {
             alignItems: "center",
             display: "flex",
             justifyContent: "center",
-            marginTop:"1rem",
+            marginTop:"0.5rem",
           }}
         >
           <p
@@ -456,7 +456,7 @@ const QualityCheckAuth = () => {
               fontWeight: "bold",
             }}
           >
-            Token Requests Second Approval
+            Token Requests First Approval
           </p>
         </div>
 
@@ -795,10 +795,17 @@ marginTop:"0.3rem",
             <br />
             {/* images */}
             <div style={{ width: "100%", padding: "0.2rem" }}>
-              <img
-                src={viewData?.itemImage[0]}
-                style={{ width: "100%", borderRadius: "10px" }}
-              />
+                {
+                    viewData?.itemImage?.map((item,index)=>{
+                        return (
+                            <img key={index}
+                            src={item}
+                            style={{ width: "100%", borderRadius: "10px" }}
+                          />
+                        )
+                    })
+                }
+             
             </div>
 
             <div
@@ -814,7 +821,12 @@ marginTop:"0.3rem",
               <button className="q-submit-btn" 
               style={{background:"red"}}
               onClick={rejectRequestConfirmClick}>
-                Reject Confirm
+                Reject
+              </button>
+              <button 
+              style={{marginLeft:"1rem",background:"green"}}
+              className="q-submit-btn" onClick={handleCancela}>
+                Accept
               </button>
               <button 
               style={{marginLeft:"1rem"}}
@@ -865,4 +877,4 @@ marginTop:"0.3rem",
   );
 };
 
-export default QualityCheckAuth;
+export default QualityCheckFirst;

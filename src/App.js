@@ -43,6 +43,8 @@ import Membership from "./pages/user/Membership/Membership";
 import ProfileAuth from "./protectedRoutes/ProfileAuth";
 import FileSystem from "./FileSystem";
 import ItemViewPage from "./pages/user/ItemViewPage/ItemViewPage";
+import PaymentSuccess from "./pages/user/PaymentSuccess/PaymentSuccess";
+import PaymentCancel from "./pages/user/PaymentCancel/PaymentCancel";
 
 
 
@@ -118,7 +120,8 @@ function App() {
          {/* qulaity checker pages start */}
 
          <Route element={<QualityCheckerAuthenticated/>}>
-           <Route path="quality-checker-quality-check-page" element={<QualityCheckAuth/>}/>
+     
+           <Route path="final-request-token-accept" element={<QualityCheckAuth/>}/>
          <Route path="quality-checker-complaints-page"    element={<QualityCheckerComplaint/>}/>
          <Route path="quality-checker-profile-page" element={<QualityCheckerProfile/>}/>
                   <Route path="listing" element={<Listing/>}/>
@@ -151,7 +154,8 @@ function App() {
        <Route path="inventory-manager-complaint" element={<InventoryManagerComplaint/>}/>
              </Route>
 
-          
+          <Route path="success" element={<PaymentSuccess/>}/>
+          <Route path="cancel" element={<PaymentCancel/>}/>
 
              {/* inventory auth end */}
 

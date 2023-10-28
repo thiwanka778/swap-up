@@ -9,6 +9,7 @@ import HelpAssistantHome from '../helpAssistant/HelpAssistantHome/HelpAssistantH
 import InventoryManagerHome from '../inventoryManager/InventoryManagerHome/InventoryManagerHome';
 import QualityCheckAuth from '../quality_checker/QualityCheckAuth/QualityCheckAuth';
 import HelpRequest from '../helpAssistant/HelpRequest/HelpRequest';
+import QualityCheckFirst from '../quality_checker/QualityCheckAuth/QualityCheckFirst';
 
 const AuthenticatedHome = () => {
 
@@ -22,7 +23,7 @@ switch (user?.role?.toLowerCase().trim()) {
     break;
 
     case "quality_checker":
-    componentToRender = <QualityCheckAuth/>;
+    componentToRender = <QualityCheckFirst/>;
     break;
 
     case "admin":

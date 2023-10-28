@@ -40,13 +40,15 @@ const requiredObject=sizeOptions2.find((item)=>item?.value?.toLowerCase()==props
 
   return (
     <div   
-    style={{width:screen<=694?"100%":"320px",padding:"1.5rem", margin: "1rem",cursor:"pointer",
+    style={{width:screen<=694?"100%":"320px",
+    padding:"1.5rem", margin: "1rem",cursor:"pointer",
     display:"flex",flexDirection:"column",
     borderRadius:"10px",
     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px ",
     alignItems:'center'}}>
         <img src={JSON.parse(props.item.imageURL)[0]}
-         style={{width:"100%",borderRadius:"10px",}}
+        
+         style={{width:"100%",borderRadius:"10px",height:screen<=694?"auto":"360px"}}
          onClick={()=>navigate(`/item-view-page/${props.item?.itemId}`)}
          />
 

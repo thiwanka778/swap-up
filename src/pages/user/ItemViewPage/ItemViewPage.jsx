@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./ItemViewPage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getItemsOnListing } from "../../../redux/inventorySlice";
+import { Divider } from "@mui/material";
 import { Modal ,Checkbox } from "antd";
 import { useParams } from "react-router-dom";
 import Magnifier from "react-magnifier";
@@ -93,12 +94,16 @@ const ItemViewPage = () => {
               style={{
                 width: screen < 750 ? "100%" : "50%",
                 padding: "0.2rem",
+                display:"flex",
+                flexDirection:"column",
+                alignItems:"center",
+                // background:"yellow"
                 
               }}
             >
               <div
                 style={{
-                  width: "100%",   
+                  width:screen<500?"100%":"500px",   
                   display: "flex",
                   justifyContent: "center",
                   flexDirection: "column",
@@ -166,6 +171,7 @@ const ItemViewPage = () => {
               style={{
                 width: screen < 750 ? "100%" : "50%",
                 padding: "0.2rem",
+                // background:"red",
                 paddingLeft: screen < 750 ? "0.2rem" : "2rem",
                 marginTop: screen < 750 ? "1rem" : "0rem",
               }}
@@ -176,8 +182,8 @@ const ItemViewPage = () => {
                     marginBottom:"1.5rem",
                     width: "100%",
                     display: "grid",
-                    gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",
-                    gridGap:"10px",
+                    gridTemplateColumns:"repeat(auto-fill,minmax(102px,1fr))",
+                    gridGap:"5px",
                     
                   }}
                 >
@@ -189,8 +195,8 @@ const ItemViewPage = () => {
                       <img
                         onMouseOver={() => viewImageClick(item?.id)}
                         style={{
-                          width : "150px",
-                          height:"160px",
+                          width : "100px",
+                          height:"100px",
                           marginRight: "1rem",
                           borderRadius: "8px",
                           opacity: item?.id == itemId ? "1" : "0.5",
@@ -210,27 +216,44 @@ const ItemViewPage = () => {
                 </div>}
               <div
                 style={{
-                  padding: "2rem",
+                  padding: "1rem",
                   borderRadius: "10px",
-                  background: "#edeff5",
+                  // background: "#edeff5",
                   width: "fit-content",
-                  boxShadow:
-                    "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
+                  // boxShadow:
+                  //   "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
                 }}
               >
                 
                 <p
                   style={{
-                    fontSize: "3rem",
-                    fontFamily: "'Ubuntu', sans-serif",
+                    fontSize: "1.8rem",
+                    fontFamily:" 'Poppins', sans-serif",
+                    marginBottom:"0.3rem",
                   }}
                 >
                   {item?.type}
                 </p>
+                <Divider/>
+                <p
+                  style={{
+                    fontSize: "1.2rem",
+                    fontFamily: "'Roboto', sans-serif",
+                    marginBottom:"0.3rem",
+                    marginTop:"0.3rem",
+                  }}
+                >
+                  whimsical, ethereal wedding gown, designed to 
+                  make brides feel like princesses on their special day.
+                </p>
+                <Divider/>
                 <p
                   style={{
                     fontSize: "2rem",
                     fontFamily: "'Ubuntu', sans-serif",
+                    marginBottom:"0.3rem",
+                    marginTop:"0.3rem",
+                    color:"red"
                   }}
                 >
                   Rs. {item?.price}
@@ -259,8 +282,8 @@ const ItemViewPage = () => {
                     marginTop: "2rem",
                     width: "100%",
                     display: "grid",
-                    gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",
-                    gridGap:"10px",
+                    gridTemplateColumns:"repeat(auto-fill,minmax(102px,1fr))",
+                    gridGap:"5px",
                     
                   }}
                 >
@@ -272,8 +295,8 @@ const ItemViewPage = () => {
                       <img
                         onMouseOver={() => viewImageClick(item?.id)}
                         style={{
-                          width : "150px",
-                          height:"160px",
+                          width : "100px",
+                          height:"100px",
                           marginRight: "1rem",
                           borderRadius: "8px",
                           opacity: item?.id == itemId ? "1" : "0.5",

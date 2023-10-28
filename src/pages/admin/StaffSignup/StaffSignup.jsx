@@ -352,7 +352,7 @@ const handleCancel = () => {
           >
             Staff Registration
           </p>
-          <p
+          {/* <p
             style={{
               fontFamily: "'Ubuntu', sans-serif",
               fontSize: "1.75rem",
@@ -365,7 +365,7 @@ const handleCancel = () => {
             }}
           >
             Staff details to Complete the Registation
-          </p>
+          </p> */}
         </div>
         <div className="input-box-container">
           <p style={pStyles}>First Name</p>

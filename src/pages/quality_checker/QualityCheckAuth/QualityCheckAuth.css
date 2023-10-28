@@ -2,6 +2,12 @@
   width:100%;
  padding:1rem;
 }
+.quality-checker-token-request-second{
+  width:100%;
+  padding-top: 12vh;
+    min-height: 95vh; 
+
+}
 
 .appeal-button {
   background-color: #4CAF50; /* Green background color */

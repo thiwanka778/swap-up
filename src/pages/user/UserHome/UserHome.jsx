@@ -367,8 +367,9 @@ const UserHome = () => {
       )
     : updatedListingItems;
 
+
   const filteredItemsByGender =
-    selectedGender && selectedGender !== "unisex"
+    selectedGender 
       ? filteredItems.filter(
           (item) =>
             item.gender.toLowerCase().trim() ===

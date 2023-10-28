@@ -1,12 +1,35 @@
 import React from "react";
+import axios from "axios";
 import "./Membership.css";
+import { useSelector } from "react-redux";
 
-const DiamondMembership = () => {
+const DiamondMembership = ({subscribed}) => {
+
+  const {openRedux,screen,user}=useSelector((state)=>state.user);
+  const createCheckoutSession = async (priceId) => {
+    try {
+      const response = await axios.post('http://localhost:8081/payment/create-checkout-session', {
+        priceId: priceId,
+        userId:user?.userId,
+        planName:"diamond",
+        price:19.99,
+      });
+      
+      // The response will contain the Checkout Session URL
+      const checkoutSessionUrl = response.data;
+      
+      // Redirect the user to the Stripe Checkout page
+      window.location.href = checkoutSessionUrl;
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+    }
+  };
+
   return (
     <div
       style={{
         marginBottom:"1.5rem",
-        width: "300px",
+        width:screen<350?"100%":"300px",
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
@@ -58,7 +81,9 @@ const DiamondMembership = () => {
         </ul>
       </div>
 
-      <button className="diamond">Buy Now</button>
+      {!subscribed && <button className="diamond"  
+      onClick={() => createCheckoutSession('price_1O68ieLjRG9MltRHGPOI8CCz')}>Buy Now</button>}
+      
     </div>
   );
 };

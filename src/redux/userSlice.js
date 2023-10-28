@@ -30,6 +30,13 @@ const initialState = {
   complaintArray:[],
   profile:{},
   updateProfilePictureStatus:false,
+
+  priceId:"",
+  paymentLoading:false,
+  createPaymentStatus:false,
+  confirmPaymentStatus:false,
+  subData:{},
+
 };
 
 // userRegister
@@ -269,6 +276,57 @@ export const updateProfilePicture = createAsyncThunk(
   }
 );
 
+export const createPaymentIntent = createAsyncThunk(
+  'payment/createIntent',
+  async (amount,thunkAPI) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/payment/create-payment-intent?amount=${amount}`);
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getSubscribedDetail = createAsyncThunk(
+  'payment/getSubscribedDetail',
+  async (userId,thunkAPI) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/payment/get-subscribed-user/${userId}`);
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const confirmPayment = createAsyncThunk(
+  'payment/confirm',
+  async (userId,thunkAPI) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/payment/payment-complete/${userId}`);
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 
 const userSlice = createSlice({
   name: 'user',
@@ -287,6 +345,10 @@ const userSlice = createSlice({
       state.requestTokenStatus=false;
       state.createHelpRequest=false;
       state.updateProfilePictureStatus=false;
+      state.createPaymentStatus=false;
+      state.confirmPaymentStatus=false;
+      state.priceId="";
+      
     },
     getScreenWidth: (state, action) => {
       state.screen = action.payload;
@@ -512,7 +574,51 @@ const userSlice = createSlice({
         state.updateProfilePictureStatus=false;
       })
 
+      //createPaymentIntent
 
+      .addCase(createPaymentIntent.pending, (state) => {
+        state.paymentLoading = true;
+        state.priceId="";
+        state.createPaymentStatus=false;
+      })
+      .addCase(createPaymentIntent.fulfilled, (state, action) => {
+        // console.log(action)
+        state.priceId=action.payload;
+        state.paymentLoading = false;
+        state.createPaymentStatus=true;
+      })
+      .addCase(createPaymentIntent.rejected, (state, action) => {
+        state.paymentLoading = false;
+        state.createPaymentStatus=false;
+        state.priceId="";
+      })
+
+    // confirmPayment 
+
+    .addCase(confirmPayment.pending, (state) => {
+      state.paymentLoading = true;
+      state.confirmPaymentStatus=false;
+    })
+    .addCase(confirmPayment.fulfilled, (state, action) => {
+      state.paymentLoading = false;
+      state.confirmPaymentStatus=true;
+    })
+    .addCase(confirmPayment.rejected, (state, action) => {
+      state.paymentLoading = false;
+      state.confirmPaymentStatus=false;
+    })
+// getSubscribedDetail
+
+.addCase(getSubscribedDetail.pending, (state) => {
+  state.paymentLoading = true;
+})
+.addCase(getSubscribedDetail.fulfilled, (state, action) => {
+  state.paymentLoading = false;
+  state.subData=action.payload;
+})
+.addCase(getSubscribedDetail.rejected, (state, action) => {
+  state.paymentLoading = false;
+})
 
 
 
