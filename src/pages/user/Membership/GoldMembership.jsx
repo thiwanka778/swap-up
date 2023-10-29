@@ -2,12 +2,7 @@ import React,{useState} from 'react';
 import axios from 'axios';
 import "./Membership.css";
 import { useDispatch,useSelector } from 'react-redux';
-import { createPaymentIntent} from '../../../redux/userSlice';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import stripe from 'stripe';
 
-const stripePromise = loadStripe('pk_test_51O5ryaLjRG9MltRHbvAFmI18GBud2gIDxX8HPalyMEXxciOADzvVM0gCwXvMozCc7QvEjiKqiNCdXgw8TrtkNsPI00xmSeFFmt');
 
 const GoldMembership = ({subscribed}) => {
   
@@ -18,7 +13,7 @@ const GoldMembership = ({subscribed}) => {
   
 
 
-   const goldPriceId="price_1O68cwLjRG9MltRHRrAnxRUE";
+   
  
 
    const createCheckoutSession = async (priceId) => {

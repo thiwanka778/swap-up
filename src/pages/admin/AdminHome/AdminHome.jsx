@@ -1,124 +1,152 @@
 import React, { useEffect, useState } from "react";
 import "./AdminHome.css";
-import { useSelector,useDispatch } from "react-redux";
-import CountUp from 'react-countup';
+import { useSelector, useDispatch } from "react-redux";
+import BakeryDiningIcon from '@mui/icons-material/BakeryDining';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
+import PendingIcon from '@mui/icons-material/Pending';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import CheckroomIcon from '@mui/icons-material/Checkroom';
+import GroupIcon from '@mui/icons-material/Group';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 // Import Swiper styles
-import 'swiper/css';
-
-
-
-
+import "swiper/css";
+import AdminCard from "./AdminCard";
+import MyPieChart from "./MyPieChart";
 
 function formatDate(date) {
-    const day = date.getDate();
-    const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-    return `${day} ${month} ${year}`;
-  }
-  
-  function getDayOfWeek(date) {
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    return daysOfWeek[date.getDay()];
-  }
+  const day = date.getDate();
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+  return `${day} ${month} ${year}`;
+}
+
+function getDayOfWeek(date) {
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  return daysOfWeek[date.getDay()];
+}
 
 const AdminHome = () => {
   const carouselRef = React.useRef(null);
 
-    const {screen}=useSelector((state)=>state.user)
-    const [currentDate, setCurrentDate] = useState(new Date());
+  const { screen, openRedux } = useSelector((state) => state.user);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-    useEffect(() => {
-      
-          setCurrentDate(new Date());
-       
-      }, []);
-    
-      const formattedDate = formatDate(currentDate);
-      const dayOfWeek = getDayOfWeek(currentDate);
+  useEffect(() => {
+    setCurrentDate(new Date());
+  }, []);
 
-      
-      
+  const formattedDate = formatDate(currentDate);
+  const dayOfWeek = getDayOfWeek(currentDate);
 
   return (
-    
-    <div className='admin-home'>
-
-       <div style={{width:"100%",display:"flex",
+    <div className="admin-home" 
+    style={{ paddingLeft: openRedux && screen > 650 ? "270px" : "1rem" }}>
+      {/* <div style={{width:"100%",display:"flex",
        alignContent:"center",
        justifyContent:"flex-end",}}>
           <p style={{fontFamily:" 'Poppins', sans-serif",fontSize:"1.2rem",
           fontWeight:600,letterSpacing:"0.1rem",color:"#00425A",}}>{formattedDate}</p>
-       </div>
+       </div> */}
 
-       <div style={{width:"100%",display:"flex",
+      {/* <div style={{width:"100%",display:"flex",
        alignContent:"center",
        justifyContent:"flex-end",}}>
           <p style={{fontFamily:" 'Poppins', sans-serif",
           fontSize:"0.8rem",fontWeight:600,letterSpacing:"0.1rem"}}>{dayOfWeek}</p>
-       </div>
-
-
-
-       <div style={{width:"100%",display:"flex",alignItems:"center",
-       justifyContent:"center",flexDirection:screen<485?"column":"row"}}>
-
-        <div style={{display:"flex",alignItems:"center",marginRight:screen<485?"0rem":"2rem",
-        marginBottom:screen<485?"1.5rem":"0rem",
-        padding:"1rem",boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-        justifyContent:"center",flexDirection:"column",background:"#d3d3db",borderRadius:"10px"}}>
-            <p style={{fontFamily: "'Inter', sans-serif",fontSize:"2rem",color:"#00425A",fontWeight:500}}>Total Checked</p>
-            <p style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center"}} >
-                <span>
-               <i className="bi-file-text" style={{fontSize:"1.5rem"}}></i>
-                    </span> 
-                <span style={{fontFamily: "'Inter', sans-serif",fontSize:"30px",display:"flex",
-                alignItems:"center",
-                color:"#00425A",fontWeight:500,marginLeft:"0.5rem"}}>
-                <CountUp
-          start={0}
-          end={85}
-          duration={3}
-          style={{ fontSize: '2rem', }} 
-        /> 
-                </span>
-                </p>
-        </div>
-
-
-        <div style={{display:"flex",alignItems:"center",
-        padding:"1rem",boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-        justifyContent:"center",flexDirection:"column",background:"#d3d3db",borderRadius:"10px"}}>
-            <p style={{fontFamily: "'Inter', sans-serif",fontSize:"2rem",color:"#00425A",fontWeight:500}}>Total Collection</p>
-            <p style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center"}} >
-                <span>
-               <i className="bi-file-earmark-bar-graph" style={{fontSize:"1.5rem"}}></i>
-                    </span> 
-                <span style={{fontFamily: "'Inter', sans-serif",fontSize:"2rem",color:"#00425A",display:"flex",
-                alignItems:"center",
-                fontWeight:500,marginLeft:"0.5rem"}}>
-                    <CountUp
-          start={0}
-          end={70}
-          duration={3}
-          style={{ fontSize: '2rem', }} 
-        /> 
-                </span>
-                </p>
-        </div>
-
-       </div>
-
-       {/* text slider start */}
-
-
+       </div> */}
 
       
-        </div>
-  )
-}
+
+      <div className="admin-container">
+      <AdminCard 
+         title="Total Requests"
+         icon={<BakeryDiningIcon style={{fontSize:"28px",color:"#2749f5"}}/>}
+         count={120}
+         prefix={false}
+      />
+
+     <AdminCard 
+         title="Accepted Requests"
+         icon={<CheckCircleIcon style={{fontSize:"28px",color:"#6ce813"}}/>}
+         count={87}
+         prefix={false}
+      />
+
+       <AdminCard 
+         title="Rejected Requests"
+         icon={<DoDisturbOnIcon  style={{fontSize:"28px",color:"#ad360a"}}/>}
+         count={10}
+         prefix={false}
+      />
+
+       <AdminCard 
+         title="Pending Requests"
+         icon={<PendingIcon  style={{fontSize:"28px",color:"#f2b313"}}/>}
+         count={23}
+         prefix={false}
+      />
+
+       <AdminCard 
+         title="Total Swaps"
+         icon={<AutorenewIcon  style={{fontSize:"28px",color:"#a205e6"}}/>}
+         count={45}
+         prefix={false}
+      />
+
+       <AdminCard 
+         title="Received Items"
+         icon={<CheckroomIcon  style={{fontSize:"28px",color:"#db045e"}}/>}
+         count={78}
+         prefix={false}
+      />
+
+      <AdminCard 
+         title="Total Customers"
+         icon={<GroupIcon style={{fontSize:"28px",color:"#1f732a"}}/>}
+         count={248}
+         prefix={false}
+      />
+
+       <AdminCard 
+         title="Total Profit"
+         icon={<MonetizationOnIcon style={{fontSize:"28px",color:"#bfbf02"}}/>}
+         count={420}
+         prefix={true}
+         prefixValue="Rs."
+      />
+   
+      </div>
+
+      <div style={{marginTop:"1rem"}}>
+       <MyPieChart/>
+      </div>
+
+
+    </div>
+  );
+};
 
 export default AdminHome;

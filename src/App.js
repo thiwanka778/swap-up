@@ -112,7 +112,8 @@ function App() {
             <Route path="donate" element={<Donate/>}/>
             <Route path="complaints" element={<Complaints/>}/>
             <Route path="user-membership" element={<Membership/>}/>
-         
+            <Route path="success" element={<PaymentSuccess/>}/>
+          <Route path="cancel" element={<PaymentCancel/>}/>
             <Route path="favorite-items-page" element={<FavoriteItemPage/>}/>
         </Route>
          {/* user routes end */}
@@ -154,8 +155,7 @@ function App() {
        <Route path="inventory-manager-complaint" element={<InventoryManagerComplaint/>}/>
              </Route>
 
-          <Route path="success" element={<PaymentSuccess/>}/>
-          <Route path="cancel" element={<PaymentCancel/>}/>
+         
 
              {/* inventory auth end */}
 
