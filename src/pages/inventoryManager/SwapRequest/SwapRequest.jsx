@@ -23,6 +23,8 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import { useSelector,useDispatch } from "react-redux";
+import { getAllUnshippedSwapItems, inventoryReset, shipSwappingItem } from "../../../redux/inventorySlice";
 const { TextArea } = Input;
 
 const pStyles = {
@@ -55,264 +57,20 @@ const options = [
   },
 ];
 
-const data = [
-    {
-      key: "1",
-      swapId: "501",
-      itemName: "Shirt",
-      customerName: "Nimal Lansa",
-      status: "processed",
-      customerId: "200",
-      itemId: "2",
-      customerAddress: "21, New Road, Kaluthara",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "2",
-      swapId: "502",
-      itemName: "Pants",
-      customerName: "John Doe",
-      status: "shipped",
-      customerId: "201",
-      itemId: "3",
-      customerAddress: "123 Main Street, Cityville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "3",
-      swapId: "503",
-      itemName: "Shoes",
-      customerName: "Jane Smith",
-      status: "processed",
-      customerId: "202",
-      itemId: "4",
-      customerAddress: "45 Oak Avenue, Townsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "4",
-      swapId: "504",
-      itemName: "Hat",
-      customerName: "Alice Johnson",
-      status: "shipped",
-      customerId: "203",
-      itemId: "5",
-      customerAddress: "67 Elm Street, Villagetown",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "5",
-      swapId: "505",
-      itemName: "Dress",
-      customerName: "Bob Anderson",
-      status: "processed",
-      customerId: "204",
-      itemId: "6",
-      customerAddress: "89 Maple Road, Hamletsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "6",
-      swapId: "506",
-      itemName: "Socks",
-      customerName: "Eve Taylor",
-      status: "shipped",
-      customerId: "205",
-      itemId: "7",
-      customerAddress: "34 Pine Lane, Woodsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "7",
-      swapId: "507",
-      itemName: "T-shirt",
-      customerName: "David Wilson",
-      status: "processed",
-      customerId: "206",
-      itemId: "8",
-      customerAddress: "56 Cedar Street, Riverside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "8",
-      swapId: "508",
-      itemName: "Jeans",
-      customerName: "Grace Martinez",
-      status: "shipped",
-      customerId: "207",
-      itemId: "9",
-      customerAddress: "78 Oakwood Drive, Hillside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "9",
-      swapId: "509",
-      itemName: "Sweater",
-      customerName: "Frank Brown",
-      status: "processed",
-      customerId: "208",
-      itemId: "10",
-      customerAddress: "90 Elm Avenue, Lakeside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "10",
-      swapId: "510",
-      itemName: "Jacket",
-      customerName: "Olivia White",
-      status: "shipped",
-      customerId: "209",
-      itemId: "11",
-      customerAddress: "12 Cedar Lane, Brookside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "11",
-      swapId: "511",
-      itemName: "Scarf",
-      customerName: "Sophia Lee",
-      status: "processed",
-      customerId: "210",
-      itemId: "12",
-      customerAddress: "45 Oak Avenue, Townsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "12",
-      swapId: "512",
-      itemName: "Gloves",
-      customerName: "James Green",
-      status: "shipped",
-      customerId: "211",
-      itemId: "13",
-      customerAddress: "34 Pine Lane, Woodsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "13",
-      swapId: "513",
-      itemName: "Skirt",
-      customerName: "Liam Harris",
-      status: "processed",
-      customerId: "212",
-      itemId: "14",
-      customerAddress: "56 Cedar Street, Riverside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "14",
-      swapId: "514",
-      itemName: "Belt",
-      customerName: "Emma Turner",
-      status: "shipped",
-      customerId: "213",
-      itemId: "15",
-      customerAddress: "78 Oakwood Drive, Hillside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "15",
-      swapId: "515",
-      itemName: "Shorts",
-      customerName: "Mia Collins",
-      status: "processed",
-      customerId: "214",
-      itemId: "16",
-      customerAddress: "90 Elm Avenue, Lakeside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "16",
-      swapId: "516",
-      itemName: "Sweatshirt",
-      customerName: "Noah Clark",
-      status: "shipped",
-      customerId: "215",
-      itemId: "17",
-      customerAddress: "12 Cedar Lane, Brookside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "17",
-      swapId: "517",
-      itemName: "Blouse",
-      customerName: "Ava Adams",
-      status: "processed",
-      customerId: "216",
-      itemId: "18",
-      customerAddress: "21, New Road, Kaluthara",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "18",
-      swapId: "518",
-      itemName: "Sandals",
-      customerName: "William Lewis",
-      status: "shipped",
-      customerId: "217",
-      itemId: "19",
-      customerAddress: "123 Main Street, Cityville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "19",
-      swapId: "519",
-      itemName: "Sweatpants",
-      customerName: "Isabella Hall",
-      status: "processed",
-      customerId: "218",
-      itemId: "20",
-      customerAddress: "45 Oak Avenue, Townsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "20",
-      swapId: "520",
-      itemName: "Cap",
-      customerName: "Mason Scott",
-      status: "shipped",
-      customerId: "219",
-      itemId: "21",
-      customerAddress: "67 Elm Street, Villagetown",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "21",
-      swapId: "521",
-      itemName: "Sunglasses",
-      customerName: "Sophie Mitchell",
-      status: "processed",
-      customerId: "220",
-      itemId: "22",
-      customerAddress: "89 Maple Road, Hamletsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "22",
-      swapId: "522",
-      itemName: "Backpack",
-      customerName: "Lucas Wright",
-      status: "shipped",
-      customerId: "221",
-      itemId: "23",
-      customerAddress: "34 Pine Lane, Woodsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "23",
-      swapId: "523",
-      itemName: "Watch",
-      customerName: "Aiden Turner",
-      status: "processed",
-      customerId: "222",
-      itemId: "24",
-      customerAddress: "56 Cedar Street, Riverside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-  ];
+
   
 
 const SwapRequest = () => {
+  const dispatch=useDispatch();
+  const {unshippedSwapArray,shipSwappingStatus,inventoryLoading}=useSelector((state)=>state.inventory);
+  const {user}=useSelector((state)=>state.user);
+
+  React.useEffect(()=>{
+     dispatch(getAllUnshippedSwapItems())
+  },[]);
+
+
+
   const columns = [
     {
       title: "Swap Id",
@@ -320,30 +78,36 @@ const SwapRequest = () => {
       key: "swapId",
     },
     {
-      title: "Customer Name",
-      dataIndex: "customerName",
-      key: "customerName",
+      title: "Shipped Date",
+      dataIndex: "timeCreated",
+      render:(_,record)=>{
+        const shippedDate=record?.timeCreated==null?"-":record?.timeCreated?.slice(0,10);
+         return (
+          <span>{shippedDate}</span>
+         )
+      }
     },
+    // {
+    //   title: "Item Name",
+    //   dataIndex: "itemName",
+    //   key: "itemName",
+    // },
     {
-      title: "Item Name",
-      dataIndex: "itemName",
-      key: "itemName",
-    },
-    {
-      title: "Status",
+      title: "Swapping Status",
       key: "status",
       render: (_, record) => {
         let color;
-        switch (record.status?.toLowerCase().trim()) {
-          case "processed":
+        let wordSpan="";
+        switch (record.swappingStatus) {
+          case true:
             color = "#13d609";
+            wordSpan="Shipped"
             break;
-          case "shipped":
+          case false:
             color = "blue";
+            wordSpan="Pending"
             break;
-          default:
-            color = "black"; // Fallback color for any other status
-            break;
+         
         }
 
         return (
@@ -356,7 +120,7 @@ const SwapRequest = () => {
               cursor: "pointer",
             }}
           >
-            {record.status}
+            {wordSpan}
           </span>
         );
       },
@@ -370,7 +134,7 @@ const SwapRequest = () => {
           onClick={() => viewClick(record)}
           className="donation-request-view-button"
         >
-          View
+          Confirm Shipping
         </button>
       ),
     },
@@ -392,11 +156,33 @@ const SwapRequest = () => {
   const [imageLoading, setImageLoading] = React.useState(false);
   const [isModalOpena, setIsModalOpena] = React.useState(false);
   const [appealData, setAppealData] = React.useState({});
-  const [filteredData, setFilteredData] = React.useState(data);
+  const [filteredData, setFilteredData] = React.useState([]);
   const [statusData, setStatusData] = React.useState({});
   const [openu, setOpenu] = React.useState(false);
+  const [data,setData]=React.useState([]);
+
+console.log("unshippedSwapArray",unshippedSwapArray?.data)
+
+React.useEffect(()=>{
+  const getData=unshippedSwapArray?.data?.map((item,index)=>{
+      return {...item,key:index+1}
+  })
+  setData(getData)
+},[unshippedSwapArray]);
+
+React.useEffect(()=>{
+ if(inventoryLoading===false &&shipSwappingStatus===true){
+  dispatch(getAllUnshippedSwapItems());
+  setIsModalOpena(false);
+  dispatch(inventoryReset())
+ }
+
+},[inventoryLoading])
+
+
 
   const statusClick = (data) => {
+
     console.log(data);
     setStatusData(data);
     setOpenu(true);
@@ -426,21 +212,23 @@ const SwapRequest = () => {
 
   React.useEffect(() => {
     // console.log(data?.length);
-    setTotalPages(Math.ceil(data.length / itemsPerPage));
-  }, [data]);
+    setTotalPages(Math.ceil(unshippedSwapArray?.data?.length / itemsPerPage));
+  }, [data,unshippedSwapArray]);
 
   React.useEffect(() => {
     setDisplayItems((prevState) => {
       const startIndex = pageNumber * itemsPerPage - itemsPerPage;
       const endIndex = pageNumber * itemsPerPage - 1;
       setFrom(startIndex + 1);
-      const slicedData = filteredData?.slice(startIndex, endIndex + 1);
-      const actualItemsPerPage = slicedData.length;
+      const slicedData = data?.slice(startIndex, endIndex + 1);
+      const actualItemsPerPage = slicedData?.length;
       const toValue = startIndex + actualItemsPerPage;
       setTo(toValue);
       return slicedData;
     });
-  }, [pageNumber, filteredData, totalPages]);
+  }, [pageNumber, filteredData, totalPages,data,]);
+
+  
 
   const handleFileSelect = (event) => {
     setDownloadUrlArray([]);
@@ -521,6 +309,15 @@ const SwapRequest = () => {
     setIsModalOpena(false);
   };
 
+  const shippedClick=()=>{
+     console.log(appealData)
+     dispatch(shipSwappingItem({
+      inventoryManagerId:user?.userId,
+      swapId:appealData?.swapId,
+       status: true,
+     }))
+  }
+
   const handlePageChange = (event, page) => {
     setPageNumber(page);
   };
@@ -561,7 +358,7 @@ const SwapRequest = () => {
               marginTop: "1rem",
             }}
           >
-            Swap Requests
+            Swapped Requests
           </p>
         </div>
 
@@ -817,7 +614,7 @@ marginTop:"0.3rem",
               marginBottom: "1rem",
             }}
           >
-            Swap Request Details
+            Confirm shipping
           </h2>
         }
         open={isModalOpena}
@@ -827,34 +624,7 @@ marginTop:"0.3rem",
         zIndex={50000}
       >
         <div style={{ width: "100%" }}>
-          <p style={pStyles2}>
-            Swap Id : <span style={pStyles}>{appealData?.swapId}</span>
-          </p>
-          <p style={pStyles2}>
-            Customer Name :{" "}
-            <span style={pStyles}>{appealData?.customerName}</span>
-          </p>
-          <p style={pStyles2}>
-            Customer Address :{" "}
-            <span style={pStyles}>{appealData?.customerAddress}</span>
-          </p>
-          <p style={pStyles2}>
-            Customer Id : <span style={pStyles}>{appealData?.customerId}</span>
-          </p>
-          <p style={pStyles2}>
-            Item Name : <span style={pStyles}>{appealData?.itemName}</span>
-          </p>
-          <p style={pStyles2}>
-            Item Id : <span style={pStyles}>{appealData?.itemId}</span>
-          </p>
-
-          <div style={{width:"100%", marginTop: "1rem",}}>
-           <img src={appealData?.itemPicture}  style={{width:"100%",borderRadius:"10px",}}/>
-          </div>
-
-          <br />
-        
-
+          
           <div
             style={{
               width: "100%",
@@ -864,8 +634,10 @@ marginTop:"0.3rem",
               marginTop: "1rem",
             }}
           >
-            <button className="q-submit-btn" onClick={handleCancela}>
-              Okay
+            <button className="q-submit-btn-shipped" 
+         
+            onClick={shippedClick}>
+              Shipping
             </button>
             {/* <button className="q-cancel-btn" style={{marginLeft:"1rem"}} onClick={handleCancela}>Cancel</button> */}
           </div>

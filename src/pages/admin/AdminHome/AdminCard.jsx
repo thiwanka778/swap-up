@@ -22,12 +22,14 @@ const AdminCard = (props) => {
             fontFamily: "'Inter', sans-serif",
             fontWeight:"bold",color:"#86888f"}}>{props.prefixValue}</p>}
 
-         <CountUp
+       { props.d===false ? <CountUp
          style={{fontSize:"2rem",fontFamily: "'Inter', sans-serif",fontWeight:"bold",color:"#86888f"}}
   start={0}
   end={props.count}
   duration={2.75}
- ></CountUp>
+ ></CountUp>: <p style={{fontSize:"2rem",fontFamily: "'Inter', sans-serif",fontWeight:"bold",color:"#86888f"}}>
+  {props?.count?.toFixed(2)}
+  </p>}
          </div>
       
 

@@ -286,7 +286,9 @@ if(nic!=="" && !isNicValidate){
 
 React.useEffect(()=>{
 if(userLoading==false){
-  if(userRegisterStatus===true && userRegisterMessage=="please check your mail for verify your account"){
+  if(userRegisterStatus===true
+    //  && userRegisterMessage=="please check your mail for verify your account"
+    ){
    
     setForm({ firstName: "",
     lastName: "",

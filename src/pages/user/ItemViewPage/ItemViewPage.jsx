@@ -2,22 +2,46 @@ import React, { useState } from "react";
 import "./ItemViewPage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getItemsOnListing } from "../../../redux/inventorySlice";
+import { AiOutlineCheckCircle } from "react-icons/ai";
 import { Divider } from "@mui/material";
-import { Modal ,Checkbox } from "antd";
-import { useParams } from "react-router-dom";
+import { Modal, Checkbox } from "antd";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Magnifier from "react-magnifier";
 import { nanoid } from "nanoid";
+import { getSubscribedDetail, getValidTokens, requestSwap } from "../../../redux/userSlice";
+import toast, { Toaster } from "react-hot-toast";
+import WarningToast from "../../../components/warningToast/WarningToast";
 
 const ItemViewPage = () => {
   const { id } = useParams();
+  
   const dispatch = useDispatch();
-  const { screen, openRedux } = useSelector((state) => state.user);
+  const {
+    screen,
+    openRedux,
+    requestSwapStatus,
+    userLoading,
+    getValidTokenArray,
+    user,
+    subData,
+  } = useSelector((state) => state.user);
+  const navigate=useNavigate();
   const { listingItems } = useSelector((state) => state.inventory);
   const [item, setItem] = useState({});
   const [imagesArray, setImagesArray] = useState([]);
   const [previewImage, setPreviewImage] = useState("");
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isActive, setIsActive] = React.useState(false);
+  const [error,setError]=React.useState("");
+  const [showModal,setShowModal]=React.useState(false);
+
+
+  console.log(subData)
+  React.useEffect(() => {
+    dispatch(getValidTokens(user?.userId));
+  }, [user]);
+
+  console.log("getValidTokenArray : ", getValidTokenArray);
 
   React.useEffect(() => {
     dispatch(getItemsOnListing());
@@ -25,29 +49,30 @@ const ItemViewPage = () => {
 
   React.useEffect(() => {
     const findObject = listingItems?.find((item) => item?.itemId == id);
-    const imageArray=findObject?.imageURL?JSON.parse(findObject?.imageURL):[];
-    const requiredObject={...findObject,imageURL:imageArray}
+    const imageArray = findObject?.imageURL
+      ? JSON.parse(findObject?.imageURL)
+      : [];
+    const requiredObject = { ...findObject, imageURL: imageArray };
     setItem(requiredObject);
   }, [id, listingItems]);
 
   React.useEffect(() => {
     // console.log(item?.imageURL,"BNULLA");
-    if(item?.imageURL?.length>0){
-      const newArray=item?.imageURL?.map((item,index)=>{
-        const requiredObject={
-          id:index+1,
-          image:item
-        }
+    if (item?.imageURL?.length > 0) {
+      const newArray = item?.imageURL?.map((item, index) => {
+        const requiredObject = {
+          id: index + 1,
+          image: item,
+        };
         return requiredObject;
-    })
-  
-    setImagesArray(newArray);
+      });
+
+      setImagesArray(newArray);
     }
-    
   }, [item]);
 
   React.useEffect(() => {
-    if(item?.imageURL?.length>0){
+    if (item?.imageURL?.length > 0) {
       setPreviewImage(item?.imageURL[0]);
     }
   }, [item]);
@@ -68,12 +93,58 @@ const ItemViewPage = () => {
   };
 
   const swapClick = () => {
-    setIsModalOpen(true);
+    if(subData?.subscribed){
+      setIsModalOpen(true);
+    }else{
+      toast.custom(<WarningToast message={"Unable to swap. please subscribe"}/>)
+     
+    }
+    
   };
   const onChangeActiveStatus = (e) => {
     const newValue = e.target.checked;
     setIsActive(newValue);
   };
+
+  React.useEffect(()=>{
+    if(user?.role==="CUSTOMER"){
+      dispatch(getSubscribedDetail(user?.userId))
+    }
+  
+  },[user])
+
+  const swapClickFinal=(data)=>{
+      setError("");
+    if(data?.price>=item?.price){
+      console.log(data)
+      const integer = parseInt(id, 10);
+      const payload={
+        customerId:user?.userId,
+        itemId:integer,
+        tokenId: data?.tokenId,
+      }
+  
+      dispatch(requestSwap({...payload}))
+    }else{
+      setError("Token price is not enough")
+    }
+
+    
+  }
+
+  React.useEffect(()=>{
+       if(userLoading ===false && requestSwapStatus===true){
+        //  toast.success("You have swapped successfully !")
+        setShowModal(true);
+          // navigate("/")
+         setIsModalOpen(false);
+       }
+  },[userLoading])
+
+  const handleCancel2=()=>{
+    setShowModal(false);
+    navigate("/")
+  }
 
   if (previewImage !== "") {
     return (
@@ -94,16 +165,15 @@ const ItemViewPage = () => {
               style={{
                 width: screen < 750 ? "100%" : "50%",
                 padding: "0.2rem",
-                display:"flex",
-                flexDirection:"column",
-                alignItems:"center",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
                 // background:"yellow"
-                
               }}
             >
               <div
                 style={{
-                  width:screen<500?"100%":"500px",   
+                  width: screen < 500 ? "100%" : "500px",
                   display: "flex",
                   justifyContent: "center",
                   flexDirection: "column",
@@ -176,27 +246,27 @@ const ItemViewPage = () => {
                 marginTop: screen < 750 ? "1rem" : "0rem",
               }}
             >
-                {screen<750 &&  <div
+              {screen < 750 && (
+                <div
                   style={{
                     marginTop: "1rem",
-                    marginBottom:"1.5rem",
+                    marginBottom: "1.5rem",
                     width: "100%",
                     display: "grid",
-                    gridTemplateColumns:"repeat(auto-fill,minmax(102px,1fr))",
-                    gridGap:"5px",
-                    
+                    gridTemplateColumns: "repeat(auto-fill,minmax(102px,1fr))",
+                    gridGap: "5px",
                   }}
                 >
                   {imagesArray?.map((item) => {
                     // const itemId = item?.image == previewImage ? item?.id : "";
                     const itemId = item?.image === previewImage ? item?.id : "";
-               
+
                     return (
                       <img
                         onMouseOver={() => viewImageClick(item?.id)}
                         style={{
-                          width : "100px",
-                          height:"100px",
+                          width: "100px",
+                          height: "100px",
                           marginRight: "1rem",
                           borderRadius: "8px",
                           opacity: item?.id == itemId ? "1" : "0.5",
@@ -204,8 +274,7 @@ const ItemViewPage = () => {
                           cursor: "pointer",
                           boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
                           //  padding:"0.3rem",
-                          padding:"5px",
-                           
+                          padding: "5px",
                         }}
                         key={item?.id}
                         src={item?.image}
@@ -213,7 +282,8 @@ const ItemViewPage = () => {
                       />
                     );
                   })}
-                </div>}
+                </div>
+              )}
               <div
                 style={{
                   padding: "1rem",
@@ -224,36 +294,35 @@ const ItemViewPage = () => {
                   //   "rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px",
                 }}
               >
-                
                 <p
                   style={{
                     fontSize: "1.8rem",
-                    fontFamily:" 'Poppins', sans-serif",
-                    marginBottom:"0.3rem",
+                    fontFamily: " 'Poppins', sans-serif",
+                    marginBottom: "0.3rem",
                   }}
                 >
                   {item?.type}
                 </p>
-                <Divider/>
+                <Divider />
                 <p
                   style={{
                     fontSize: "1.2rem",
                     fontFamily: "'Roboto', sans-serif",
-                    marginBottom:"0.3rem",
-                    marginTop:"0.3rem",
+                    marginBottom: "0.3rem",
+                    marginTop: "0.3rem",
                   }}
                 >
-                  whimsical, ethereal wedding gown, designed to 
-                  make brides feel like princesses on their special day.
+                  whimsical, ethereal wedding gown, designed to make brides feel
+                  like princesses on their special day.
                 </p>
-                <Divider/>
+                <Divider />
                 <p
                   style={{
                     fontSize: "2rem",
                     fontFamily: "'Ubuntu', sans-serif",
-                    marginBottom:"0.3rem",
-                    marginTop:"0.3rem",
-                    color:"red"
+                    marginBottom: "0.3rem",
+                    marginTop: "0.3rem",
+                    color: "red",
                   }}
                 >
                   Rs. {item?.price}
@@ -277,26 +346,26 @@ const ItemViewPage = () => {
                 Swap
               </button>
 
-            {screen>=750 &&  <div
+              {screen >= 750 && (
+                <div
                   style={{
                     marginTop: "2rem",
                     width: "100%",
                     display: "grid",
-                    gridTemplateColumns:"repeat(auto-fill,minmax(102px,1fr))",
-                    gridGap:"5px",
-                    
+                    gridTemplateColumns: "repeat(auto-fill,minmax(102px,1fr))",
+                    gridGap: "5px",
                   }}
                 >
                   {imagesArray?.map((item) => {
                     // const itemId = item?.image == previewImage ? item?.id : "";
                     const itemId = item?.image === previewImage ? item?.id : "";
-               
+
                     return (
                       <img
                         onMouseOver={() => viewImageClick(item?.id)}
                         style={{
-                          width : "100px",
-                          height:"100px",
+                          width: "100px",
+                          height: "100px",
                           marginRight: "1rem",
                           borderRadius: "8px",
                           opacity: item?.id == itemId ? "1" : "0.5",
@@ -304,8 +373,7 @@ const ItemViewPage = () => {
                           cursor: "pointer",
                           boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
                           //  padding:"0.3rem",
-                          padding:"5px",
-                           
+                          padding: "5px",
                         }}
                         key={item?.id}
                         src={item?.image}
@@ -313,7 +381,8 @@ const ItemViewPage = () => {
                       />
                     );
                   })}
-                </div>}
+                </div>
+              )}
             </section>
           </div>
         </div>
@@ -337,14 +406,15 @@ const ItemViewPage = () => {
           zIndex={50000}
         >
           <div style={{ width: "100%" }}>
-
-            <div style={{width:"100%",display:"flex"}}>
+            <p style={{color:"red",marginBottom:"0.5rem",fontFamily:" 'Poppins', sans-serif",fontWeight:"bold"}}>{error}</p>
+            <div style={{ width: "100%", display: "flex" }}>
               <div>
-              <Checkbox onChange={onChangeActiveStatus} checked={isActive}> </Checkbox>
+                <Checkbox onChange={onChangeActiveStatus} checked={isActive}>
+                  {" "}
+                </Checkbox>
               </div>
               <span
                 style={{
-                  
                   fontFamily: "'Ubuntu', sans-serif",
                   fontWeight: "bold",
                 }}
@@ -358,18 +428,94 @@ const ItemViewPage = () => {
                 additional swaps will be equal to your remaining token balance.
                 Do you agree to these terms?
               </span>
+            </div>
 
-              </div>
-
-
-            <button
+            {/* <button
               className="swap-button-proceed"
               style={{ marginTop: "1rem" }}
             >
               Proceed
-            </button>
+            </button> */}
+
+           {isActive && <div
+              style={{
+                marginTop: "1rem",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              {getValidTokenArray?.map((item, index) => {
+                return (
+                  // <button className="token-button" style={{marginTop:"0.5rem"}}>Rs. {item?.price}</button>
+                  <button  onClick={()=>swapClickFinal(item)}
+                    className="swap-button-proceed"
+                    style={{ marginTop: "1rem" }}
+                  >
+                    Rs. {item?.price}
+                  </button>
+                );
+              })}
+            </div>}
           </div>
         </Modal>
+
+
+        <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          // Define default options
+          className: "",
+          duration: 2000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+
+          // Default options for specific types
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+          custom: {
+            duration: 2000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
+
+
+
+<Modal
+       title="" 
+       footer={null}
+       open={showModal} 
+       onOk={handleOk} 
+       centered={true}
+       closable={false}
+       zIndex={50000}
+       >
+         <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",
+         flexDirection:"column"}}>
+         <AiOutlineCheckCircle size={80} style={{ color: "green" }} />
+           <p style={{fontSize:"1.5rem",letterSpacing:"0.1rem",color:"green",textAlign:"center"}}>
+            Successfully swapped !
+            </p>
+            {/* <p>Go and check your inbox</p> */}
+           <button onClick={handleCancel2} 
+           className="rs-modal-btn" style={{marginTop:"0.5rem"}}>OKAY</button>
+         </div>
+     
+      </Modal>
       </>
     );
   } else {

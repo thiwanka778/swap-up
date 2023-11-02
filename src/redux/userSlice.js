@@ -36,7 +36,10 @@ const initialState = {
   createPaymentStatus:false,
   confirmPaymentStatus:false,
   subData:{},
-
+  requestSwapStatus:false,
+  getValidTokenArray:[],
+  swapArray:[],
+  swappedArrayByUser:[],
 };
 
 // userRegister
@@ -327,6 +330,92 @@ export const confirmPayment = createAsyncThunk(
   }
 );
 
+export const requestSwap = createAsyncThunk(
+  'REQUEST_SWAP',
+  async ({ customerId, itemId, tokenId }, thunkAPI) => {
+    try {
+      // Define the request data
+      const requestData = {
+        customerId,
+        itemId,
+        tokenId,
+      };
+
+      // Make the POST request
+      const response = await axios.post(`${BASE_URL}/api/v1/customer/requestSwap`, requestData);
+
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getValidTokens = createAsyncThunk(
+  'user/validtoken',
+  async (id, thunkAPI) => {
+    try {
+      // Create the request data
+     
+
+      // Make the POST request
+      const response = await axios.get(`${BASE_URL}/api/v1/customer/get-valid-token/${id}`);
+
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getShippedSwaps = createAsyncThunk(
+  'user/get-swaps',
+  async (id, thunkAPI) => {
+    try {
+      // Make the GET request
+      const response = await axios.get(`${BASE_URL}/api/v1/customer/get-shipped-swaps/${id}`);
+
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getSwappedItems = createAsyncThunk(
+  'user/get-swaps-by-user',
+  async (id, thunkAPI) => {
+    try {
+      // Make the GET request
+      const response = await axios.get(`${BASE_URL}/api/v1/customer/view-swapped-items/${id}`);
+
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 
 const userSlice = createSlice({
   name: 'user',
@@ -348,6 +437,7 @@ const userSlice = createSlice({
       state.createPaymentStatus=false;
       state.confirmPaymentStatus=false;
       state.priceId="";
+      state.requestSwapStatus=false;
       
     },
     getScreenWidth: (state, action) => {
@@ -619,6 +709,75 @@ const userSlice = createSlice({
 .addCase(getSubscribedDetail.rejected, (state, action) => {
   state.paymentLoading = false;
 })
+
+//requestSwap
+
+.addCase(requestSwap.pending, (state) => {
+  state.userLoading=true;
+  state.requestSwapStatus=false;
+})
+.addCase(requestSwap.fulfilled, (state, action) => {
+  state.userLoading=false;
+  state.requestSwapStatus=true;
+})
+.addCase(requestSwap.rejected, (state, action) => {
+  state.userLoading=false;
+  state.requestSwapStatus=false;
+})
+//getValidTokens
+
+.addCase(getValidTokens.pending, (state) => {
+  state.userLoading=true;
+ 
+})
+.addCase(getValidTokens.fulfilled, (state, action) => {
+  state.userLoading=false;
+  state.getValidTokenArray=action.payload;
+ 
+})
+.addCase(getValidTokens.rejected, (state, action) => {
+  state.userLoading=false;
+  
+})
+
+// getShippedSwaps
+
+
+.addCase(getShippedSwaps.pending, (state) => {
+  state.userLoading=true;
+ 
+})
+.addCase(getShippedSwaps.fulfilled, (state, action) => {
+  state.userLoading=false;
+  state.swapArray=action.payload;
+ 
+})
+.addCase(getShippedSwaps.rejected, (state, action) => {
+  state.userLoading=false;
+  
+})
+
+//getSwappedItems
+
+.addCase(getSwappedItems.pending, (state) => {
+  state.userLoading=true;
+ 
+})
+.addCase(getSwappedItems.fulfilled, (state, action) => {
+  state.userLoading=false;
+  state.swappedArrayByUser=action.payload;
+ 
+})
+.addCase(getSwappedItems.rejected, (state, action) => {
+  state.userLoading=false;
+  
+})
+
+
+
+
+
+
 
 
 

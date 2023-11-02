@@ -65,7 +65,7 @@ const DiamondMembership = ({subscribed}) => {
 
       <div style={{ marginTop: "1rem", marginBottom: "1.5rem" }}>
         <ul>
-          <li className="list-text-d">Unlimited Swaps</li>
+          <li className="list-text-d">10 Swaps</li>
           <li className="list-text-d">Priority Listings</li>
           <li className="list-text-d">Access to Premium Themes</li>
           <li className="list-text-d">Early Access to New Features</li>

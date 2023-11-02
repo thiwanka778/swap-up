@@ -63,7 +63,7 @@ const PlatinumMembership = ({subscribed}) => {
 
       <div style={{ marginTop: "1rem",marginBottom:"1.5rem" }}>
         <ul>
-          <li className="list-text">Unlimited Swaps</li>
+          <li className="list-text">5 Swaps</li>
           <li className="list-text">Priority Listings</li>
           <li className="list-text">Access to Premium Themes</li>
           <li className="list-text">Early Access to New Features</li>

@@ -13,7 +13,8 @@ import { Input } from 'antd';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Pagination from '@mui/material/Pagination';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getSwappedItems } from "../../../redux/userSlice";
 const { TextArea } = Input;
 
 
@@ -346,45 +347,63 @@ const data = [
 
 
 const Swap = () => {
-  const {screen,openRedux}=useSelector((state)=>state.user);
+  const dispatch=useDispatch();
+  const {screen,openRedux,swappedArrayByUser,user}=useSelector((state)=>state.user);
+  const {
+    inventoryLoading,
+    inventoryErrorMessage,
+    inventoryError,
+    inventoryCreateItemStatus,
+    listingItems,
+    addFavoriteStatus,
+    favoriteList,
+    deleteFavoriteStatus,
+    inventoryStatus,
+  } = useSelector((state) => state.inventory);
+
+  React.useEffect(()=>{
+       dispatch(getSwappedItems(user?.userId))
+  },[])
 
     const columns = [
         {
-          title: "ID",
-          dataIndex: "id",
-          key: "id",
+          title: "Swap Id",
+          dataIndex: "swapId",
+          key: "swapId",
         },
         {
-          title: "Date of Swap",
-          dataIndex: "dateOfSwap",
-          key: "dateOfSwap",
+          title: "Shipped Time",
+          dataIndex: "timeCreated",
+          render:(_,record)=>{
+            return (
+              <span>{record?.timeCreated===null?"-":record?.timeCreated?.slice(0,10)}</span>
+            )
+          }
         },
-        {
-          title: "Item Name",
-          dataIndex: "itemName",
-          key: "itemName",
-        },
+        // {
+        //   title: "Item Name",
+        //   dataIndex: "itemName",
+        //   key: "itemName",
+        // },
         {
           title: "Status",
           key: "status",
           render: (_, record) => {
             let color;
-            switch (record.status) {
-              case "Swap":
+            let spanWord="";
+            switch (record?.swappingStatus) {
+              case true:
                 color = "#04ba25";
+                spanWord="Shipped"
                 break;
-              case "Rejected":
-                color = "red";
-                break;
-              case "In progress":
+              case false:
                 color = "blue";
+                spanWord="Pending"
                 break;
-              default:
-                color = "black"; // Fallback color for any other status
-                break;
+             
             }
       
-            return <span style={{ color,fontWeight:"bold",fontSize:"1rem" }}>{record.status}</span>;
+            return <span style={{ color,fontWeight:"bold",fontSize:"1rem" }}>{spanWord}</span>;
           },
         },
       
@@ -394,7 +413,7 @@ const Swap = () => {
           render: (_, record) => (
             <button
             className="view-button"
-            // onClick={()=>appealClick(record)}
+            onClick={()=>appealClick(record)}
             >
              View
             </button>
@@ -416,9 +435,16 @@ const Swap = () => {
   const [validImages,setValidImages]=React.useState("");
   const [downloadUrlArray,setDownloadUrlArray]=React.useState([]);
   const [imageLoading,setImageLoading]=React.useState(false);
-
+  const [data,setData]=React.useState([]);
   const [isModalOpena, setIsModalOpena] = React.useState(false);
-  const [appealData,setAppealData]=React.useState({});
+  const [appealData,setAppealData]=React.useState([]);
+
+  React.useEffect(()=>{
+ const getData=swappedArrayByUser?.map((item,index)=>{
+       return {...item,key:index+1}
+ });
+ setData(getData)
+  },[swappedArrayByUser])
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -444,8 +470,8 @@ const Swap = () => {
 
   React.useEffect(() => {
     // console.log(data?.length);
-    setTotalPages(Math.ceil(data.length / itemsPerPage));
-  }, []);
+    setTotalPages(Math.ceil(data?.length / itemsPerPage));
+  }, [data]);
 
   const handlePageChange = (event, page) => {
     setPageNumber(page);
@@ -462,7 +488,7 @@ const Swap = () => {
       setTo(toValue);
       return slicedData;
     });
-  }, [pageNumber]);
+  }, [pageNumber,data]);
 
 
 
@@ -538,9 +564,23 @@ const Swap = () => {
   
   const appealClick=(data)=>{
     console.log(data)
-    setAppealData(data);
+    console.log(listingItems)
+    const requiredObject=listingItems?.find((item)=>item?.itemId==data?.itemId);
+
+    const imageArray=requiredObject?.imageURL;
+    let imageURL=[];
+    if(imageArray && imageArray!=null && imageArray!="undefined" || imageArray!=undefined){
+          imageURL=JSON.parse(imageArray)
+          // console.log(JSON.parse(imageArray))
+    }
+
+    setAppealData(JSON.parse(imageArray),"image Array");
     setIsModalOpena(true);
   };
+
+  console.log(appealData)
+
+
 
   const showModala = () => {
     setIsModalOpena(true);
@@ -761,27 +801,23 @@ return (
       <Modal 
       
       title={<h2 style={{color:"#00425A",
-        fontSize:"1.5rem",marginBottom:"1rem"}}>Appeal</h2>}
+        fontSize:"1.5rem",marginBottom:"1rem"}}>Swapped Item</h2>}
        open={isModalOpena} onOk={handleOka} onCancel={handleCancela}
        footer={null}
        zIndex={50000}
        >
 
-       <div style={{width:"100%",}}>
-        
-        <p style={pStyles}>Item Id : <span>{appealData?.itemId}</span></p>
-        <p style={pStyles}>Item Name : <span>{appealData?.itemName}</span></p>
-<br/>
-        <p style={pStyles} >Reason for appeal</p>
-        <Input placeholder="Reason for appeal" style={{width:"100%",marginTop:"0.3rem"}}/>
-
-        <p style={pStyles}>Describe Objection</p>
-        <TextArea rows={4} style={{marginTop:"0.3rem",width:"100%",}} />
-
-        <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:"1rem"}}>
-        <button className="q-submit-btn" onClick={handleCancela}>Submit</button>
-        <button className="q-cancel-btn" style={{marginLeft:"1rem"}} onClick={handleCancela}>Cancel</button>
-        </div>
+       <div style={{width:"100%",display:"flex",flexDirection:"column"}}>
+         
+        {
+            appealData?.map((item,index)=>{
+               return (
+                <img 
+                style={{width:"100%",marginTop:"1rem"}}
+                src={item} key={index}/>
+               )
+            })  
+        }
 
        </div>
 

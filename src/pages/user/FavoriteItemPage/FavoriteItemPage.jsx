@@ -26,6 +26,14 @@ const {
     inventoryStatus,
   } = useSelector((state) => state.inventory);
   const { screen, user,openRedux } = useSelector((state) => state.user);
+  const itemPriceObject=listingItems?.find((item)=>item?.itemId==deleteData?.itemId);
+ 
+  let imageArray= [];
+ 
+if(itemPriceObject && itemPriceObject?.imageURL && itemPriceObject?.imageURL!=null && itemPriceObject?.imageURL!="undefined" && itemPriceObject?.imageURL!=undefined){
+  imageArray =  JSON.parse(itemPriceObject?.imageURL)
+}
+
 
   const displayItemsStyles =
   screen <= 694
@@ -152,7 +160,7 @@ style={{zIndex:"15000"}}
         <DialogContent>
 
             <div style={{width:screen<420?"100%":"300px",display:"flex",flexDirection:"column"}}>
-          {deleteData?.imageURL?.length>0 && <img src={deleteData?.imageURL[0]} style={{width:"100%",borderRadius:"6px",}}/>}
+          {imageArray?.length>0 && <img src={imageArray[0]} style={{width:"100%",borderRadius:"6px",}}/>}
 
            <div style={{marginTop:"0.5rem",display:"flex",
            alignItems:"center",justifyContent:"center",textAlign:"center"}}>

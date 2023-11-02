@@ -4,7 +4,7 @@ import { MdWarning } from 'react-icons/md';
 const WarningToast = ({message}) => {
   return (
     <div style={{display:"flex",alignItems:"center",background:"#fa560a",
-    borderRadius:"8px",padding:"0.5rem",zIndex:"400000",marginTop:"15vh"}}>
+    borderRadius:"8px",padding:"0.5rem",zIndex:"40000000000",marginTop:"15vh"}}>
         <MdWarning size={21} color="white" />
         <p style={{color:"white",marginLeft:"0.5rem",
         fontFamily:" 'Poppins', sans-serif",

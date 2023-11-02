@@ -17,6 +17,11 @@ const initialState = {
     addFavoriteStatus:false,
 
     deleteFavoriteStatus:false,
+    unprocessedSwapItems:[],
+    arrivedOrReturnItemStatus:false,
+
+    unshippedSwapArray:[],
+    shipSwappingStatus:false,
 
   };
 
@@ -147,6 +152,86 @@ const initialState = {
     }
   );
 
+  export const getAllUnprocessedSwapItems = createAsyncThunk(
+    'inventory/getAllUnprocessedSwapItems',
+    async (_, thunkAPI) => {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/v1/inventory-manager/get-all-unprocessed-swap-item`);
+        return response.data;
+      } catch (error) {
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+        return thunkAPI.rejectWithValue(message);
+      }
+    }
+  );
+
+  export const arrivedOrReturnItem = createAsyncThunk(
+    'inventoryManager/arrivedOrReturnItem',
+    async ({ inventoryManagerId, requestId, shippingStatus }, thunkAPI) => {
+      try {
+        const response = await axios.post(`${BASE_URL}/api/v1/inventory-manager/arrived_or_return_item?inventory-manager-id=${inventoryManagerId}&request-token-id=${requestId}&shipping-status=${shippingStatus}`);
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+        return thunkAPI.rejectWithValue(message);
+      }
+    }
+  );
+
+  
+  
+  
+  export const getAllUnshippedSwapItems = createAsyncThunk(
+    'GET_ALL_UNSHIPPED_SWAP_ITEMS',
+    async (_, thunkAPI) => {
+      try {
+        // Make the GET request
+        const response = await axios.get(`${BASE_URL}/api/v1/inventory-manager/get-all-unShipped-swap-item`);
+  
+        return response.data;
+      } catch (error) {
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+  
+        return thunkAPI.rejectWithValue(message);
+      }
+    }
+  );
+
+
+  export const shipSwappingItem = createAsyncThunk(
+    'SHIP_SWAPPING_ITEM',
+    async ({ inventoryManagerId, swapId, status }, thunkAPI) => {
+      try {
+        // Define the request parameters as an object
+        
+  
+        // Make the POST request with query parameters in the URL
+        const response = await axios.post(`${BASE_URL}/api/v1/inventory-manager/shipped-swapping-item?inventory-manager-id=${inventoryManagerId}&swap-id=${swapId}&status=${status}`);
+  
+        return response.data;
+      } catch (error) {
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+  
+        return thunkAPI.rejectWithValue(message);
+      }
+    }
+  );
+  
+  
+
 
 
   
@@ -162,6 +247,8 @@ const initialState = {
     state.inventoryCreateItemStatus=false;
     state.addFavoriteStatus=false;
     state.deleteFavoriteStatus=false;
+    state.arrivedOrReturnItemStatus=false;
+    state.shipSwappingStatus=false;
   },
      
     },
@@ -287,6 +374,75 @@ const initialState = {
           
           
           })
+
+          // getAllUnprocessedSwapItems
+
+
+          builder.addCase(getAllUnprocessedSwapItems.pending, (state) => {
+            state.inventoryLoading = true;
+          })
+          builder.addCase(getAllUnprocessedSwapItems.fulfilled, (state,action) => {
+            state.inventoryLoading = false;
+            state.unprocessedSwapItems=action.payload?.data;
+          })
+          builder.addCase(getAllUnprocessedSwapItems.rejected, (state, action) => {
+            state.inventoryLoading = false;
+          })
+
+          //arrivedOrReturnItem
+
+          builder.addCase(arrivedOrReturnItem.pending, (state) => {
+            state.inventoryLoading = true;
+            state.arrivedOrReturnItemStatus=false;
+          })
+          builder.addCase(arrivedOrReturnItem.fulfilled, (state,action) => {
+            state.inventoryLoading = false;
+            state.arrivedOrReturnItemStatus=true;
+            
+          })
+          builder.addCase(arrivedOrReturnItem.rejected, (state, action) => {
+            state.inventoryLoading = false;
+            state.arrivedOrReturnItemStatus=false;
+          })
+
+          //getAllUnshippedSwapItems
+
+          builder.addCase(getAllUnshippedSwapItems.pending, (state) => {
+            state.inventoryLoading = true;
+           
+          })
+          builder.addCase(getAllUnshippedSwapItems.fulfilled, (state,action) => {
+            state.inventoryLoading = false;
+            state.unshippedSwapArray=action.payload;
+           
+            
+          })
+          builder.addCase(getAllUnshippedSwapItems.rejected, (state, action) => {
+            state.inventoryLoading = false;
+           
+          })
+
+          //shipSwappingItem
+
+          builder.addCase(shipSwappingItem.pending, (state) => {
+            state.inventoryLoading = true;
+            state.shipSwappingStatus=false;
+           
+          })
+          builder.addCase(shipSwappingItem.fulfilled, (state,action) => {
+            state.inventoryLoading = false;
+            state.shipSwappingStatus=true;
+            
+          
+            
+          })
+          builder.addCase(shipSwappingItem.rejected, (state, action) => {
+            state.inventoryLoading = false;
+            state.shipSwappingStatus=false;
+           
+          })
+
+
 
 
 

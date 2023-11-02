@@ -37,7 +37,7 @@ import {
   getItemsOnListing,
 } from "../../../redux/inventorySlice";
 import ListingCard from "./ListingCard";
-import { acceptQualityCheckerRequest, getRequestToken, resetQualityChecker } from "../../../redux/qualityCheckerSlice";
+import { acceptQualityCheckerRequest, fetchShippingApprovalData, getRequestToken, resetQualityChecker } from "../../../redux/qualityCheckerSlice";
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -137,7 +137,7 @@ const sizeOptions = [
 const Listing = () => {
   const dispatch = useDispatch();
   const { screen ,user} = useSelector((state) => state.user);
-  const {acceptRequestStatus,qLoading,requestTokenData}=useSelector((state)=>state.qualityChecker)
+  const {acceptRequestStatus,qLoading,requestTokenData,secondApprovalList}=useSelector((state)=>state.qualityChecker)
   const {
     inventoryLoading,
     inventoryErrorMessage,
@@ -147,7 +147,9 @@ const Listing = () => {
     inventoryStatus,
   } = useSelector((state) => state.inventory);
 
- 
+  React.useEffect(() => {
+    dispatch(fetchShippingApprovalData());
+  }, []);
 
   const storage = getStorage();
   const itemsPerPage = 10;
@@ -402,7 +404,7 @@ dispatch(getItemsOnListing())
           toast.success("Accepted successfully!")
           dispatch(resetQualityChecker())
           dispatch(getItemsOnListing());
-          dispatch(getRequestToken())
+          dispatch(fetchShippingApprovalData())
           setGender("unisex");
           setDownloadUrlArray([]);
           setQuality("good");
@@ -497,7 +499,7 @@ dispatch(getItemsOnListing())
             alignItems: "center",
             display: "flex",
             paddingLeft:"1rem",
-            // justifyContent: "center",
+             justifyContent: "center",
           }}
         >
           <p
@@ -507,9 +509,10 @@ dispatch(getItemsOnListing())
               marginTop: "1rem",
               color: "#00425A",
               fontSize: "1.5rem",
+              textAlign:"center",
             }}
           >
-            Accept Item
+            Review Received Item
           </p>
         </div>
 
@@ -678,11 +681,11 @@ dispatch(getItemsOnListing())
                 }}
               >
                 <button 
-                disabled={requestTokenData?.find((item)=>item?.requestTokenId==localData?.requestTokenId)?.status==1?true:false}
-                className={requestTokenData?.find((item)=>item?.requestTokenId==localData?.requestTokenId)?.status!=1?"n-button":"n-button-d"} 
+                disabled={secondApprovalList?.data?.find((item)=>item?.requestTokenId==localData?.requestTokenId)?.status==1?true:false}
+                className={secondApprovalList?.data?.find((item)=>item?.requestTokenId==localData?.requestTokenId)?.status!=1?"n-button":"n-button-d"} 
                 onClick={onClickSave}>
                   {/* {localData?.status===1?"ACCEPTED":"ACCEPT"} */}
-                  {requestTokenData?.find((item)=>item?.requestTokenId==localData?.requestTokenId)?.status==1?"ACCEPTED":"ACCEPT"}
+                  {secondApprovalList?.data?.find((item)=>item?.requestTokenId==localData?.requestTokenId)?.status==1?"ACCEPTED":"ACCEPT"}
                 </button>
               </div>
           </div>

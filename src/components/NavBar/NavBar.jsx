@@ -208,8 +208,8 @@ const NavBar = () => {
             Home
           </NavLink>
         )}
-        {screen >= 670 && <p className="nav-text">About Us</p>}
-        {screen >= 670 && <p className="nav-text">Contact Us</p>}
+        {/* {screen >= 670 && <p className="nav-text">About Us</p>}
+        {screen >= 670 && <p className="nav-text">Contact Us</p>} */}
 
         {user && user?.role === "CUSTOMER" && (
           <div className="nav-text">

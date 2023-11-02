@@ -33,10 +33,13 @@ const FavoriteItemCard = (props) => {
   }, []);
 const itemPriceObject=listingItems?.find((item)=>item?.itemId==props.item?.itemId)
 const requiredObject=sizeOptions2.find((item)=>item?.value?.toLowerCase()==props.item.size.toLowerCase());
+let imageArray= [];
+ 
+if(itemPriceObject && itemPriceObject?.imageURL && itemPriceObject?.imageURL!=null && itemPriceObject?.imageURL!="undefined" && itemPriceObject?.imageURL!=undefined){
+  imageArray=  JSON.parse(itemPriceObject?.imageURL)
+}
 
-
-
-
+console.log(imageArray)
 
   return (
     <div   
@@ -46,7 +49,7 @@ const requiredObject=sizeOptions2.find((item)=>item?.value?.toLowerCase()==props
     borderRadius:"10px",
     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px ",
     alignItems:'center'}}>
-        <img src={JSON.parse(props.item.imageURL)[0]}
+        <img src={imageArray[0]}
         
          style={{width:"100%",borderRadius:"10px",height:screen<=694?"auto":"360px"}}
          onClick={()=>navigate(`/item-view-page/${props.item?.itemId}`)}

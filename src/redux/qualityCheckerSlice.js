@@ -9,6 +9,9 @@ const initialState = {
     requestTokenData:[],
     acceptRequestStatus:false,
     rejectRequestStatus:false,
+    firstApprovalList:[],
+    imageCheckingStatus:false,
+    secondApprovalList:[],
 };
 
 //  get all token by quality checker
@@ -30,6 +33,51 @@ export const getRequestToken = createAsyncThunk(
       }
     }
   );
+
+  export const getAllFirstApprovalList = createAsyncThunk(
+    'qualityChecker/getAllQualityCheckers',
+    async (_, thunkAPI) => {
+   
+      try {
+        const response = await axios.get(`${BASE_URL}/api/v1/quality-checker/get-all-request-token`);
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+        return thunkAPI.rejectWithValue(message);
+      }
+    }
+  );
+
+  export const imageChecking = createAsyncThunk(
+    'qualityChecker/imageChecking',
+    async ({ requestId, qualityCheckerId, imageStatus }, thunkAPI) => {
+     
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/api/v1/quality-checker/image-Checking?request-id=${requestId}&quality-checker-id=${qualityCheckerId}&image-status=${imageStatus}`
+        );
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+        return thunkAPI.rejectWithValue(message);
+      }
+    }
+  );
+ 
+  
+  
+  
+  
+  
+  
 //  accept 
   export const acceptQualityCheckerRequest = createAsyncThunk(
     "qualityChecker/acceptRequestToken",
@@ -91,6 +139,23 @@ export const rejectRequestToken = createAsyncThunk(
   }
 );
 
+export const fetchShippingApprovalData = createAsyncThunk(
+  'qualityChecker/fetchShippingApprovalData',
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/v1/quality-checker/get-shipping-approved-requet-token`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 
 
 const qualityCheckerSlice = createSlice({
@@ -101,6 +166,7 @@ const qualityCheckerSlice = createSlice({
         //    write variables you want to clear after APIs are triggered successfully!
         state.acceptRequestStatus=false;
         state.rejectRequestStatus=false;
+        state.imageCheckingStatus=false;
           },
     },
     extraReducers: (builder) => {
@@ -146,6 +212,62 @@ const qualityCheckerSlice = createSlice({
           .addCase(rejectRequestToken.rejected, (state, action) => {
             state.qLoading = false;
             state.rejectRequestStatus=false;
+          
+          })
+          //getAllFirstApprovalList 
+
+          .addCase(getAllFirstApprovalList.pending, (state) => {
+            state.qLoading = true;
+            
+      
+            
+          })
+          .addCase(getAllFirstApprovalList.fulfilled, (state, action) => {
+            state.qLoading = false;
+            state.firstApprovalList=action.payload;
+  
+          })
+          .addCase(getAllFirstApprovalList.rejected, (state, action) => {
+            state.qLoading = false;
+      
+          
+          })
+          //imageChecking
+
+          .addCase(imageChecking.pending, (state) => {
+            state.qLoading = true;
+            state.imageCheckingStatus=false;
+            
+          })
+          .addCase(imageChecking.fulfilled, (state, action) => {
+            state.qLoading = false;
+            state.imageCheckingStatus=true;
+  
+          })
+          .addCase(imageChecking.rejected, (state, action) => {
+            state.qLoading = false;
+            state.imageCheckingStatus=true;
+      
+          
+          })
+
+          //fetchShippingApprovalData
+
+          .addCase(fetchShippingApprovalData.pending, (state) => {
+            state.qLoading = true;
+            
+            
+          })
+          .addCase(fetchShippingApprovalData.fulfilled, (state, action) => {
+            state.qLoading = false;
+            state.secondApprovalList=action.payload;
+          
+  
+          })
+          .addCase(fetchShippingApprovalData.rejected, (state, action) => {
+            state.qLoading = false;
+         
+      
           
           })
 

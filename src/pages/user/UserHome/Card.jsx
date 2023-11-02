@@ -49,7 +49,7 @@ const oneFavoriteObject=favoriteList?.find((item)=>item.itemId==props.item.itemI
     borderRadius:"10px",
     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px ",
     alignItems:'center'}}>
-        <img src={JSON.parse(props.item.imageURL)[0]} 
+        <img src={JSON.parse(props.item?.imageURL)[0]} 
         onClick={()=>navigate(`/item-view-page/${props.item?.itemId}`)}
          style={{width:"100%", height:screen<=694?"auto":"360px",cursor:"pointer",
          borderRadius:"10px",}}/>

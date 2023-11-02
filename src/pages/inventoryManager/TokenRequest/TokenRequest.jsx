@@ -23,6 +23,9 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import { useDispatch, useSelector } from "react-redux";
+import { arrivedOrReturnItem, getAllUnprocessedSwapItems, inventoryReset } from "../../../redux/inventorySlice";
+import { getAllFirstApprovalList } from "../../../redux/qualityCheckerSlice";
 const { TextArea } = Input;
 
 const pStyles = {
@@ -43,307 +46,63 @@ const pStyles2 = {
   color: "#616263",
 };
 
-const options = [
-  {
-    value: "Burns Bay Road",
-  },
-  {
-    value: "Downing Street",
-  },
-  {
-    value: "Wall Street",
-  },
-];
 
-const data = [
-    {
-      key: "1",
-      swapId: "501",
-      itemName: "Shirt",
-      customerName: "Nimal Lansa",
-      status: "Pending",
-      customerId: "200",
-      itemId: "2",
-      customerAddress: "21, New Road, Kaluthara",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "2",
-      swapId: "502",
-      itemName: "Pants",
-      customerName: "John Doe",
-      status: "Shipped",
-      customerId: "201",
-      itemId: "3",
-      customerAddress: "123 Main Street, Cityville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "3",
-      swapId: "503",
-      itemName: "Shoes",
-      customerName: "Jane Smith",
-      status: "Stored",
-      customerId: "202",
-      itemId: "4",
-      customerAddress: "45 Oak Avenue, Townsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "4",
-      swapId: "504",
-      itemName: "Hat",
-      customerName: "Alice Johnson",
-      status: "Pending",
-      customerId: "203",
-      itemId: "5",
-      customerAddress: "67 Elm Street, Villagetown",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "5",
-      swapId: "505",
-      itemName: "Dress",
-      customerName: "Bob Anderson",
-      status: "Shipped",
-      customerId: "204",
-      itemId: "6",
-      customerAddress: "89 Maple Road, Hamletsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "6",
-      swapId: "506",
-      itemName: "Socks",
-      customerName: "Eve Taylor",
-      status: "Stored",
-      customerId: "205",
-      itemId: "7",
-      customerAddress: "34 Pine Lane, Woodsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "7",
-      swapId: "507",
-      itemName: "T-shirt",
-      customerName: "David Wilson",
-      status: "Pending",
-      customerId: "206",
-      itemId: "8",
-      customerAddress: "56 Cedar Street, Riverside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "8",
-      swapId: "508",
-      itemName: "Jeans",
-      customerName: "Grace Martinez",
-      status: "Shipped",
-      customerId: "207",
-      itemId: "9",
-      customerAddress: "78 Oakwood Drive, Hillside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "9",
-      swapId: "509",
-      itemName: "Sweater",
-      customerName: "Frank Brown",
-      status: "Stored",
-      customerId: "208",
-      itemId: "10",
-      customerAddress: "90 Elm Avenue, Lakeside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "10",
-      swapId: "510",
-      itemName: "Jacket",
-      customerName: "Olivia White",
-      status: "Pending",
-      customerId: "209",
-      itemId: "11",
-      customerAddress: "12 Cedar Lane, Brookside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "11",
-      swapId: "511",
-      itemName: "Scarf",
-      customerName: "Sophia Lee",
-      status: "Shipped",
-      customerId: "210",
-      itemId: "12",
-      customerAddress: "45 Oak Avenue, Townsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "12",
-      swapId: "512",
-      itemName: "Gloves",
-      customerName: "James Green",
-      status: "Stored",
-      customerId: "211",
-      itemId: "13",
-      customerAddress: "34 Pine Lane, Woodsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "13",
-      swapId: "513",
-      itemName: "Skirt",
-      customerName: "Liam Harris",
-      status: "Pending",
-      customerId: "212",
-      itemId: "14",
-      customerAddress: "56 Cedar Street, Riverside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "14",
-      swapId: "514",
-      itemName: "Belt",
-      customerName: "Emma Turner",
-      status: "Shipped",
-      customerId: "213",
-      itemId: "15",
-      customerAddress: "78 Oakwood Drive, Hillside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "15",
-      swapId: "515",
-      itemName: "Shorts",
-      customerName: "Mia Collins",
-      status: "Stored",
-      customerId: "214",
-      itemId: "16",
-      customerAddress: "90 Elm Avenue, Lakeside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "16",
-      swapId: "516",
-      itemName: "Sweatshirt",
-      customerName: "Noah Clark",
-      status: "Pending",
-      customerId: "215",
-      itemId: "17",
-      customerAddress: "12 Cedar Lane, Brookside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "17",
-      swapId: "517",
-      itemName: "Blouse",
-      customerName: "Ava Adams",
-      status: "Shipped",
-      customerId: "216",
-      itemId: "18",
-      customerAddress: "21, New Road, Kaluthara",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "18",
-      swapId: "518",
-      itemName: "Sandals",
-      customerName: "William Lewis",
-      status: "Stored",
-      customerId: "217",
-      itemId: "19",
-      customerAddress: "123 Main Street, Cityville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "19",
-      swapId: "519",
-      itemName: "Sweatpants",
-      customerName: "Isabella Hall",
-      status: "Pending",
-      customerId: "218",
-      itemId: "20",
-      customerAddress: "45 Oak Avenue, Townsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "20",
-      swapId: "520",
-      itemName: "Cap",
-      customerName: "Mason Scott",
-      status: "Shipped",
-      customerId: "219",
-      itemId: "21",
-      customerAddress: "67 Elm Street, Villagetown",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "21",
-      swapId: "521",
-      itemName: "Sunglasses",
-      customerName: "Sophie Mitchell",
-      status: "Stored",
-      customerId: "220",
-      itemId: "22",
-      customerAddress: "89 Maple Road, Hamletsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "22",
-      swapId: "522",
-      itemName: "Backpack",
-      customerName: "Lucas Wright",
-      status: "Pending",
-      customerId: "221",
-      itemId: "23",
-      customerAddress: "34 Pine Lane, Woodsville",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-    {
-      key: "23",
-      swapId: "523",
-      itemName: "Watch",
-      customerName: "Aiden Turner",
-      status: "Shipped",
-      customerId: "222",
-      itemId: "24",
-      customerAddress: "56 Cedar Street, Riverside",
-      itemPicture: "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-760w,f_auto,q_auto:best/streams/2014/May/140501/2D274905752454-crocodile-tee-636.jpg",
-    },
-  ];
+
+
   
   
 
 const TokenRequest= () => {
+  const dispatch=useDispatch();
+  const {unprocessedSwapItems,arrivedOrReturnItemStatus,inventoryLoading}=useSelector((state)=>state.inventory);
+  const { qLoading, requestTokenData,rejectRequestStatus,firstApprovalList ,imageCheckingStatus} = useSelector(
+    (state) => state.qualityChecker
+  );
+  const {user,screen} =useSelector((state)=>state.user);
+  
+
+  console.log("unprocessedSwapItems: ",unprocessedSwapItems)
   const columns = [
     {
-      title: "Requested Id",
-      dataIndex: "swapId",
+      title: "Request Token Id",
+      dataIndex: "requestTokenId",
       key: "swapId",
     },
     {
-      title: "Customer Name",
-      dataIndex: "customerName",
-      key: "customerName",
+      title: "Shipped Or Arrived Date",
+      dataIndex: "shippedOrArrivedTime",
+      key: "shippedOrArrivedTime",
+      render:(_,record)=>{
+        return (
+          <span>{record?.shippedOrArrivedTime?.slice(0,10)}</span>
+        )
+      
+      }
     },
+   
+    // {
+    //   title: "Item Name",
+    //   dataIndex: "itemName",
+    //   key: "itemName",
+    // },
     {
-      title: "Item Name",
-      dataIndex: "itemName",
-      key: "itemName",
-    },
-    {
-      title: "Status",
-      key: "status",
+      title: "Shipment Status",
+      key: "shipmentStatus",
       render: (_, record) => {
         let color;
-        switch (record.status?.toLowerCase().trim()) {
-          case "pending":
+        let wordStatus="";
+        switch (record?.shipmentStatus) {
+          case 0:
             color = "blue";
+            wordStatus="Pending"
             break;
-          case "shipped":
+          case 1:
             color = "#13d609";
+            wordStatus="Received"
             break;
-            case "stored":
+            case -1:
                 color="gray";
+                wordStatus="Retuned"
                 break;
           default:
             color = "black"; // Fallback color for any other status
@@ -352,7 +111,7 @@ const TokenRequest= () => {
 
         return (
           <span
-            onClick={() => statusClick(record)}
+            // onClick={() => statusClick(record)}
             style={{
               color,
               fontWeight: "bold",
@@ -360,7 +119,7 @@ const TokenRequest= () => {
               cursor: "pointer",
             }}
           >
-            {record.status}
+           {wordStatus}
           </span>
         );
       },
@@ -379,28 +138,28 @@ const TokenRequest= () => {
     //   ),
     // },
 
-    {
-        title: "Action",
-        key:"action",
-        render:(_,record)=>{
-            return (
-                <div>
+    // {
+    //     title: "Action",
+    //     key:"action",
+    //     render:(_,record)=>{
+    //         return (
+    //             <div>
 
-               {record?.status?.toLowerCase().trim()!=="shipped" && <button  className="donation-request-view-button-shipped" style={{margin:"0.1rem"}}>
-                     Shipped
-              </button>}
+    //            {record?.status?.toLowerCase().trim()!=="shipped" && <button  className="donation-request-view-button-shipped" style={{margin:"0.1rem"}}>
+    //                  Shipped
+    //           </button>}
 
-             {record?.status?.toLowerCase().trim()!=="stored" && <button  className="donation-request-view-button-stored" style={{margin:"0.1rem"}}>
-                Stored
-              </button>}
+    //          {record?.status?.toLowerCase().trim()!=="stored" && <button  className="donation-request-view-button-stored" style={{margin:"0.1rem"}}>
+    //             Stored
+    //           </button>}
 
-              { record?.status?.toLowerCase().trim()!=="pending" && <button  className="donation-request-view-button-pending" style={{margin:"0.1rem"}}>
-                Pending
-              </button>}
-                    </div>
-            )
-        }
-    },
+    //           { record?.status?.toLowerCase().trim()!=="pending" && <button  className="donation-request-view-button-pending" style={{margin:"0.1rem"}}>
+    //             Pending
+    //           </button>}
+    //                 </div>
+    //         )
+    //     }
+    // },
       {
       title: "View",
       key: "view",
@@ -431,12 +190,49 @@ const TokenRequest= () => {
   const [imageLoading, setImageLoading] = React.useState(false);
   const [isModalOpena, setIsModalOpena] = React.useState(false);
   const [appealData, setAppealData] = React.useState({});
-  const [filteredData, setFilteredData] = React.useState(data);
+  const [filteredData, setFilteredData] = React.useState([]);
+  const [data,setData]=React.useState([]);
   const [statusData, setStatusData] = React.useState({});
   const [openu, setOpenu] = React.useState(false);
 
+  React.useEffect(()=>{
+    dispatch(getAllUnprocessedSwapItems())
+  },[]);
+
+  React.useEffect(() => {
+    dispatch(getAllFirstApprovalList());
+  }, []);
+
+  console.log(firstApprovalList,"first Approval List");
+
+  React.useEffect(()=>{
+   const getData=unprocessedSwapItems?.map((item,index)=>{
+      return {...item,key:index+1}
+   });
+   setData(getData);
+  },[unprocessedSwapItems])
+
+  // React.useEffect(() => {
+  //   const uniqueRequestTokenIds = new Set();
+  
+  //   const getData = unprocessedSwapItems
+  //     .filter(item => {
+  //       if (!uniqueRequestTokenIds.has(item.requestTokenId)) {
+  //         uniqueRequestTokenIds.add(item.requestTokenId);
+  //         return true;
+  //       }
+  //       return false;
+  //     })
+  //     .map((item, index) => {
+  //       return { ...item, key: index + 1 };
+  //     });
+  
+  //   setData(getData);
+  // }, [unprocessedSwapItems]);
+
   const statusClick = (data) => {
-    console.log(data);
+    setStatusData({});
+    // console.log(data);
     setStatusData(data);
     setOpenu(true);
   };
@@ -473,13 +269,13 @@ const TokenRequest= () => {
       const startIndex = pageNumber * itemsPerPage - itemsPerPage;
       const endIndex = pageNumber * itemsPerPage - 1;
       setFrom(startIndex + 1);
-      const slicedData = filteredData?.slice(startIndex, endIndex + 1);
+      const slicedData = data?.slice(startIndex, endIndex + 1);
       const actualItemsPerPage = slicedData.length;
       const toValue = startIndex + actualItemsPerPage;
       setTo(toValue);
       return slicedData;
     });
-  }, [pageNumber, filteredData, totalPages]);
+  }, [pageNumber, filteredData, totalPages,data]);
 
   const handleFileSelect = (event) => {
     setDownloadUrlArray([]);
@@ -545,9 +341,22 @@ const TokenRequest= () => {
   };
 
   const viewClick = (data) => {
+    let imageArray=[];
     console.log(data);
-    setAppealData(data);
-    setIsModalOpena(true);
+    const requiredObject=firstApprovalList?.data?.find((item)=>item?.requestTokenId==data?.requestTokenId);
+    if(requiredObject && requiredObject?.itemImage && requiredObject?.itemImage!=null && requiredObject?.itemImage!="undefined" && requiredObject?.itemImage!=undefined){
+      imageArray=JSON.parse(requiredObject?.itemImage);
+      
+    }
+   const finalObject={...data,...requiredObject,itemImage:imageArray}
+   console.log(finalObject,"Fimal pamka")
+    setAppealData(finalObject);
+
+    // setIsModalOpena(true);
+    setTimeout(() => {
+      setIsModalOpena(true);
+    }, 1000);
+   
   };
 
   const showModala = () => {
@@ -555,10 +364,43 @@ const TokenRequest= () => {
   };
   const handleOka = () => {
     setIsModalOpena(false);
+    setAppealData({})
   };
   const handleCancela = () => {
     setIsModalOpena(false);
+    setAppealData({})
   };
+
+  const receivedClick=()=>{
+    const payload={
+      inventoryManagerId:user?.userId,
+      requestId:appealData?.requestTokenId,
+     shippingStatus:1
+    }
+
+    dispatch(arrivedOrReturnItem({...payload}))
+  }
+
+  const returnedClick=()=>{
+    const payload={
+      inventoryManagerId:user?.userId,
+      requestId:appealData?.requestTokenId,
+     shippingStatus:-1
+    }
+
+    dispatch(arrivedOrReturnItem({...payload}))
+  }
+
+  React.useEffect(()=>{
+
+    if(inventoryLoading===false && arrivedOrReturnItemStatus===true){
+      setIsModalOpena(false);
+      dispatch(getAllUnprocessedSwapItems())
+      dispatch(inventoryReset());
+
+    }
+
+  },[inventoryLoading])
 
   const handlePageChange = (event, page) => {
     setPageNumber(page);
@@ -588,7 +430,7 @@ const TokenRequest= () => {
             alignItems: "center",
             display: "flex",
             justifyContent: "center",
-            marginTop: "2rem",
+            marginTop: "1rem",
           }}
         >
           <p
@@ -600,7 +442,7 @@ const TokenRequest= () => {
               marginTop: "1rem",
             }}
           >
-            Token Requests
+            Accepted Token Requests
           </p>
         </div>
 
@@ -843,7 +685,7 @@ marginTop:"0.3rem",
         </div>
       </Modal>
 
-      <Backdrop sx={{ color: "gold", zIndex: 1500 }} open={imageLoading}>
+      <Backdrop sx={{ color: "gold", zIndex: 8000000 }} open={inventoryLoading}>
         <CircularProgress color="inherit" size={50} />
       </Backdrop>
 
@@ -867,25 +709,30 @@ marginTop:"0.3rem",
       >
         <div style={{ width: "100%" }}>
           <p style={pStyles2}>
-            Requested Id : <span style={pStyles}>{appealData?.swapId}</span>
+            Requested Date : <span style={pStyles}>{appealData?.requestDateTime?.slice(0,10)}</span>
           </p>
           <p style={pStyles2}>
-            Customer Name :{" "}
-            <span style={pStyles}>{appealData?.customerName}</span>
+            {appealData?.itemDescription}
           </p>
-          <p style={pStyles2}>
-            Customer Address :{" "}
-            <span style={pStyles}>{appealData?.customerAddress}</span>
-          </p>
-          <p style={pStyles2}>
-            Customer Id : <span style={pStyles}>{appealData?.customerId}</span>
-          </p>
-          <p style={pStyles2}>
-            Item Name : <span style={pStyles}>{appealData?.itemName}</span>
-          </p>
-          <p style={pStyles2}>
-            Item Id : <span style={pStyles}>{appealData?.itemId}</span>
-          </p>
+
+          <div style={{marginTop:"1rem"}}>
+
+            {
+              appealData?.itemImage?.map((item,index)=>{
+                return (
+                  <img 
+                  style={{width:"100%",marginBottom:"0.5rem"}}
+                  key={index} src={item}/>
+                )
+              })
+            }
+
+          </div>
+
+      
+          
+        
+     
 
           {/* <div style={{width:"100%", marginTop: "1rem",}}>
            <img src={appealData?.itemPicture}  style={{width:"100%",borderRadius:"10px",}}/>
@@ -903,9 +750,27 @@ marginTop:"0.3rem",
               marginTop: "1rem",
             }}
           >
-            <button className="q-submit-btn" onClick={handleCancela}>
-              Okay
+            <button className="q-submit-btn" 
+            style={{marginRight:"0.2rem"}}
+            onClick={handleCancela}>
+              Cancel
             </button>
+
+            <button style={{background:"#02e619",marginRight:"0.2rem"}}
+            className="q-submit-btn" onClick={receivedClick}>
+              Received
+            </button>
+
+
+            <button className="q-submit-btn" 
+            style={{background:"#aeb1d1",marginRight:"0.2rem"}}
+            onClick={returnedClick}>
+              Returned
+            </button>
+
+            
+
+
             {/* <button className="q-cancel-btn" style={{marginLeft:"1rem"}} onClick={handleCancela}>Cancel</button> */}
           </div>
         </div>

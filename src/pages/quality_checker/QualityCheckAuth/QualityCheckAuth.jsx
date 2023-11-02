@@ -25,7 +25,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { useNavigate } from "react-router-dom";
-import { getRequestToken, rejectRequestToken, resetQualityChecker } from "../../../redux/qualityCheckerSlice";
+import { fetchShippingApprovalData, getRequestToken, rejectRequestToken, resetQualityChecker } from "../../../redux/qualityCheckerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -56,7 +56,7 @@ const pStyles2 = {
 const QualityCheckAuth = () => {
   const dispatch = useDispatch();
   const { screen, user, openRedux } = useSelector((state) => state.user);
-  const { qLoading, requestTokenData,rejectRequestStatus } = useSelector(
+  const { qLoading, requestTokenData,rejectRequestStatus ,secondApprovalList} = useSelector(
     (state) => state.qualityChecker
   );
   const navigate = useNavigate();
@@ -174,14 +174,14 @@ const QualityCheckAuth = () => {
   });
 
   React.useEffect(() => {
-    const getData = requestTokenData?.map((item, index) => {
+    const getData = secondApprovalList?.data?.map((item, index) => {
       return { ...item, key: index + 1 };
     });
     if (getData) {
       setData(getData);
       setFilteredData(getData);
     }
-  }, [requestTokenData]);
+  }, [secondApprovalList]);
 
   const statusClick = (data) => {
     console.log(data);
@@ -212,7 +212,7 @@ const QualityCheckAuth = () => {
   };
 
   React.useEffect(() => {
-    dispatch(getRequestToken());
+    dispatch(fetchShippingApprovalData());
   }, []);
 
   React.useEffect(() => {
@@ -403,7 +403,7 @@ const QualityCheckAuth = () => {
     setIsModalOpena(false);
     toast.success("Rejected successfully!");
     dispatch(resetQualityChecker());
-    dispatch(getRequestToken())
+    dispatch(fetchShippingApprovalData())
    }
   },[qLoading])
 

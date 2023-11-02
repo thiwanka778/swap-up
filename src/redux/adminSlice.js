@@ -11,6 +11,7 @@ const initialState = {
 
   putOnHoldStatus:false,
   removeUserHoldStatus:false,
+  adminData:{},
   
 };
 
@@ -75,6 +76,25 @@ export const removeUserHold = createAsyncThunk(
   }
 );
 
+export const getAdminDashboardData = createAsyncThunk(
+  'GET_ADMIN_DASHBOARD_DATA',
+  async (_, thunkAPI) => {
+    try {
+      // Make the GET request
+      const response = await axios.get(`${BASE_URL}/api/v1/admin/admin-dashboard-data`);
+
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const adminSlice = createSlice({
   name: 'admin',
   initialState,
@@ -128,7 +148,23 @@ state.removeUserHoldStatus=false;
       builder.addCase(removeUserHold.rejected, (state, action) => {
         state.adminLoading = false;
         state.removeUserHoldStatus=false;
+      })
+      //getAdminDashboardData
+
+      builder.addCase(getAdminDashboardData.pending, (state) => {
+        state.adminLoading = true;
+ 
       });
+      builder.addCase(getAdminDashboardData.fulfilled, (state, action) => {
+        state.adminLoading = false;
+        state.adminData=action.payload;
+       
+       
+      });
+      builder.addCase(getAdminDashboardData.rejected, (state, action) => {
+        state.adminLoading = false;
+       
+      })
   },
 });
 

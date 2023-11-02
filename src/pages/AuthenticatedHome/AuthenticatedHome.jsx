@@ -10,6 +10,7 @@ import InventoryManagerHome from '../inventoryManager/InventoryManagerHome/Inven
 import QualityCheckAuth from '../quality_checker/QualityCheckAuth/QualityCheckAuth';
 import HelpRequest from '../helpAssistant/HelpRequest/HelpRequest';
 import QualityCheckFirst from '../quality_checker/QualityCheckAuth/QualityCheckFirst';
+import TokenRequest from '../inventoryManager/TokenRequest/TokenRequest';
 
 const AuthenticatedHome = () => {
 
@@ -31,7 +32,7 @@ switch (user?.role?.toLowerCase().trim()) {
       break;
 
       case "inventory_manager":
-        componentToRender=<InventoryManagerHome/>;
+        componentToRender=<TokenRequest/>;
         break;
 
         case "help_assistant":

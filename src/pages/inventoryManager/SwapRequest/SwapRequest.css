@@ -147,5 +147,17 @@
     color: #fff !important;
   }
 
+  .q-submit-btn-shipped{
+    background-color: blue; /* Orange background color */
+    color: #ffffff; /* White text color */
+    padding: 8px 16px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Default cursor on hover */
+    font-family: 'Inter', sans-serif; /* Use 'Inter' font-family */
+    transition: all 0.3s ease;
+  }
+
 
 

@@ -269,6 +269,16 @@
       clip-path: inset(0 0 0 100%);
     }
   }
+
+  .token-button {
+    background-color: #3498db; /* Change this to your preferred background color */
+    color: #fff; /* Change this to your preferred text color */
+    border: none;
+    padding: 10px 20px; /* Adjust padding as needed */
+    border-radius: 5px; /* Adjust the radius for rounded corners */
+    cursor: pointer;
+    /* Add any other styles you want */
+  }
    
 
   

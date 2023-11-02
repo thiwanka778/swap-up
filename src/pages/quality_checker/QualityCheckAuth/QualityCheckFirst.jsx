@@ -25,7 +25,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { useNavigate } from "react-router-dom";
-import { getRequestToken, rejectRequestToken, resetQualityChecker } from "../../../redux/qualityCheckerSlice";
+import { getAllFirstApprovalList, getRequestToken, imageChecking, rejectRequestToken, resetQualityChecker } from "../../../redux/qualityCheckerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -55,8 +55,9 @@ const pStyles2 = {
 
 const QualityCheckFirst = () => {
   const dispatch = useDispatch();
+  const [arDetail,setArDetail]=React.useState(0);
   const { screen, user, openRedux } = useSelector((state) => state.user);
-  const { qLoading, requestTokenData,rejectRequestStatus } = useSelector(
+  const { qLoading, requestTokenData,rejectRequestStatus,firstApprovalList ,imageCheckingStatus} = useSelector(
     (state) => state.qualityChecker
   );
   const navigate = useNavigate();
@@ -78,12 +79,12 @@ const QualityCheckFirst = () => {
     },
 
     {
-      title: "Status",
-      key: "status",
+      title: "Shipping Approval",
+      key: "shippingApproval",
 
       render: (_, record) => {
         let color;
-        switch (record.status) {
+        switch (record.shippingApproval) {
           case 1:
             color = "#04ba25";
             break;
@@ -98,9 +99,9 @@ const QualityCheckFirst = () => {
             break;
         }
         let btnLabel = "";
-        if (record.status === 0) {
+        if (record.shippingApproval === 0) {
           btnLabel = "Pending";
-        } else if (record.status === 1) {
+        } else if (record.shippingApproval === 1) {
           btnLabel = "Accepted";
         } else {
           btnLabel = "Rejected";
@@ -130,7 +131,7 @@ const QualityCheckFirst = () => {
           </button> */}
 
           <button
-           disabled={record?.status===-1?true:false}
+          
             onClick={() => viewClick(record)}
              className="view-requested-token-details-btn"
           >
@@ -174,14 +175,16 @@ const QualityCheckFirst = () => {
   });
 
   React.useEffect(() => {
-    const getData = requestTokenData?.map((item, index) => {
+    const getData = firstApprovalList?.data?.map((item, index) => {
       return { ...item, key: index + 1 };
     });
     if (getData) {
       setData(getData);
       setFilteredData(getData);
     }
-  }, [requestTokenData]);
+  }, [firstApprovalList]);
+
+
 
   const statusClick = (data) => {
     console.log(data);
@@ -212,23 +215,25 @@ const QualityCheckFirst = () => {
   };
 
   React.useEffect(() => {
-    dispatch(getRequestToken());
+    dispatch(getAllFirstApprovalList());
   }, []);
+
+  console.log(data,"data balla")
 
   React.useEffect(() => {
     if (selectedValue !== "") {
       setPageNumber(1);
       const filtered = data.filter((item) => {
         if (selectedValue === "Pending") {
-          if (item.status === 0) {
+          if (item.shippingApproval === 0) {
             return item;
           }
         } else if (selectedValue === "Accepted") {
-          if (item.status === 1) {
+          if (item.shippingApproval === 1) {
             return item;
           }
         } else {
-          if (item.status !== 1 && item.status !== 0) {
+          if (item.shippingApproval !== 1 && item.shippingApproval !== 0) {
             return item;
           }
         }
@@ -353,11 +358,11 @@ const QualityCheckFirst = () => {
   // };
 
   const viewClick = (data) => {
+     setArDetail(0);
     console.log(data);
     if(data?.itemImage){
       const imageArray=JSON.parse(data?.itemImage);
       const requiredObject={...data,itemImage:imageArray}
-      setViewData({});
       setViewData(requiredObject);
       setIsModalOpena(true);
     }
@@ -382,30 +387,73 @@ const QualityCheckFirst = () => {
   };
   const handleOka = () => {
     setIsModalOpena(false);
+    setArDetail(0);
     setViewData({});
   };
   const handleCancela = () => {
     setIsModalOpena(false);
+    setArDetail(0);
     setViewData({});
   };
+
   const rejectRequestConfirmClick=()=>{
-    // console.log(viewData,"vhbk")
-  
-    dispatch(rejectRequestToken({
-      requestTokenId:viewData?.requestTokenId,
-        qualityCheckerId:user?.userId,
-    }))
-    
+     console.log(viewData,"vhbk")
+     setArDetail(-1);
+     setIsModalOpena(false);
+    dispatch(imageChecking(
+      {
+        requestId:viewData?.requestTokenId,
+        qualityCheckerId:user?.userId, 
+        imageStatus:-1,
+      }
+    ))
+  };
+  const requestConfirm=()=>{
+    setArDetail(1);
+    setIsModalOpena(false);
+    console.log(viewData)
+    dispatch(imageChecking(
+      {
+        requestId:viewData?.requestTokenId,
+        qualityCheckerId:user?.userId, 
+        imageStatus:1,
+      }
+    ))
   }
 
   React.useEffect(()=>{
-   if(qLoading===false && rejectRequestStatus===true){
-    setIsModalOpena(false);
-    toast.success("Rejected successfully!");
-    dispatch(resetQualityChecker());
-    dispatch(getRequestToken())
-   }
+     if(qLoading===false && imageCheckingStatus===true){
+      setIsModalOpena(false);
+      dispatch(resetQualityChecker())
+      dispatch(getAllFirstApprovalList());
+      setArDetail(0);
+      setViewData({});
+     }else if(qLoading===false && imageCheckingStatus===false){
+      // setIsModalOpena(false);
+      // dispatch(resetQualityChecker())
+      // dispatch(getAllFirstApprovalList());
+      // setArDetail(0);
+      // setViewData({});
+     }
+    //  else if(qLoading===false && imageCheckingStatus===false){
+    //   dispatch(imageChecking(
+    //     {
+    //       requestId:viewData?.requestTokenId,
+    //       qualityCheckerId:user?.userId, 
+    //       imageStatus:arDetail,
+    //     }
+    //   ))
+    //  }
   },[qLoading])
+
+  // React.useEffect(()=>{
+  //  if(qLoading===false && rejectRequestStatus===true){
+  //   setIsModalOpena(false);
+  //   toast.success("Rejected successfully!");
+  //   dispatch(resetQualityChecker());
+  //   dispatch(getRequestToken())
+  //  }
+  // },[qLoading])
 
   const handlePageChange = (event, page) => {
     setPageNumber(page);
@@ -818,21 +866,24 @@ marginTop:"0.3rem",
               }}
             >
 
-              <button className="q-submit-btn" 
+             {viewData?.shippingApproval!=-1 && <button className="q-submit-btn" 
               style={{background:"red"}}
               onClick={rejectRequestConfirmClick}>
                 Reject
-              </button>
-              <button 
-              style={{marginLeft:"1rem",background:"green"}}
-              className="q-submit-btn" onClick={handleCancela}>
+              </button>}
+
+             {viewData?.shippingApproval!=1 &&  <button 
+              style={{marginLeft:"1rem",background:"#04d404"}}
+              className="q-submit-btn" onClick={requestConfirm}>
                 Accept
-              </button>
+              </button>}
+
               <button 
               style={{marginLeft:"1rem"}}
               className="q-submit-btn" onClick={handleCancela}>
                 Cancel
               </button>
+
             </div>
           </div>
         </Modal>
